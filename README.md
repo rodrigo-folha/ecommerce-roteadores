@@ -27,19 +27,19 @@ Clone o repositório:
 1. Entre no diretório do repositório:
 
    ```sh
-   cd backend
+   cd ecommerce-roteadores/backend
    ```
 
 2. Baixe as dependências:
 
    ```sh
-   mvn clean install
+   ./mvnw clean install
    ```
 
 3. Rode a aplicação localmente:
 
    ```sh
-   ./mvnw compile quarkus:dev   
+   ./mvnw compile quarkus:dev
    ```
 
 ### Frontend (Angular)
@@ -47,7 +47,7 @@ Clone o repositório:
 1. Entre no diretório do repositório:
 
    ```sh
-   cd frontend
+   cd ecommerce-roteadores/frontend
    ```
 
 2. Baixe as dependências:
