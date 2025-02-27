@@ -1,0 +1,204 @@
+@startuml
+
+class Fornecedor {
+    - nome: String
+    - cnpj: String
+    - email: String
+}
+
+class Lote {
+    - codigo: String
+    - quantidade: Integer
+    - data: LocalDate
+}
+
+class Roteador {
+    - nome: String
+    - descricao: String
+    - preco: Double
+}
+
+class BandaFrequencia {
+    - nome: String
+}
+
+class ProtocoloSeguranca {
+    - nome: String
+}
+
+class QuantidadeAntena {
+    - quantidade: Integer
+}
+
+class SinalWireless {
+    - nome: String
+}
+
+class SistemaOperacional {
+    - nome: String
+}
+
+class Cliente {
+    - dataCadastro: LocalDateTime
+}
+
+class Funcionario {
+    - altura: Double
+}
+
+class Usuario {
+    - nome: String
+    - cpf: String
+    - dataNascimento: LocalDate
+    - email: String
+    - senha: String
+}
+
+enum Perfil {
+    + ADM: int
+    + USER: int
+}
+
+class Telefone {
+    - codigoArea: String
+    - numero: String
+}
+
+class Pedido {
+    - data: LocalDateTime
+    - valorTotal: Double   
+}
+
+class ItemPedido {
+    - quantidade: Integer
+    - preco: Double
+}
+
+class StatusPedido {
+    - dataAtualizacao: LocalDateTime
+}
+
+enum SituacaoPedido {
+    + AGUARDANDO_PAGAMENTO: int
+    + PAGAMENTO_AUTORIZADO: int
+    + PAGAMENTO_EXPIRADO: int
+    + CANCELADO: int
+    + ENVIADO: int
+    + ENTREGUE: int
+    + DEVOLVIDO: int
+}
+
+class Endereco {
+    - logradouro: String
+    - bairro: String
+    - numero: String
+    - complemento: String
+    - cep: String
+}
+
+class Cidade {
+    - nome: String
+}
+
+class Estado {
+    - nome: String
+    - sigla: String
+}
+
+class EnderecoEntrega {
+    - logradouro: String
+    - bairro: String
+    - numero: String
+    - complemento: String
+    - cep: String
+}
+
+abstract Pagamento {
+    - valor: Double
+}
+
+class Pix {
+    - chave: String
+    - validade: LocalDateTime
+}
+
+class Boleto {
+    - codigoBarras: String
+    - validade: LocalDate
+}
+
+class CartaoPagamento {
+    - titular: String
+    - cpfCartao: String
+    - numero: String
+    - dataValidade: LocalDate
+    - cvc: String
+}
+
+class Cartao {
+    - titular: String
+    - cpfCartao: String
+    - numero: String
+    - dataValidade: LocalDate
+    - cvc: String
+}
+
+enum ModalidadeCartao {
+    + CREDITO: int
+    + DEBITO: int
+}
+
+class CupomDesconto {
+    - codigo: String
+    - percentualDesconto: Double
+    - validade: LocalDate
+}
+
+' RELACIONAMENTO
+
+Roteador "*" o--> "1" Fornecedor
+Roteador "*" o--> "1" BandaFrequencia
+Roteador "*" o--> "1" ProtocoloSeguranca
+Roteador "*" o--> "1" QuantidadeAntena
+Roteador "*" o--> "1" SinalWireless
+Roteador "*" o--> "1" SistemaOperacional
+
+Fornecedor "1" *-up-> "*" Endereco
+Fornecedor "1" *-up-> "*" Telefone
+
+Lote "*" --> "1" Roteador
+
+Cliente "*" --> "*" Roteador: listaDesejos
+Cliente "1" --> "1" Usuario
+Cliente "1" --> "*" Cartao
+
+Funcionario "1" --> "1" Usuario
+
+Usuario "1" *-left-> "*" Endereco
+Usuario "1" *--> "*" Telefone
+Usuario "*" -right-> "1" Perfil
+
+Endereco "*" --> "1" Cidade
+EnderecoEntrega "*" --> "1" Cidade
+
+Cidade "*" o--> "1" Estado
+
+Pedido "*" --> "1" Cliente
+Pedido "1" *--> "*" ItemPedido
+Pedido "1" *--> "1" EnderecoEntrega
+Pedido "1" *--> "1" Pagamento
+Pedido "1" *--> "*" StatusPedido
+Pedido "*" o--> "1" CupomDesconto
+
+StatusPedido "*" --> "1" SituacaoPedido
+
+ItemPedido "*" --> "1" Lote
+
+Pix --|> Pagamento
+Boleto --|> Pagamento
+CartaoPagamento --|> Pagamento
+CartaoPagamento "*" --> "1" ModalidadeCartao
+
+Cartao "*" -down-|> "1" ModalidadeCartao
+
+@enduml
