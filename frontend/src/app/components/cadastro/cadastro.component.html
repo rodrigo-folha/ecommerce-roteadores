@@ -1,0 +1,172 @@
+<div class="container">
+  <div class="container-content">
+    <div class="container-content-login">
+      <div class="container-title">
+        <h3>Crie sua conta</h3>
+      </div>
+
+      <div class="container-form">
+        <form [formGroup]="loginClienteForm" (ngSubmit)="onSubmit()">
+          <label for="nome">Digite o seu nome:</label>
+          <mat-form-field class="login-input" appearance="outline">
+            <input
+              matInput
+              id="nome"
+              placeholder="Insira aqui o seu nome"
+              formControlName="nome"
+              required
+            />
+            <mat-error
+              *ngIf="loginClienteForm.get('email')?.hasError('required')"
+            >
+              O e-mail é obrigatório.
+            </mat-error>
+            <mat-error *ngIf="loginClienteForm.get('email')?.hasError('email')">
+              Insira um e-mail válido.
+            </mat-error>
+          </mat-form-field>
+
+          <label for="cpf">Digite o seu CPF:</label>
+          <mat-form-field class="login-input" appearance="outline">
+            <input
+              matInput
+              id="cpf"
+              placeholder="Insira o seu CPF"
+              formControlName="cpf"
+              required
+            />
+            <mat-error
+              *ngIf="loginClienteForm.get('email')?.hasError('required')"
+            >
+              O e-mail é obrigatório.
+            </mat-error>
+            <mat-error *ngIf="loginClienteForm.get('email')?.hasError('email')">
+              Insira um e-mail válido.
+            </mat-error>
+          </mat-form-field>
+
+          <label for="email">Digite o seu e-mail:</label>
+          <mat-form-field class="login-input" appearance="outline">
+            <input
+              matInput
+              id="email"
+              placeholder="Insira o seu e-mail"
+              formControlName="email"
+              required
+            />
+            <mat-error
+              *ngIf="loginClienteForm.get('email')?.hasError('required')"
+            >
+              O e-mail é obrigatório.
+            </mat-error>
+            <mat-error *ngIf="loginClienteForm.get('email')?.hasError('email')">
+              Insira um e-mail válido.
+            </mat-error>
+          </mat-form-field>
+
+          <div class="container-senha">
+            <div class="container-senha-content">
+              <label for="senha">Senha:</label>
+              <mat-form-field class="login-input" appearance="outline">
+                <input
+                  matInput
+                  id="senha"
+                  placeholder="Senha"
+                  type="password"
+                  autocomplete="current-password"
+                  formControlName="senha"
+                  [type]="hide() ? 'password' : 'text'"
+                />
+                <mat-error
+                  *ngIf="loginClienteForm.get('senha')?.hasError('required')"
+                >
+                  A senha é obrigatória
+                </mat-error>
+                <mat-error
+                  *ngIf="loginClienteForm.get('senha')?.hasError('minlength')"
+                >
+                  A senha deve ter pelo menos 6 digitos.
+                </mat-error>
+                <mat-error
+                  *ngIf="loginClienteForm.get('senha')?.hasError('maxlength')"
+                >
+                  A senha deve ter no máximo 20 digitos.
+                </mat-error>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="clickEvent($event)"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide()"
+                >
+                  <mat-icon>{{
+                    hide() ? "visibility_off" : "visibility"
+                  }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            <div class="container-senha-content">
+              <label for="confirmarSenha">Repita a senha:</label>
+              <mat-form-field class="login-input" appearance="outline">
+                <input
+                  matInput
+                  id="confirmarSenha"
+                  placeholder="Repita a senha"
+                  type="password"
+                  autocomplete="current-password"
+                  formControlName="confirmarSenha"
+                  [type]="hide() ? 'password' : 'text'"
+                />
+                <mat-error
+                  *ngIf="
+                    loginClienteForm.get('confirmarSenha')?.hasError('required')
+                  "
+                >
+                  A confirmação de senha é obrigatória.
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    loginClienteForm
+                      .get('confirmarSenha')
+                      ?.hasError('passwordMismatch')
+                  "
+                >
+                  As senhas não coincidem.
+                </mat-error>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="clickEvent($event)"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide()"
+                >
+                  <mat-icon>{{
+                    hide() ? "visibility_off" : "visibility"
+                  }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <button mat-raised-button class="login-button" type="submit">
+            Criar Conta
+          </button>
+          <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+        </form>
+        <span class="not-account">
+          Possui uma conta? <a href="/login">Faça login aqui</a>
+        </span>
+      </div>
+    </div>
+
+    <div class="container-content-img">
+      <img
+        src="../login/Img-Cadastro.png"
+        alt="Roteador"
+        class="img-container"
+      />
+    </div>
+  </div>
+</div>

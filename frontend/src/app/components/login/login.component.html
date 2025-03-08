@@ -1,0 +1,87 @@
+<div class="container">
+    <div class="container-content">
+        <div class="container-content-login">
+            <div class="container-title">
+                <h3>
+                    Bem-vindo(a) de volta
+                </h3>
+            </div>
+            <div class="container-title-description">
+                <p>
+                    Olá! Se você já comprou na loja da Connect Hub antes, por favor, informe seu e-mail e senha
+                </p>
+            </div>
+
+            <div class="container-form">
+                <form [formGroup]="loginClienteForm" (ngSubmit)="onSubmit()">
+                    <label for="email">Email:</label>
+                    <mat-form-field class="login-input" appearance="outline">
+                        <input
+                        matInput
+                        id="email"
+                        placeholder="Digite o seu e-mail"
+                        autocomplete="email"
+                        formControlName="email"
+                        required
+                        />
+                    <mat-error *ngIf="loginClienteForm.get('email')?.hasError('required')">
+                        O e-mail é obrigatório.
+                    </mat-error>
+                    <mat-error *ngIf="loginClienteForm.get('email')?.hasError('email')">
+                        Insira um e-mail válido.
+                    </mat-error>
+                    </mat-form-field>
+                    <label for="senha">Senha:</label>
+                    <mat-form-field class="login-input" appearance="outline">
+                        <input 
+                            matInput
+                            id="senha"
+                            placeholder="Digite a sua senha"
+                            type="password"
+                            autocomplete="current-password"
+                            formControlName="senha"
+                            [type]="hide() ? 'password' : 'text'" 
+                        />
+                        <mat-error *ngIf="loginClienteForm.get('senha')?.hasError('required')">
+                            A senha é obrigatória
+                        </mat-error>
+                        <mat-error *ngIf="loginClienteForm.get('senha')?.hasError('minlength')">
+                            A senha deve ter pelo menos 6 digitos.
+                        </mat-error>
+                        <mat-error *ngIf="loginClienteForm.get('senha')?.hasError('maxlength')">
+                            A senha deve ter no máximo 20 digitos.
+                        </mat-error>
+                        <button
+                            mat-icon-button
+                            matSuffix
+                            type="button"
+                            (click)="clickEvent($event)"
+                            [attr.aria-label]="'Hide password'"
+                            [attr.aria-pressed]="hide()"
+                        >
+                            <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <div class="container-link">
+                        <!-- <mat-checkbox class="chkbx-login-credenciais">Lembrar minhas credenciais</mat-checkbox> -->
+                        <a href="">Esqueceu a senha?</a>
+                    </div>
+                    <button mat-raised-button class="login-button" type="submit">
+                        Login
+                    </button>
+                    <div *ngIf="errorMessage" class="error-message"> {{errorMessage}} </div>
+                </form>
+                <span class="not-account">
+                    Ainda não tem uma conta? <a href="/cadastrar">Registre-se aqui</a>
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="container-content-img">
+            <img src="../login/Img-Cadastro.png" alt="Roteador" class="img-container">
+        </div>
+
+    </div>
+</div>

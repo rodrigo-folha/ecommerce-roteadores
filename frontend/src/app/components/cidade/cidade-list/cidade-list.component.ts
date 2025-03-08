@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Estado } from '../../../models/estado.model';
-import { EstadoService } from '../../../services/estado.service';
+import { Cidade } from '../../../models/cidade.model';
+import { CidadeService } from '../../../services/cidade.service';
 
 @Component({
-  selector: 'app-estado-list',
+  selector: 'app-cidade-list',
   imports: [
     MatToolbarModule,
     MatButtonModule,
@@ -19,13 +18,13 @@ import { EstadoService } from '../../../services/estado.service';
     CommonModule,
     MatPaginatorModule,
   ],
-  templateUrl: './estado-list.component.html',
-  styleUrl: './estado-list.component.css',
+  templateUrl: './cidade-list.component.html',
+  styleUrl: './cidade-list.component.css',
 })
-export class EstadoListComponent {
-  estados: Estado[] = [];
+export class CidadeListComponent {
+  cidades: Cidade[] = [];
 
-  constructor(private estadoService: EstadoService) {}
+  constructor(private cidadeService: CidadeService) {}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -34,16 +33,16 @@ export class EstadoListComponent {
   }
 
   ngOnInit(): void {
-    this.carregarEstados();
+    this.carregarCidades();
   }
 
-  carregarEstados(): void {
-    this.estadoService.getEstados().subscribe((estados) => {
-      this.estados = estados;
-      this.dataSource.data = this.estados;
+  carregarCidades(): void {
+    this.cidadeService.getCidades().subscribe((cidades) => {
+      this.cidades = cidades;
+      this.dataSource.data = this.cidades;
     });
   }
 
-  displayedColumns: string[] = ['id', 'nome', 'sigla'];
+  displayedColumns: string[] = ['id', 'nome', 'estado'];
   dataSource = new MatTableDataSource<any>();
 }

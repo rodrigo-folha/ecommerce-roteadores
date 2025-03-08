@@ -1,0 +1,7 @@
+import { Usuario } from './usuario.model';
+
+export class Cliente {
+  id!: number;
+  dataCadastro!: Date;
+  usuario!: Usuario;
+}
