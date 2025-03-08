@@ -50,7 +50,7 @@ public class CidadeResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     public Response findAll() {
         LOG.info("Execucao do metodo findAll");
         return Response.ok(cidadeService

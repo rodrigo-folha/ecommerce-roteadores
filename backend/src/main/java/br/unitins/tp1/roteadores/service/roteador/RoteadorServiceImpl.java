@@ -5,6 +5,7 @@ import java.util.List;
 
 import br.unitins.tp1.roteadores.dto.roteador.RoteadorRequestDTO;
 import br.unitins.tp1.roteadores.model.roteador.Roteador;
+import br.unitins.tp1.roteadores.repository.LoteRepository;
 import br.unitins.tp1.roteadores.repository.RoteadorRepository;
 import br.unitins.tp1.roteadores.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -31,6 +32,9 @@ public class RoteadorServiceImpl implements RoteadorService {
 
     @Inject
     public QuantidadeAntenaService quantidadeAntenaService;
+
+    @Inject
+    public LoteRepository loteRepository;
 
     @Override
     public Roteador findById(Long id) {
@@ -125,6 +129,7 @@ public class RoteadorServiceImpl implements RoteadorService {
     @Override
     @Transactional
     public void delete(Long id) {
+        loteRepository.deleteByRoteador(id);
         roteadorRepository.deleteById(id);
     }
 

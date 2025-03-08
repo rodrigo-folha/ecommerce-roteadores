@@ -47,4 +47,8 @@ public class LoteRepository implements PanacheRepository<Lote> {
 
         return find(jpql.toString(), codigo).firstResult();
     }
+
+    public void deleteByRoteador(Long idRoteador) {
+        delete("roteador.id = ?1", idRoteador);
+    }
 }

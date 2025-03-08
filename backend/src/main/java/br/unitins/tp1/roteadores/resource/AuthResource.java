@@ -4,6 +4,7 @@ import org.jboss.logging.Logger;
 
 import br.unitins.tp1.roteadores.dto.usuario.AuthRequestDTO;
 import br.unitins.tp1.roteadores.dto.usuario.UsuarioResponseDTO;
+import br.unitins.tp1.roteadores.model.usuario.Perfil;
 import br.unitins.tp1.roteadores.model.usuario.Usuario;
 import br.unitins.tp1.roteadores.service.jwt.JwtService;
 import br.unitins.tp1.roteadores.service.usuario.HashService;
@@ -36,7 +37,7 @@ public class AuthResource {
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
-    public Response login(@Valid AuthRequestDTO authDTO) {
+    public Response loginUsuario(@Valid AuthRequestDTO authDTO) {
         LOG.info("Logando no sistema");
         String hash = hashService.getHashSenha(authDTO.senha());
         
@@ -46,6 +47,46 @@ public class AuthResource {
             LOG.warn("Tentativa de login falhou - Usuario ou senha invalido(s)");
             return Response.status(Status.UNAUTHORIZED).entity("Usuario ou senha invalido(s)").build();
         } 
+
+        if (!usuario.getPerfis().contains(Perfil.USER)) {
+            LOG.warn("Cliente nao cadastrado!");
+            return Response.status(Status.UNAUTHORIZED).entity("Cliente nao cadastrado!").build();
+        }
+
+        if (usuario.getPerfis().contains(Perfil.USER)) {
+            usuario.getPerfis().clear();
+            usuario.getPerfis().add(Perfil.USER);
+        }
+
+        return Response.ok()
+            .header("Authorization", jwtService.generateJwt(UsuarioResponseDTO.valueOf(usuario)))
+            .build();
+        
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/funcionario")
+    public Response loginAdm(@Valid AuthRequestDTO authDTO) {
+        LOG.info("Logando no sistema");
+        String hash = hashService.getHashSenha(authDTO.senha());
+        
+        Usuario usuario = usuarioService.findByEmailAndSenha(authDTO.email(), hash);
+        
+        if (usuario == null) {
+            LOG.warn("Tentativa de login falhou - Usuario ou senha invalido(s)");
+            return Response.status(Status.UNAUTHORIZED).entity("Usuario ou senha invalido(s)").build();
+        } 
+
+        if (!usuario.getPerfis().contains(Perfil.ADM)) {
+            LOG.warn("Funcionario nao cadastrado!");
+            return Response.status(Status.UNAUTHORIZED).entity("Funcionario nao cadastrado!").build();
+        }
+
+        if (usuario.getPerfis().contains(Perfil.ADM)) {
+            usuario.getPerfis().clear();
+            usuario.getPerfis().add(Perfil.ADM);
+        }
 
         return Response.ok()
             .header("Authorization", jwtService.generateJwt(UsuarioResponseDTO.valueOf(usuario)))
