@@ -24,7 +24,6 @@ export class CidadeService {
   }
 
   insert(cidade: Cidade): Observable<Cidade> {
-    console.log('estado id = ', cidade.estado.id);
     const data = {
       nome: cidade.nome,
       idEstado: cidade.estado.id

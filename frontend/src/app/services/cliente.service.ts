@@ -35,7 +35,7 @@ export class ClienteService {
   }
 
   create(usuario: Usuario): Observable<Cliente> {
-    const params = {
+    const data = {
       usuario: {
         nome: usuario.nome,
         cpf: usuario.cpf,
@@ -43,7 +43,7 @@ export class ClienteService {
         senha: usuario.senha
       }
     }
-    return this.httpClient.post<Cliente>(`${this.baseUrlClientesBasicos}/cadastrar-cliente/`, params);
+    return this.httpClient.post<Cliente>(`${this.baseUrlClientesBasicos}/cadastrar-cliente/`, data);
   }
 
 }

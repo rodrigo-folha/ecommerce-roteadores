@@ -1,11 +1,116 @@
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { BandaFrequencia } from '../../../models/banda-frequencia.model';
+import { BandaFrequenciaService } from '../../../services/banda-frequencia.service';
 
 @Component({
   selector: 'app-bandafrequencia-form',
-  imports: [],
+  imports: [
+    NgIf,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatCardModule,
+    RouterLink,
+  ],
   templateUrl: './bandafrequencia-form.component.html',
   styleUrl: './bandafrequencia-form.component.css'
 })
 export class BandafrequenciaFormComponent {
+  formGroup: FormGroup;
+
+  bandaFrequencias: BandaFrequencia[] = [];
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private bandaFrequenciaService: BandaFrequenciaService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.formGroup = this.formBuilder.group({
+      nome: ['', Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    this.initializeForm();
+  }
+
+  initializeForm(): void {
+    const bandaFrequencia: BandaFrequencia = this.activatedRoute.snapshot.data['bandafrequencia'];
+
+    this.formGroup = this.formBuilder.group({
+      id: [ 
+        (bandaFrequencia && bandaFrequencia.id) ? bandaFrequencia.id : null],
+      nome: [
+        (bandaFrequencia && bandaFrequencia.nome) ? bandaFrequencia.nome : null, 
+        Validators.required],
+    })
+  }
+
+  salvar() {
+    if (this.formGroup.valid) {
+      const bandaFrequencia = this.formGroup.value;
+      if(bandaFrequencia.id == null) {
+        this.cadastrar(bandaFrequencia);
+      } else {
+        this.atualizar(bandaFrequencia);
+      }
+    }
+  }
+
+  cadastrar(bandaFrequencia: any) {
+    this.bandaFrequenciaService.insert(bandaFrequencia).subscribe({
+      next: (bandaFrequenciaCadastrado) => {
+        console.log(
+          'Bandafrequencia cadastrado com sucesso',
+          JSON.stringify(bandaFrequenciaCadastrado)
+        );
+        this.router.navigateByUrl('/bandafrequencias');
+      },
+      error: (e) => {
+        console.log('Erro ao salvar', JSON.stringify(e));
+      },
+    });
+  }
+
+  atualizar(bandaFrequencia: any) {
+    this.bandaFrequenciaService.update(bandaFrequencia).subscribe({
+      next: (bandaFrequenciaAtualizado) => {
+        console.log(
+          'Bandafrequencia atualizado com sucesso',
+          JSON.stringify(bandaFrequenciaAtualizado)
+        );
+        this.router.navigateByUrl('/bandafrequencias');
+      }
+    });
+  }
+
+  excluir() {
+    const bandaFrequencia = this.formGroup.value;
+    this.bandaFrequenciaService.delete(bandaFrequencia).subscribe({
+      next: (bandaFrequenciaExcluido) => {
+        console.log(
+          'Bandafrequencia excluído com sucesso',
+          JSON.stringify(bandaFrequenciaExcluido)
+        );
+        this.router.navigateByUrl('/bandafrequencias');
+      },
+      error: (e) => {
+        console.log('Erro ao excluir', JSON.stringify(e));
+      },
+    });
+  }
 
 }

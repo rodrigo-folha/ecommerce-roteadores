@@ -1,1 +1,53 @@
-<p>sistemaoperacional-list works!</p>
+<mat-toolbar color="primary">
+    <div class="flex-container">
+      <button mat-icon-button color="accent" routerLink="/sistemasoperacionais">
+        <mat-icon>home</mat-icon>
+      </button>
+      <span class="toolbar-title">Controle de Sistemas Operacionais</span>
+      <button mat-fab color="accent" routerLink="/sistemasoperacionais/new">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+  
+  <table mat-table [dataSource]="sistemasOperacionais" class="mat-elevation-z8">
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Id.</th>
+      <td mat-cell *matCellDef="let sistemaoperacional">{{ sistemaoperacional.id }}</td>
+    </ng-container>
+  
+    <!-- Nome Column -->
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef>Nome</th>
+      <td mat-cell *matCellDef="let sistemaoperacional">{{ sistemaoperacional.nome }}</td>
+    </ng-container>
+  
+    <!-- Acao Column -->
+    <ng-container matColumnDef="acao">
+      <th mat-header-cell *matHeaderCellDef>Ação</th>
+      <td mat-cell *matCellDef="let sistemaoperacional">
+        <button mat-icon-button 
+                color="primary"
+                routerLink="/sistemasoperacionais/edit/{{ sistemaoperacional.id }}">
+                <mat-icon>edit</mat-icon>
+        </button>
+        <button 
+          mat-icon-button 
+          color="warn" 
+          (click)="excluir(sistemaoperacional)"
+          routerLink="/sistemasoperacionais">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    aria-label="Select page of sistemasoperacionais"
+  >
+  </mat-paginator>
+  
