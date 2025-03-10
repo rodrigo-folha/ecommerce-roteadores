@@ -31,7 +31,7 @@ public class CidadeResource {
     public CidadeService cidadeService;
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -39,7 +39,7 @@ public class CidadeResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
@@ -61,7 +61,7 @@ public class CidadeResource {
     }
 
     @POST
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response create(@Valid CidadeRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         return Response.status(Status.CREATED)
@@ -70,7 +70,7 @@ public class CidadeResource {
     }
 
     @PUT
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid CidadeRequestDTO dto) {
         LOG.info("Execucao do metodo update. Id da cidade: " + id);
@@ -79,7 +79,7 @@ public class CidadeResource {
     }
 
     @DELETE
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id da cidade: " + id);

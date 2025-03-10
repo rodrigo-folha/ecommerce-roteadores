@@ -31,7 +31,7 @@ public class EstadoResource {
     private static final Logger LOG = Logger.getLogger(EstadoResource.class);
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -39,7 +39,7 @@ public class EstadoResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
@@ -60,7 +60,7 @@ public class EstadoResource {
     }
 
     @POST
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response create(@Valid EstadoRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         return Response.status(Status.CREATED)
@@ -69,7 +69,7 @@ public class EstadoResource {
     }
 
     @PUT
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid EstadoRequestDTO estado) {
         LOG.info("Execucao do metodo update. Id do estado: " + id);
@@ -78,7 +78,7 @@ public class EstadoResource {
     }
 
     @DELETE
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id do estado: " + id);

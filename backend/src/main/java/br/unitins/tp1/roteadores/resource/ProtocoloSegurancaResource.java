@@ -31,7 +31,7 @@ public class ProtocoloSegurancaResource {
     public ProtocoloSegurancaService protocoloSegurancaService;
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -39,7 +39,7 @@ public class ProtocoloSegurancaResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
@@ -50,7 +50,7 @@ public class ProtocoloSegurancaResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     public Response findAll() {
         LOG.info("Execucao do metodo findAll");
         return Response.ok(protocoloSegurancaService.findAll()
@@ -60,7 +60,7 @@ public class ProtocoloSegurancaResource {
     }
 
     @POST
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response create(@Valid ProtocoloSegurancaRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         return Response.status(Status.CREATED)
@@ -69,7 +69,7 @@ public class ProtocoloSegurancaResource {
     }
 
     @PUT
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid ProtocoloSegurancaRequestDTO dto) {
         LOG.info("Execucao do metodo update. Id do Protocolo de Seguranca: " + id);
@@ -78,7 +78,7 @@ public class ProtocoloSegurancaResource {
     }
 
     @DELETE
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id do Protocolo de Seguranca: " + id);

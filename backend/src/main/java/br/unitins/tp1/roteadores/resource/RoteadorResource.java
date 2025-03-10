@@ -41,7 +41,7 @@ public class RoteadorResource {
     public RoteadorFileServiceImpl roteadorFileService;
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -49,7 +49,7 @@ public class RoteadorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
@@ -60,7 +60,7 @@ public class RoteadorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/sinalwireless/{idSinalWireless}")
     public Response findBySinalWireless(@PathParam("idSinalWireless") Long idSinalWireless) {
         LOG.info("Execucao do metodo findBysinalWireless. idSinalWireless: " + idSinalWireless);
@@ -71,7 +71,7 @@ public class RoteadorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/sistemasoperacionais/{idSistemaOperacional}")
     public Response findBySistemaOperacional(@PathParam("idSistemaOperacional") Long idSistemaOperacional) {
         LOG.info("Execucao do metodo findBySistemaOperacional. idSinalWireless: " + idSistemaOperacional);
@@ -82,7 +82,7 @@ public class RoteadorResource {
     }
     
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/quantidadeantenas/{idQuantidadeAntena}")
     public Response findByQuantidadeAntena(@PathParam("idQuantidadeAntena") Long idQuantidadeAntena) {
         LOG.info("Execucao do metodo findByQuantidadeAntena. idQuantidadeAntena: " + idQuantidadeAntena);
@@ -93,7 +93,7 @@ public class RoteadorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/bandafrequencias/{idBandaFrequencia}")
     public Response findByBandaFrequencia(@PathParam("idBandaFrequencia") Long idBandaFrequencia) {
         LOG.info("Execucao do metodo findByBandaFrequencia. idBandaFrequencia: " + idBandaFrequencia);
@@ -104,7 +104,7 @@ public class RoteadorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/protocolosseguranca/{idProtocoloSeguranca}")
     public Response findByProtocoloSeguranca(@PathParam("idProtocoloSeguranca") Long idProtocoloSeguranca) {
         LOG.info("Execucao do metodo findByProtocoloSeguranca. idProtocoloSeguranca: " + idProtocoloSeguranca);
@@ -115,7 +115,7 @@ public class RoteadorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/preco/{min}/{max}")
     public Response findByPreco(@PathParam("min") Double min, @PathParam("max") Double max) {
         LOG.info("Execucao do metodo findByPreco. Preco min: " + min + ", preco max: " + max);
@@ -136,7 +136,7 @@ public class RoteadorResource {
     }
 
     @POST
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response create(@Valid RoteadorRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         return Response.status(Status.CREATED)
@@ -145,7 +145,7 @@ public class RoteadorResource {
     }
 
     @PUT
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid RoteadorRequestDTO roteador) {
         LOG.info("Execucao do metodo update. Id do roteador: " + id);
@@ -154,7 +154,7 @@ public class RoteadorResource {
     }
 
     @DELETE
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id do roteador: " + id);
@@ -163,7 +163,7 @@ public class RoteadorResource {
     }
     
     @PATCH
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{idRoteador}/upload/imagem")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadImage(@PathParam("idRoteador") Long id, @MultipartForm ImageForm form) {
@@ -180,7 +180,7 @@ public class RoteadorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/download/imagem/{nomeImagem}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadImage(@PathParam("nomeImagem") String nomeImagem) {

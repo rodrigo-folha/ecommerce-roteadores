@@ -31,7 +31,7 @@ public class QuantidadeAntenaResource {
     public QuantidadeAntenaService quantidadeAntenaService;
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -39,7 +39,7 @@ public class QuantidadeAntenaResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     @Path("/search/{quantidade}")
     public Response findByQuantidade(@PathParam("quantidade") Integer quantidade) {
         LOG.info("Execucao do metodo findByQuantidade. Quantidade de antenas: " + quantidade);
@@ -50,7 +50,7 @@ public class QuantidadeAntenaResource {
     }
 
     @GET
-    @RolesAllowed({"Adm", "User"})
+    // @RolesAllowed({"Adm", "User"})
     public Response findAll() {
         LOG.info("Execucao do metodo findAll");
         return Response.ok(quantidadeAntenaService.findAll()
@@ -60,7 +60,7 @@ public class QuantidadeAntenaResource {
     }
 
     @POST
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response create(@Valid QuantidadeAntenaRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         return Response.status(Status.CREATED)
@@ -69,7 +69,7 @@ public class QuantidadeAntenaResource {
     }
 
     @PUT
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid QuantidadeAntenaRequestDTO dto) {
         LOG.info("Execucao do metodo update. Id da quantidade de antenas: " + id);
@@ -78,7 +78,7 @@ public class QuantidadeAntenaResource {
     }
 
     @DELETE
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id da quantidade de antenas: " + id);
