@@ -11,7 +11,23 @@ export class EstadoService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getEstados(): Observable<Estado[]> {
+  findAll(): Observable<Estado[]> {
     return this.httpClient.get<Estado[]>(this.baseUrl);
+  }
+
+  findById(id: String): Observable<Estado> {
+    return this.httpClient.get<Estado>(`${this.baseUrl}/${id}`);
+  }
+
+  insert(estado: Estado): Observable<Estado> {
+    return this.httpClient.post<Estado>(this.baseUrl, estado);
+  }
+
+  update(estado: Estado): Observable<any> {
+    return this.httpClient.put<Estado>(`${this.baseUrl}/${estado.id}`, estado);
+  }
+
+  delete(estado: Estado): Observable<any> {
+    return this.httpClient.delete<Estado>(`${this.baseUrl}/${estado.id}`);
   }
 }
