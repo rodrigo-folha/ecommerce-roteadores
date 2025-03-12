@@ -12,6 +12,6 @@ export class Roteador {
     sistemaOperacional!: SistemaOperacional;
     bandaFrequencia!: BandaFrequencia;
     protocoloSeguranca!: ProtocoloSeguranca;
-    quantidadeAntenas!: QuantidadeAntena;
+    quantidadeAntena!: QuantidadeAntena;
     sinalWireless!: SinalWireless;
 }

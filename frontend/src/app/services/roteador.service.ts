@@ -12,7 +12,7 @@ export class RoteadorService {
 
   constructor(private httpClient: HttpClient) { }
 
-  findById(id: number): Observable<Roteador> {
+  findById(id: string): Observable<Roteador> {
     return this.httpClient.get<Roteador>(`${this.baseUrl}/${id}`);
   }
 
@@ -48,16 +48,16 @@ export class RoteadorService {
     return this.httpClient.get<Roteador[]>(`${this.baseUrl}`);
   }
 
-  create(roteador: Roteador): Observable<Roteador> {
+  insert(roteador: Roteador): Observable<Roteador> {
     const data = {
       nome: roteador.nome,
       descricao: roteador.descricao,
       preco: roteador.preco,
-      sistemaOperacional: roteador.sistemaOperacional.id,
-      bandaFrequencia: roteador.bandaFrequencia.id,
-      protocoloSeguranca: roteador.protocoloSeguranca.id,
-      quantidadeAntenas: roteador.quantidadeAntenas.id,
-      sinalWireless: roteador.sinalWireless.id
+      idSinalWireless: roteador.sinalWireless.id,
+      idSistemaOperacional: roteador.sistemaOperacional.id,
+      idBandaFrequencia: roteador.bandaFrequencia.id,
+      idProtocoloSeguranca: roteador.protocoloSeguranca.id,
+      idQuantidadeAntena: roteador.quantidadeAntena.id
     }
 
     return this.httpClient.post<Roteador>(`${this.baseUrl}`, data);
@@ -71,7 +71,7 @@ export class RoteadorService {
       sistemaOperacional: roteador.sistemaOperacional.id,
       bandaFrequencia: roteador.bandaFrequencia.id,
       protocoloSeguranca: roteador.protocoloSeguranca.id,
-      quantidadeAntenas: roteador.quantidadeAntenas.id,
+      quantidadeAntena: roteador.quantidadeAntena.id,
       sinalWireless: roteador.sinalWireless.id
     }
 

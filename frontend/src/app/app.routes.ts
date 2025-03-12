@@ -24,6 +24,8 @@ import { HomeComponent } from './components/template/home/home.component';
 import { QuantidadeantenaListComponent } from './components/quantidadeantena/quantidadeantena-list/quantidadeantena-list.component';
 import { QuantidadeantenaFormComponent } from './components/quantidadeantena/quantidadeantena-form/quantidadeantena-form.component';
 import { quantidadeantenaResolver } from './components/quantidadeantena/resolver';
+import { RoteadorFormComponent } from './components/roteador/roteador-form/roteador-form.component';
+import { roteadorResolver } from './components/roteador/resolver';
 
 export const routes: Routes = [
 //   {path: 'estados', component: EstadoListComponent, title: 'Lista de Estados',},
@@ -45,6 +47,8 @@ export const routes: Routes = [
         {path: 'cidades/edit/:id', component: CidadeFormComponent, resolve: {cidade: cidadeResolver}},
 
         {path: 'roteadores', component: RoteadorListComponent},
+        {path: 'roteadores/new', component: RoteadorFormComponent},
+        {path: 'roteadores/edit/:id', component: RoteadorFormComponent, resolve: {roteador: roteadorResolver}},
 
         {path: 'sistemasoperacionais', component: SistemaoperacionalListComponent},
         {path: 'sistemasoperacionais/new', component: SistemaoperacionalFormComponent},
