@@ -26,6 +26,9 @@ import { QuantidadeantenaFormComponent } from './components/quantidadeantena/qua
 import { quantidadeantenaResolver } from './components/quantidadeantena/resolver';
 import { RoteadorFormComponent } from './components/roteador/roteador-form/roteador-form.component';
 import { roteadorResolver } from './components/roteador/resolver';
+import { LoteListComponent } from './components/lote/lote-list/lote-list.component';
+import { LoteFormComponent } from './components/lote/lote-form/lote-form.component';
+import { loteResolver } from './components/lote/resolver';
 
 export const routes: Routes = [
 //   {path: 'estados', component: EstadoListComponent, title: 'Lista de Estados',},
@@ -45,6 +48,10 @@ export const routes: Routes = [
         {path: 'cidades', component: CidadeListComponent},
         {path: 'cidades/new', component: CidadeFormComponent},
         {path: 'cidades/edit/:id', component: CidadeFormComponent, resolve: {cidade: cidadeResolver}},
+
+        {path: 'lotes', component: LoteListComponent},
+        {path: 'lotes/new', component: LoteFormComponent},
+        {path: 'lotes/edit/:id', component: LoteFormComponent, resolve: {lote: loteResolver}},
 
         {path: 'roteadores', component: RoteadorListComponent},
         {path: 'roteadores/new', component: RoteadorFormComponent},

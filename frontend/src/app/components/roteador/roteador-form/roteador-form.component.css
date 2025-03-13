@@ -1,37 +1,69 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 800px;
+  margin: auto;
+}
+
+.container-content {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.container-content-column {
+  padding-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
 mat-toolbar {
-    background: #fff;
+  background: none;
 }
 
 .toolbar-title {
-    flex: 1;
-    text-align: center;
+  flex: 1;
+  text-align: center;
 }
 
 .full-width {
-    display: flex;
-    margin-bottom: 20px;
+  width: 100%;
 }
 
 mat-card {
-    max-width: 800px;
-    margin: 2rem auto;
-    background: #fff;
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+  background: #fff;
+  width: 100%;
 }
 
 mat-card-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.form-container {
-    padding: 2rem;
+  display: flex;
+  justify-content: flex-end;
 }
 
 button[mat-raised-button] {
-    width: 120px;
+  width: 120px;
 }
 
 button[mat-raised-button]:not(:last-child) {
-    margin-right: 1rem;
+  margin-right: 1rem;
 }
 
+.form-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  width: 100%;
+}
+
+button {
+  background: white;
+  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
+}

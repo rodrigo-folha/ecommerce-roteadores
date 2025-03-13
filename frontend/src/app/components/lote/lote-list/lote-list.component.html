@@ -1,0 +1,71 @@
+<mat-toolbar color="primary">
+    <div class="flex-container">
+      <button mat-icon-button color="accent" routerLink="/lotes">
+        <mat-icon>home</mat-icon>
+      </button>
+      <span class="toolbar-title">Controle de Lotes</span>
+      <button mat-fab color="accent" routerLink="/lotes/new">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+  
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Id.</th>
+      <td mat-cell *matCellDef="let lote">{{ lote.id }}</td>
+    </ng-container>
+  
+    <!-- Codigo Column -->
+    <ng-container matColumnDef="codigo">
+      <th mat-header-cell *matHeaderCellDef>Codigo</th>
+      <td mat-cell *matCellDef="let lote">{{ lote.codigo }}</td>
+    </ng-container>
+
+    <!-- Quantidade Column -->
+    <ng-container matColumnDef="estoque">
+        <th mat-header-cell *matHeaderCellDef>Quantidade</th>
+        <td mat-cell *matCellDef="let lote">{{ lote.estoque }}</td>
+    </ng-container>
+
+    <!-- Data Column -->
+    <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let lote">{{ lote.data }}</td>
+    </ng-container>
+  
+    <!-- Roteador Column -->
+    <ng-container matColumnDef="roteador">
+      <th mat-header-cell *matHeaderCellDef>Roteador</th>
+      <td mat-cell *matCellDef="let lote">{{ lote.roteador?.nome }}</td>
+    </ng-container>
+  
+    <!-- Acao Column -->
+    <ng-container matColumnDef="acao">
+      <th mat-header-cell *matHeaderCellDef>Ação</th>
+      <td mat-cell *matCellDef="let lote">
+        <button mat-icon-button 
+                color="primary"
+                routerLink="/lotes/edit/{{ lote.id }}">
+                <mat-icon>edit</mat-icon>
+        </button>
+        <button 
+          mat-icon-button 
+          color="warn" 
+          (click)="excluir(lote)"
+          routerLink="/lotes">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    aria-label="Select page of lotes"
+  >
+  </mat-paginator>
+  

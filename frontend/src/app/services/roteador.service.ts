@@ -68,11 +68,11 @@ export class RoteadorService {
       nome: roteador.nome,
       descricao: roteador.descricao,
       preco: roteador.preco,
-      sistemaOperacional: roteador.sistemaOperacional.id,
-      bandaFrequencia: roteador.bandaFrequencia.id,
-      protocoloSeguranca: roteador.protocoloSeguranca.id,
-      quantidadeAntena: roteador.quantidadeAntena.id,
-      sinalWireless: roteador.sinalWireless.id
+      idSinalWireless: roteador.sinalWireless.id,
+      idSistemaOperacional: roteador.sistemaOperacional.id,
+      idBandaFrequencia: roteador.bandaFrequencia.id,
+      idProtocoloSeguranca: roteador.protocoloSeguranca.id,
+      idQuantidadeAntena: roteador.quantidadeAntena.id
     }
 
     return this.httpClient.put<Roteador>(`${this.baseUrl}/${roteador.id}`, data);

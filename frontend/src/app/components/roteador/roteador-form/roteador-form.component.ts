@@ -113,11 +113,11 @@ export class RoteadorFormComponent {
       preco: [
         (roteador && roteador.preco) ? roteador.preco : null,
         Validators.required],
-      sistemaOperacional: [sistemaOperacional],
-      bandaFrequencia: [bandaFrequencia],
-      protocoloSeguranca: [protocoloSeguranca],
-      quantidadeAntena: [quantidadeAntena],
-      sinalWireless: [sinalWireless],
+      sistemaOperacional: [sistemaOperacional, Validators.required],
+      bandaFrequencia: [bandaFrequencia, Validators.required],
+      protocoloSeguranca: [protocoloSeguranca, Validators.required],
+      quantidadeAntena: [quantidadeAntena, Validators.required],
+      sinalWireless: [sinalWireless, Validators.required],
     })
   }
 

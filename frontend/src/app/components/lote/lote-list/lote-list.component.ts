@@ -8,11 +8,11 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
-import { Cidade } from '../../../models/cidade.model';
-import { CidadeService } from '../../../services/cidade.service';
+import { Lote } from '../../../models/lote.model';
+import { LoteService } from '../../../services/lote.service';
 
 @Component({
-  selector: 'app-cidade-list',
+  selector: 'app-lote-list',
   imports: [
     MatToolbarModule,
     MatButtonModule,
@@ -22,13 +22,13 @@ import { CidadeService } from '../../../services/cidade.service';
     MatPaginatorModule,
     RouterLink,
   ],
-  templateUrl: './cidade-list.component.html',
-  styleUrl: './cidade-list.component.css',
+  templateUrl: './lote-list.component.html',
+  styleUrl: './lote-list.component.css',
 })
-export class CidadeListComponent {
-  cidades: Cidade[] = [];
+export class LoteListComponent {
+  lotes: Lote[] = [];
 
-  constructor(private cidadeService: CidadeService, private router: Router) {}
+  constructor(private loteService: LoteService, private router: Router) {}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -37,20 +37,20 @@ export class CidadeListComponent {
   }
 
   ngOnInit(): void {
-    this.carregarcidades();
+    this.carregarlotes();
   }
 
-  carregarcidades(): void {
-    this.cidadeService.findAll().subscribe((cidades) => {
-      this.cidades = cidades;
-      this.dataSource.data = this.cidades;
+  carregarlotes(): void {
+    this.loteService.findAll().subscribe((lotes) => {
+      this.lotes = lotes;
+      this.dataSource.data = this.lotes;
     });
   }
 
-  displayedColumns: string[] = ['id', 'nome', 'sigla', 'acao'];
+  displayedColumns: string[] = ['id', 'codigo', 'estoque', 'data', 'roteador', 'acao'];
   dataSource = new MatTableDataSource<any>();
 
-  excluir(cidade: Cidade): void {
+  excluir(lote: Lote): void {
     Swal.fire({
       title: "Você tem certeza?",
       text: "Vou não vai poder reverter isso!",
@@ -63,14 +63,14 @@ export class CidadeListComponent {
       if (result.isConfirmed) {
         Swal.fire({
           title: "Deletado!",
-          text: "Cidade deletado com sucesso!",
+          text: "Lote deletado com sucesso!",
           icon: "success"
         });
 
-        this.cidadeService.delete(cidade).subscribe({
+        this.loteService.delete(lote).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/cidades']);
+              this.router.navigate(['/lotes']);
             });
           },
           error: (e) => {
