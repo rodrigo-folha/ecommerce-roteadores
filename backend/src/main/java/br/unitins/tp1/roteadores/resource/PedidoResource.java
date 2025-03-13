@@ -36,7 +36,7 @@ public class PedidoResource {
     public JsonWebToken jwt;
 
     @GET
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     public Response findByEmail() {
         LOG.info("Execucao do metodo findByEmail");
 
@@ -50,7 +50,7 @@ public class PedidoResource {
     }
 
     @GET
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     @Path("/resumo")
     public Response findByEmailResumido() {
         LOG.info("Execucao do metodo findByEmailResumido");
@@ -65,7 +65,7 @@ public class PedidoResource {
     }
 
     @GET
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -74,7 +74,7 @@ public class PedidoResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/{id}")
     public Response findByIdAdm(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findByIdAdm. Id: " + id);
@@ -82,7 +82,7 @@ public class PedidoResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/all")
     public Response findAll() {
         LOG.info("Execucao do metodo findAll");
@@ -93,7 +93,7 @@ public class PedidoResource {
     }
 
     @POST
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     public Response create(@Valid PedidoRequestDTO dto) {
         LOG.info("Execucao do metodo create");
 
@@ -106,7 +106,7 @@ public class PedidoResource {
     }
 
     @PATCH
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     @Path("/{idPedido}/pagamento/pagar/pix/{idpix}")
     public Response registrarPagamentoPix(@PathParam("idPedido") Long idPedido, @PathParam("idpix") Long idPix) {
         LOG.info("Execucao do metodo registrarPagamentoPix. Id do pedido: " + idPedido + ", id do pix: " + idPix);
@@ -115,7 +115,7 @@ public class PedidoResource {
     }
 
     @PATCH
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     @Path("/{idPedido}/pagamento/pagar/boleto/{idboleto}")
     public Response registrarPagamentoBoleto(@PathParam("idPedido") Long idPedido, @PathParam("idboleto") Long idBoleto) {     
         LOG.info("Execucao do metodo registrarPagamentoBoleto. Id do pedido: " + idPedido + ", id do boleto: " + idBoleto);
@@ -124,7 +124,7 @@ public class PedidoResource {
     }
 
     @PATCH
-    @RolesAllowed("Adm")
+    // @RolesAllowed("Adm")
     @Path("/statuspedido/{idPedido}")
     public Response updateStatusPedido(@PathParam("idPedido")Long idPedido, @Valid StatusPedidoRequestDTO statusPedido) {
         LOG.info("Execucao do metodo updateStatusPedido. Id do pedido: " + idPedido);  
@@ -133,7 +133,7 @@ public class PedidoResource {
     }
 
     @PATCH
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     @Path("/cancelar/{idPedido}")
     public Response cancelarPedido(@PathParam("idPedido") Long idPedido) {
         LOG.info("Execucao do metodo cancelarPedido. IdPedido: " + idPedido); 
@@ -142,7 +142,7 @@ public class PedidoResource {
     }
 
     @PATCH
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     @Path("/devolver/{idPedido}")
     public Response devolverPedido(@PathParam("idPedido") Long idPedido) {
         LOG.info("Execucao do metodo devolverPedido. IdPedido: " + idPedido); 

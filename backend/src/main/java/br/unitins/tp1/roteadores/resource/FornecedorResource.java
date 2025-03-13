@@ -36,7 +36,7 @@ public class FornecedorResource {
     public FornecedorService fornecedorService;
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -44,7 +44,7 @@ public class FornecedorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
@@ -55,7 +55,7 @@ public class FornecedorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/cnpj/{cnpj}")
     public Response findByCnpj(@PathParam("cnpj") String cnpj) {
         LOG.info("Execucao do metodo findByCNPJ. CNPJ: " + cnpj);
@@ -66,7 +66,7 @@ public class FornecedorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/email/{email}")
     public Response findByEmail(@PathParam("email") String email) {
         LOG.info("Execucao do metodo findByEmail. Email: " + email);
@@ -77,7 +77,7 @@ public class FornecedorResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response findAll() {
         LOG.info("Execucao do metodo findAll");
         return Response.ok(fornecedorService.findAll()
@@ -87,7 +87,7 @@ public class FornecedorResource {
     }
 
     @POST
-    @RolesAllowed({"Adm"}) 
+    // @RolesAllowed({"Adm"})
     public Response create(@Valid FornecedorRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         return Response.status(Status.CREATED)
@@ -96,7 +96,7 @@ public class FornecedorResource {
     }
 
     @PUT
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid FornecedorRequestDTO dto) {
         LOG.info("Execucao do metodo update. Id do Fornecedor: " + id);
@@ -105,7 +105,7 @@ public class FornecedorResource {
     }
 
     @DELETE
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id do Fornecedor: " + id);
@@ -114,7 +114,7 @@ public class FornecedorResource {
     }
 
     @PATCH
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}/enderecos/{idEndereco}")
     public Response updateEnderecoEspecifico(@PathParam("id") Long id, @PathParam("idEndereco") Long idEndereco, @Valid EnderecoRequestDTO endereco) {
         LOG.info("Execucao do metodo updateEnderecoEspecifico. Id do fornecedor: " + id + ", id do endereco: " + idEndereco);
@@ -123,7 +123,7 @@ public class FornecedorResource {
     }
 
     @PATCH
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}/enderecos")
     public Response updateEndereco(@PathParam("id") Long id, @Valid List<EnderecoRequestDTO> endereco) {
         LOG.info("Execucao do metodo updateEndereco. Id do fornecedor: " + id);
@@ -132,7 +132,7 @@ public class FornecedorResource {
     }
 
     @PATCH
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}/telefones/{idTelefone}")
     public Response updateTelefoneEspecifico(@PathParam("id") Long id, @PathParam("idTelefone") Long idTelefone, @Valid TelefoneRequestDTO telefone) {
         LOG.info("Execucao do metodo updateTelefoneEspecifico. Id do fornecedor: " + id + ", id do telefone: " + idTelefone);
@@ -141,7 +141,7 @@ public class FornecedorResource {
     }
     
     @PATCH
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}/telefones")
     public Response updateTelefone(@PathParam("id") Long id, @Valid List<TelefoneRequestDTO> telefone) {
         LOG.info("Execucao do metodo updateTelefone. Id do fornecedor: " + id);

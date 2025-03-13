@@ -31,7 +31,7 @@ public class LoteResource {
     public LoteService loteService;
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -39,7 +39,7 @@ public class LoteResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/codigo/{codigo}")
     public Response findByCodigo(@PathParam("codigo") String codigo) {
         LOG.info("Execucao do metodo findByCodigo. Codigo: " + codigo);
@@ -47,7 +47,7 @@ public class LoteResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/roteador/qtdetotal/{idRoteador}")
     public Response findByIdRoteadorQtdeTotal(@PathParam("idRoteador") Long idRoteador) {
         LOG.info("Execucao do metodo findByRoteadorQtdeTotal. Id do Roteador: " + idRoteador);
@@ -58,7 +58,7 @@ public class LoteResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response findAll() {
         LOG.info("Execucao do metodo findAll");
         return Response.ok(loteService.findAll()
@@ -68,7 +68,7 @@ public class LoteResource {
     }
 
     @POST
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response create(@Valid LoteRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         return Response.status(Status.CREATED)
@@ -77,7 +77,7 @@ public class LoteResource {
     }
 
     @PUT
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid LoteRequestDTO dto) {
         LOG.info("Execucao do metodo update. Id do lote: " + id);
@@ -86,7 +86,7 @@ public class LoteResource {
     }
 
     @DELETE
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id do lote: " + id);

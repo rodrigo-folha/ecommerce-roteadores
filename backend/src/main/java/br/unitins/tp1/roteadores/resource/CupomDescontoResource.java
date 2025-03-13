@@ -31,7 +31,7 @@ public class CupomDescontoResource {
     public CupomDescontoService cupomdescontoService;
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -39,7 +39,7 @@ public class CupomDescontoResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/{codigo}")
     public Response findByCodigo(@PathParam("codigo") String codigo) {
         LOG.info("Execucao do metodo findByCodigo. Codigo: " + codigo);
@@ -47,7 +47,7 @@ public class CupomDescontoResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response findAll() {
         LOG.info("Execucao do metodo findAll");
         return Response.ok(cupomdescontoService.findAll()
@@ -57,7 +57,7 @@ public class CupomDescontoResource {
     }
 
     @POST
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response create(@Valid CupomDescontoRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         return Response.status(Status.CREATED)
@@ -66,7 +66,7 @@ public class CupomDescontoResource {
     }
 
     @PUT
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid CupomDescontoRequestDTO dto) {
         LOG.info("Execucao do metodo update. Id do Cupom de desconto: " + id);
@@ -75,7 +75,7 @@ public class CupomDescontoResource {
     }
 
     @DELETE
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id do Cupom de desconto: " + id);

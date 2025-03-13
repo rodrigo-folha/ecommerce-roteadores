@@ -38,7 +38,7 @@ public class CartaoResource {
     public JsonWebToken jsonWebToken;
 
     @GET
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -47,7 +47,7 @@ public class CartaoResource {
     }
 
     @GET
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     public Response findByCliente() {
         LOG.info("Execucao do metodo findByCliente");
         String email = jsonWebToken.getSubject();
@@ -56,7 +56,7 @@ public class CartaoResource {
     }
 
     @POST
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     public Response create(@Valid CartaoRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         String email = jsonWebToken.getSubject();
@@ -67,7 +67,7 @@ public class CartaoResource {
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     public Response update(@PathParam("id") Long id, @Valid CartaoRequestDTO dto) {
         LOG.info("Execucao do metodo update. Id: " + id);
         String email = jsonWebToken.getSubject();
@@ -77,7 +77,7 @@ public class CartaoResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed("User")
+    // @RolesAllowed("User")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id: " + id);
         String email = jsonWebToken.getSubject();
