@@ -8,13 +8,15 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
-import { Lote } from '../../../models/lote.model';
-import { LoteService } from '../../../services/lote.service';
-import { Roteador } from '../../../models/roteador.model';
-import { RoteadorService } from '../../../services/roteador.service';
+import { Funcionario } from '../../../models/funcionario.model';
+import { FuncionarioService } from '../../../services/funcionario.service';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
-  selector: 'app-lote-list',
+  selector: 'app-funcionario-list',
+  providers: [provideNativeDateAdapter(), {
+      provide: MAT_DATE_LOCALE, useValue: 'pt-BR'}
+    ],
   imports: [
     MatToolbarModule,
     MatButtonModule,
@@ -24,18 +26,28 @@ import { RoteadorService } from '../../../services/roteador.service';
     MatPaginatorModule,
     RouterLink,
   ],
-  templateUrl: './lote-list.component.html',
-  styleUrl: './lote-list.component.css',
+  templateUrl: './funcionario-list.component.html',
+  styleUrl: './funcionario-list.component.css',
 })
-export class LoteListComponent {
-  lotes: Lote[] = [];
-  roteadores: Roteador[] = [];
+export class FuncionarioListComponent {
+  // controle de paginacao
+  totalRegistros = 0;
+  pageSize = 5;
+  page = 0;
+  funcionarios: Funcionario[] = [];
 
-  constructor(
-    private loteService: LoteService, 
-    private router: Router,
-    private roteadorService: RoteadorService
-  ) {}
+  constructor(private funcionarioService: FuncionarioService, private router: Router) {}
+
+  displayedColumns: string[] = [
+    'id',
+    'nome',
+    'cpf',
+    'dataNascimento',
+    'email',
+    'acao'
+  ];
+
+  dataSource = new MatTableDataSource<any>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -44,32 +56,17 @@ export class LoteListComponent {
   }
 
   ngOnInit(): void {
-    this.carregarlotes();
-    this.carregarRoteadores();
+    this.carregarFuncionarios();
   }
 
-  carregarlotes(): void {
-    this.loteService.findAll().subscribe((lotes) => {
-      this.lotes = lotes;
-      this.dataSource.data = this.lotes;
+  carregarFuncionarios(): void {
+    this.funcionarioService.findAll().subscribe((funcionarios) => {
+      this.funcionarios = funcionarios;
+      this.dataSource.data = this.funcionarios;
     });
   }
-
-  carregarRoteadores(): void {
-    this.roteadorService.findAll().subscribe((roteadores) => {
-      this.roteadores = roteadores;
-    });
-  }
-
-  carregarNomeRoteador(idRoteador: number): string {
-    const roteador = this.roteadores.find( (nome) => nome.id === idRoteador);
-    return roteador?.nome || '';
-  }
-
-  displayedColumns: string[] = ['id', 'codigo', 'estoque', 'data', 'roteador', 'acao'];
-  dataSource = new MatTableDataSource<any>();
-
-  excluir(lote: Lote): void {
+  
+  excluir(funcionario: Funcionario): void {
     Swal.fire({
       title: "Você tem certeza?",
       text: "Vou não vai poder reverter isso!",
@@ -82,14 +79,14 @@ export class LoteListComponent {
       if (result.isConfirmed) {
         Swal.fire({
           title: "Deletado!",
-          text: "Lote deletado com sucesso!",
+          text: "Funcionario deletado com sucesso!",
           icon: "success"
         });
 
-        this.loteService.delete(lote).subscribe({
+        this.funcionarioService.delete(funcionario).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/lotes']);
+              this.router.navigate(['/funcionarios']);
             });
           },
           error: (e) => {

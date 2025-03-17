@@ -78,10 +78,6 @@ export class EstadoFormComponent {
   cadastrar(estado: any) {
     this.estadoService.insert(estado).subscribe({
       next: (estadoCadastrado) => {
-        console.log(
-          'Estado cadastrado com sucesso',
-          JSON.stringify(estadoCadastrado)
-        );
         this.router.navigateByUrl('/estados');
       },
       error: (e) => {
@@ -92,11 +88,7 @@ export class EstadoFormComponent {
 
   atualizar(estado: any) {
     this.estadoService.update(estado).subscribe({
-      next: (estadoAtualizado) => {
-        console.log(
-          'Estado atualizado com sucesso',
-          JSON.stringify(estadoAtualizado)
-        );
+      next: () => {
         this.router.navigateByUrl('/estados');
       }
     });
@@ -105,11 +97,7 @@ export class EstadoFormComponent {
   excluir() {
     const estado = this.formGroup.value;
     this.estadoService.delete(estado).subscribe({
-      next: (estadoExcluido) => {
-        console.log(
-          'Estado excluído com sucesso',
-          JSON.stringify(estadoExcluido)
-        );
+      next: () => {
         this.router.navigateByUrl('/estados');
       },
       error: (e) => {

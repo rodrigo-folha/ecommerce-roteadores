@@ -73,10 +73,6 @@ export class QuantidadeantenaFormComponent {
   cadastrar(quantidadeAntena: any) {
     this.quantidadeAntenasService.insert(quantidadeAntena).subscribe({
       next: (quantidadeAntenaCadastrado) => {
-        console.log(
-          'QuantidadeAntena cadastrado com sucesso',
-          JSON.stringify(quantidadeAntenaCadastrado)
-        );
         this.router.navigateByUrl('/quantidadeantenas');
       },
       error: (e) => {
@@ -87,24 +83,19 @@ export class QuantidadeantenaFormComponent {
 
   atualizar(quantidadeAntena: any) {
     this.quantidadeAntenasService.update(quantidadeAntena).subscribe({
-      next: (quantidadeAntenaAtualizado) => {
-        console.log(
-          'QuantidadeAntena atualizado com sucesso',
-          JSON.stringify(quantidadeAntenaAtualizado)
-        );
+      next: () => {
         this.router.navigateByUrl('/quantidadeantenas');
-      }
+      },
+      error: (e) => {
+        console.log('Erro ao atualizar', JSON.stringify(e));
+      },
     });
   }
 
   excluir() {
     const quantidadeAntena = this.formGroup.value;
     this.quantidadeAntenasService.delete(quantidadeAntena).subscribe({
-      next: (quantidadeAntenaExcluido) => {
-        console.log(
-          'QuantidadeAntena excluído com sucesso',
-          JSON.stringify(quantidadeAntenaExcluido)
-        );
+      next: () => {
         this.router.navigateByUrl('/quantidadeantenas');
       },
       error: (e) => {

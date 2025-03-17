@@ -5,5 +5,5 @@ import { QuantidadeAntenaService } from "../../services/quantidade-antena.servic
 
 export const quantidadeantenaResolver: ResolveFn<QuantidadeAntena> =
     (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        return inject(QuantidadeAntenaService).findById(String(route.paramMap.get('id')!));
+        return inject(QuantidadeAntenaService).findById(route.paramMap.get('id')!);
     }

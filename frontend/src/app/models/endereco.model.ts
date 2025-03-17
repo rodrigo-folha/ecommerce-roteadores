@@ -1,5 +1,4 @@
 import { Cidade } from "./cidade.model";
-import { Estado } from "./estado.model";
 
 export class Endereco {
     id!: number;
@@ -9,5 +8,4 @@ export class Endereco {
     complemento!: string;
     cep!: string;
     cidade!: Cidade;
-    estado!: Estado;
 }

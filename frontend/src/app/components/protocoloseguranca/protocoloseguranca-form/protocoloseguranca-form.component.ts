@@ -85,10 +85,6 @@ export class ProtocolosegurancaFormComponent {
   cadastrar(protocoloSeguranca: any) {
     this.protocolosSegurancaService.insert(protocoloSeguranca).subscribe({
       next: (protocoloSegurancaCadastrado) => {
-        console.log(
-          'ProtocoloSeguranca cadastrado com sucesso',
-          JSON.stringify(protocoloSegurancaCadastrado)
-        );
         this.router.navigateByUrl('/protocolosseguranca');
       },
       error: (e) => {
@@ -99,11 +95,7 @@ export class ProtocolosegurancaFormComponent {
 
   atualizar(protocoloSeguranca: any) {
     this.protocolosSegurancaService.update(protocoloSeguranca).subscribe({
-      next: (protocoloSegurancaAtualizado) => {
-        console.log(
-          'ProtocoloSeguranca atualizado com sucesso',
-          JSON.stringify(protocoloSegurancaAtualizado)
-        );
+      next: () => {
         this.router.navigateByUrl('/protocolosseguranca');
       },
     });
@@ -112,11 +104,7 @@ export class ProtocolosegurancaFormComponent {
   excluir() {
     const protocoloSeguranca = this.formGroup.value;
     this.protocolosSegurancaService.delete(protocoloSeguranca).subscribe({
-      next: (protocoloSegurancaExcluido) => {
-        console.log(
-          'ProtocoloSeguranca excluído com sucesso',
-          JSON.stringify(protocoloSegurancaExcluido)
-        );
+      next: () => {
         this.router.navigateByUrl('/protocolosseguranca');
       },
       error: (e) => {

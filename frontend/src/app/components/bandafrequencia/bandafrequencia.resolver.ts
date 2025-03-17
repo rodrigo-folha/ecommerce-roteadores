@@ -5,5 +5,5 @@ import { BandaFrequenciaService } from "../../services/banda-frequencia.service"
 
 export const bandaFrequenciaResolver: ResolveFn<BandaFrequencia> =
     (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        return inject(BandaFrequenciaService).findById(String(route.paramMap.get('id')!));
+        return inject(BandaFrequenciaService).findById(route.paramMap.get('id')!);
     }

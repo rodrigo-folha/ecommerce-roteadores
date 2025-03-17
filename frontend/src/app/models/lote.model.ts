@@ -6,5 +6,6 @@ export class Lote {
     codigo!: string;
     estoque!: number;
     data!: Date;
-    roteador!: Roteador;
+    idRoteador!: number;
+    // roteador!: Roteador;
 }

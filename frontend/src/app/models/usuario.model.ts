@@ -8,7 +8,7 @@ export class Usuario {
     dataNascimento!: Date;
     senha!: string;
     email!: string;
-    endereco!: Endereco;
-    telefone!: Telefone;
+    telefones!: Telefone[];
+    enderecos!: Endereco[];
     perfil!: string;
 }

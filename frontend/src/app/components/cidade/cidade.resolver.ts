@@ -5,5 +5,5 @@ import { CidadeService } from "../../services/cidade.service";
 
 export const cidadeResolver: ResolveFn<Cidade> =
     (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        return inject(CidadeService).findById(String(route.paramMap.get('id')!));
+        return inject(CidadeService).findById(route.paramMap.get('id')!);
     }

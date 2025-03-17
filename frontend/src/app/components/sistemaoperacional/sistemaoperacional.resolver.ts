@@ -5,5 +5,5 @@ import { SistemaOperacionalService } from "../../services/sistema-operacional.se
 
 export const sistemaoperacionalResolver: ResolveFn<SistemaOperacional> =
     (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        return inject(SistemaOperacionalService).findById(String(route.paramMap.get('id')!));
+        return inject(SistemaOperacionalService).findById(route.paramMap.get('id')!);
     }

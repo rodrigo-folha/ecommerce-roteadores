@@ -5,5 +5,5 @@ import { ProtocoloSegurancaService } from "../../services/protocolo-seguranca.se
 
 export const protocoloSegurancaResolver: ResolveFn<ProtocoloSeguranca> =
     (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        return inject(ProtocoloSegurancaService).findById(String(route.paramMap.get('id')!));
+        return inject(ProtocoloSegurancaService).findById(route.paramMap.get('id')!);
     }

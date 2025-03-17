@@ -17,12 +17,9 @@
               required
             />
             <mat-error
-              *ngIf="loginClienteForm.get('email')?.hasError('required')"
+              *ngIf="loginClienteForm.get('nome')?.hasError('required')"
             >
-              O e-mail é obrigatório.
-            </mat-error>
-            <mat-error *ngIf="loginClienteForm.get('email')?.hasError('email')">
-              Insira um e-mail válido.
+              O nome é obrigatório.
             </mat-error>
           </mat-form-field>
 
@@ -36,12 +33,9 @@
               required
             />
             <mat-error
-              *ngIf="loginClienteForm.get('email')?.hasError('required')"
+              *ngIf="loginClienteForm.get('cpf')?.hasError('required')"
             >
-              O e-mail é obrigatório.
-            </mat-error>
-            <mat-error *ngIf="loginClienteForm.get('email')?.hasError('email')">
-              Insira um e-mail válido.
+              O cpf é obrigatório.
             </mat-error>
           </mat-form-field>
 
@@ -75,7 +69,7 @@
                   type="password"
                   autocomplete="current-password"
                   formControlName="senha"
-                  [type]="hide() ? 'password' : 'text'"
+                  [type]="hidePassword ? 'password' : 'text'"
                 />
                 <mat-error
                   *ngIf="loginClienteForm.get('senha')?.hasError('required')"
@@ -95,13 +89,11 @@
                 <button
                   mat-icon-button
                   matSuffix
-                  (click)="clickEvent($event)"
-                  [attr.aria-label]="'Hide password'"
-                  [attr.aria-pressed]="hide()"
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  tabindex="-1"
                 >
-                  <mat-icon>{{
-                    hide() ? "visibility_off" : "visibility"
-                  }}</mat-icon>
+                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
               </mat-form-field>
             </div>
@@ -115,7 +107,7 @@
                   type="password"
                   autocomplete="current-password"
                   formControlName="confirmarSenha"
-                  [type]="hide() ? 'password' : 'text'"
+                  [type]="hideConfirmPassword ? 'password' : 'text'"
                 />
                 <mat-error
                   *ngIf="
@@ -136,13 +128,11 @@
                 <button
                   mat-icon-button
                   matSuffix
-                  (click)="clickEvent($event)"
-                  [attr.aria-label]="'Hide password'"
-                  [attr.aria-pressed]="hide()"
+                  type="button"
+                  (click)="toggleConfirmPasswordVisibility()"
+                  tabindex="-1"
                 >
-                  <mat-icon>{{
-                    hide() ? "visibility_off" : "visibility"
-                  }}</mat-icon>
+                <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
               </mat-form-field>
             </div>

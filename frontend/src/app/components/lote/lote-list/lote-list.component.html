@@ -37,8 +37,8 @@
   
     <!-- Roteador Column -->
     <ng-container matColumnDef="roteador">
-      <th mat-header-cell *matHeaderCellDef>Roteador</th>
-      <td mat-cell *matCellDef="let lote">{{ lote.roteador?.nome }}</td>
+      <th mat-header-cell *matHeaderCellDef>Id - Roteador</th>
+      <td mat-cell *matCellDef="let lote">{{ lote.idRoteador }} - {{ carregarNomeRoteador(lote.idRoteador) }}</td>
     </ng-container>
   
     <!-- Acao Column -->

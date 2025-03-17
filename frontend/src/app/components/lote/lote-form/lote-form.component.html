@@ -26,7 +26,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Quantidade</mat-label>
-          <input matInput type="text" formControlName="estoque" />
+          <input matInput type="text" formControlName="estoque" onkeypress="return /^[0-9]+$/.test(event.key)" />
           <mat-error
             *ngIf="
               formGroup.get('estoque') &&
@@ -39,7 +39,11 @@
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Data</mat-label>
-          <input matInput type="text" formControlName="data" />
+
+          <input matInput [matDatepicker]="picker" formControlName="data" />
+          <mat-hint>Clique no calendário para escolher a data</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
           <mat-error
             *ngIf="
               formGroup.get('data') &&

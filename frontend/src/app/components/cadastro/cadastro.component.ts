@@ -31,11 +31,15 @@ import { NavigationService } from '../../services/navigation.service';
 })
 export class CadastroComponent {
   errorMessage: string = '';
-  hide = signal(true);
-  clickEvent(event: MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.hide.set(!this.hide());
+  hidePassword: boolean = true;
+  hideConfirmPassword: boolean = true;
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.hideConfirmPassword = !this.hideConfirmPassword;
   }
 
   loginClienteForm!: FormGroup;

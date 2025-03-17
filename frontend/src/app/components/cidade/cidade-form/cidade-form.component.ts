@@ -53,13 +53,10 @@ export class CidadeFormComponent {
   }
 
   ngOnInit(): void {
-    forkJoin({
-      estados: this.estadoService.findAll(),
-    }).subscribe((response) => {
-      this.estados = response.estados;
+    this.estadoService.findAll().subscribe((data) => {
+      this.estados = data;
       this.initializeForm();
     });
-
   }
   
   initializeForm(): void {
@@ -68,11 +65,10 @@ export class CidadeFormComponent {
     const estado = this.estados.find(
       (estado) => estado.id === (cidade?.estado?.id || null)
     );
-    console.log('lista de estados:', this.estados);
 
     this.formGroup = this.formBuilder.group({
       id: [cidade && cidade.id ? cidade.id : null],
-      nome: [cidade && cidade.nome ? cidade.nome : null, Validators.required],
+      nome: [cidade && cidade.nome ? cidade.nome : '', Validators.required],
       estado: [estado],
     });
   }
@@ -91,10 +87,6 @@ export class CidadeFormComponent {
   cadastrar(cidade: any) {
     this.cidadeService.insert(cidade).subscribe({
       next: (cidadeCadastrado) => {
-        console.log(
-          'Cidade cadastrado com sucesso',
-          JSON.stringify(cidadeCadastrado)
-        );
         this.router.navigateByUrl('/cidades');
       },
       error: (e) => {
@@ -105,11 +97,7 @@ export class CidadeFormComponent {
 
   atualizar(cidade: any) {
     this.cidadeService.update(cidade).subscribe({
-      next: (cidadeAtualizado) => {
-        console.log(
-          'Cidade atualizado com sucesso',
-          JSON.stringify(cidadeAtualizado)
-        );
+      next: () => {
         this.router.navigateByUrl('/cidades');
       },
     });
@@ -118,11 +106,7 @@ export class CidadeFormComponent {
   excluir() {
     const cidade = this.formGroup.value;
     this.cidadeService.delete(cidade).subscribe({
-      next: (cidadeExcluido) => {
-        console.log(
-          'Cidade excluído com sucesso',
-          JSON.stringify(cidadeExcluido)
-        );
+      next: () => {
         this.router.navigateByUrl('/cidades');
       },
       error: (e) => {

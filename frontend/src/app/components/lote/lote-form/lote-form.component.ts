@@ -1,6 +1,11 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,21 +13,27 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Lote } from '../../../models/lote.model';
 import { Roteador } from '../../../models/roteador.model';
 import { LoteService } from '../../../services/lote.service';
 import { RoteadorService } from '../../../services/roteador.service';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-lote-form',
+  providers: [provideNativeDateAdapter(), {
+    provide: MAT_DATE_LOCALE, useValue: 'pt-BR'}
+  ],
   imports: [
     NgIf,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatDatepickerModule,
     MatButtonModule,
     MatToolbarModule,
     MatCardModule,
@@ -31,6 +42,7 @@ import { RoteadorService } from '../../../services/roteador.service';
   ],
   templateUrl: './lote-form.component.html',
   styleUrl: './lote-form.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoteFormComponent {
   formGroup: FormGroup;
@@ -43,7 +55,7 @@ export class LoteFormComponent {
     private loteService: LoteService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private roteadorService: RoteadorService,
+    private roteadorService: RoteadorService
   ) {
     this.formGroup = this.formBuilder.group({
       codigo: ['', Validators.required],
@@ -60,23 +72,23 @@ export class LoteFormComponent {
       this.roteadores = response.roteadores;
       this.initializeForm();
     });
-
   }
-  
+
   initializeForm(): void {
     const lote: Lote = this.activatedRoute.snapshot.data['lote'];
-    
-    const roteador = this.roteadores.find(
-      (item) => item.id === (lote?.roteador?.id || null)
-    );
-    console.log('lista de roteadores:', this.roteadores);
+
+    const idRoteador = lote?.idRoteador
+    const roteador = this.roteadores.find((r) => r.id === idRoteador);
 
     this.formGroup = this.formBuilder.group({
       id: [lote && lote.id ? lote.id : null],
       codigo: [lote && lote.codigo ? lote.codigo : null, Validators.required],
-      estoque: [lote && lote.estoque ? lote.estoque : null, Validators.required],
+      estoque: [
+        lote && lote.estoque ? lote.estoque : null,
+        Validators.required,
+      ],
       data: [lote && lote.data ? lote.data : null, Validators.required],
-      roteador: [roteador, Validators.required],
+      roteador: [roteador?.id || null, Validators.required],
     });
   }
 
@@ -115,6 +127,9 @@ export class LoteFormComponent {
         );
         this.router.navigateByUrl('/lotes');
       },
+      error: (e) => {
+        console.log('Erro ao salvar', JSON.stringify(e));
+      },
     });
   }
 
@@ -122,10 +137,7 @@ export class LoteFormComponent {
     const lote = this.formGroup.value;
     this.loteService.delete(lote).subscribe({
       next: (loteExcluido) => {
-        console.log(
-          'Lote excluído com sucesso',
-          JSON.stringify(loteExcluido)
-        );
+        console.log('Lote excluído com sucesso', JSON.stringify(loteExcluido));
         this.router.navigateByUrl('/lotes');
       },
       error: (e) => {

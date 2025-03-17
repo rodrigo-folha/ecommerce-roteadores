@@ -5,5 +5,5 @@ import { EstadoService } from "../../services/estado.service";
 
 export const estadoResolver: ResolveFn<Estado> =
     (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        return inject(EstadoService).findById(String(route.paramMap.get('id')!));
+        return inject(EstadoService).findById(route.paramMap.get('id')!);
     }

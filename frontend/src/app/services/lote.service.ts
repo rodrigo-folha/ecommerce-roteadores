@@ -29,11 +29,24 @@ export class LoteService {
     }
   
     insert(lote: Lote): Observable<Lote> {
-      return this.httpClient.post<Lote>(this.baseUrl, lote);
+      const data = {
+        idRoteador: lote.idRoteador,
+        data: lote.data,
+        codigo: lote.codigo,
+        estoque: lote.estoque
+      }
+
+      return this.httpClient.post<Lote>(this.baseUrl, data);
     }
   
     update(lote: Lote): Observable<any> {
-      return this.httpClient.put<Lote>(`${this.baseUrl}/${lote.id}`, lote);
+      const data = {
+        idRoteador: lote.idRoteador,
+        data: lote.data,
+        codigo: lote.codigo,
+        estoque: lote.estoque
+      }
+      return this.httpClient.put<Lote>(`${this.baseUrl}/${lote.id}`, data);
     }
   
     delete(lote: Lote): Observable<any> {

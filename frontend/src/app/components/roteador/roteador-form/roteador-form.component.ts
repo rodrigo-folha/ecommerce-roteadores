@@ -135,10 +135,6 @@ export class RoteadorFormComponent {
   cadastrar(roteador: any) {
     this.roteadorService.insert(roteador).subscribe({
       next: (roteadorCadastrado) => {
-        console.log(
-          'Roteador cadastrado com sucesso',
-          JSON.stringify(roteadorCadastrado)
-        );
         this.router.navigateByUrl('/roteadores');
       },
       error: (e) => {
@@ -149,24 +145,19 @@ export class RoteadorFormComponent {
 
   atualizar(roteador: any) {
     this.roteadorService.update(roteador).subscribe({
-      next: (roteadorAtualizado) => {
-        console.log(
-          'Roteador atualizado com sucesso',
-          JSON.stringify(roteadorAtualizado)
-        );
+      next: () => {
         this.router.navigateByUrl('/roteadores');
-      }
+      },
+      error: (e) => {
+        console.log('Erro ao atualizar', JSON.stringify(e));
+      },
     });
   }
 
   excluir() {
     const roteador = this.formGroup.value;
     this.roteadorService.delete(roteador).subscribe({
-      next: (roteadorExcluido) => {
-        console.log(
-          'Roteador excluído com sucesso',
-          JSON.stringify(roteadorExcluido)
-        );
+      next: () => {
         this.router.navigateByUrl('/roteadores');
       },
       error: (e) => {

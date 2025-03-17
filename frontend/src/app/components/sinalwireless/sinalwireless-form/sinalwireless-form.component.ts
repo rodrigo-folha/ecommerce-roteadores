@@ -73,10 +73,6 @@ export class SinalwirelessFormComponent {
   cadastrar(sinalWireless: any) {
     this.sinalWirelessService.insert(sinalWireless).subscribe({
       next: (sinalWirelessCadastrado) => {
-        console.log(
-          'Sinalwireless cadastrado com sucesso',
-          JSON.stringify(sinalWirelessCadastrado)
-        );
         this.router.navigateByUrl('/sinalwireless');
       },
       error: (e) => {
@@ -87,24 +83,19 @@ export class SinalwirelessFormComponent {
 
   atualizar(sinalWireless: any) {
     this.sinalWirelessService.update(sinalWireless).subscribe({
-      next: (sinalWirelessAtualizado) => {
-        console.log(
-          'Sinalwireless atualizado com sucesso',
-          JSON.stringify(sinalWirelessAtualizado)
-        );
+      next: () => {
         this.router.navigateByUrl('/sinalwireless');
-      }
+      },
+      error: (e) => {
+        console.log('Erro ao atualizar', JSON.stringify(e));
+      },
     });
   }
 
   excluir() {
     const sinalWireless = this.formGroup.value;
     this.sinalWirelessService.delete(sinalWireless).subscribe({
-      next: (sinalWirelessExcluido) => {
-        console.log(
-          'Sinalwireless excluído com sucesso',
-          JSON.stringify(sinalWirelessExcluido)
-        );
+      next: () => {
         this.router.navigateByUrl('/sinalwireless');
       },
       error: (e) => {

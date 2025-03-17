@@ -5,5 +5,5 @@ import { LoteService } from "../../services/lote.service";
 
 export const loteResolver: ResolveFn<Lote> =
     (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        return inject(LoteService).findById(String(route.paramMap.get('id')!));
+        return inject(LoteService).findById(route.paramMap.get('id')!);
     }
