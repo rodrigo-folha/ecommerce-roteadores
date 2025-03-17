@@ -58,7 +58,7 @@ public class FuncionarioResource {
     public FuncionarioFileServiceImpl funcionarioFileService;
 
     @GET
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -66,7 +66,7 @@ public class FuncionarioResource {
     }
 
     @GET
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/search/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
@@ -77,8 +77,8 @@ public class FuncionarioResource {
     }
 
     @GET
-    @RolesAllowed({ "Adm" })
-    @Path("/search/email/{email}")
+    // @RolesAllowed({ "Adm" })
+    // @Path("/search/email/{email}")
     public Response findByEmail(@PathParam("email") String email) {
         LOG.info("Execucao do metodo findByEmail. Email: " + email);
         return Response.ok(funcionarioService.findByEmail(email)
@@ -88,7 +88,7 @@ public class FuncionarioResource {
     }
 
     @GET
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     public Response findAll() {
         LOG.info("Execucao do metodo findAll");
         return Response.ok(funcionarioService.findAll()
@@ -98,7 +98,7 @@ public class FuncionarioResource {
     }
 
     @POST
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/gerarfuncionario/{email}")
     public Response gerarFuncionarioFromCliente(@PathParam("email") String email) {
         LOG.info("Execucao do metodo gerarClienteFromFuncionario");
@@ -108,7 +108,7 @@ public class FuncionarioResource {
     }
 
     @POST
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     public Response create(@Valid FuncionarioRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         return Response.status(Status.CREATED)
@@ -117,7 +117,7 @@ public class FuncionarioResource {
     }
 
     @PUT
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid FuncionarioUpdateRequestDTO funcionario) {
         LOG.info("Execucao do metodo update. Id do Funcionario: " + id);
@@ -126,7 +126,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/update/senha")
     public Response updateSenha(@Valid SenhaPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateSenha");
@@ -137,7 +137,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/update/nome")
     public Response updateNome(@Valid NomePatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateNome");
@@ -148,7 +148,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/update/cpf")
     public Response updateCpf(@Valid CpfPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateCpf");
@@ -159,7 +159,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/update/datanascimento")
     public Response updateDataNascimento(@Valid DataNascimentoPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateDataNascimento");
@@ -170,7 +170,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/update/email")
     public Response updateEmail(@Valid EmailPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateEmail");
@@ -181,7 +181,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/{id}/enderecos/{idEndereco}")
     public Response updateEnderecoEspecifico(@PathParam("id") Long id, @PathParam("idEndereco") Long idEndereco,
             @Valid EnderecoRequestDTO endereco) {
@@ -192,7 +192,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/{id}/enderecos")
     public Response updateEndereco(@PathParam("id") Long id, @Valid List<EnderecoRequestDTO> endereco) {
         LOG.info("Execucao do metodo updateEndereco. Id do funcionario: " + id);
@@ -201,7 +201,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/{id}/telefones/{idTelefone}")
     public Response updateTelefoneEspecifico(@PathParam("id") Long id, @PathParam("idTelefone") Long idTelefone,
             @Valid TelefoneRequestDTO telefone) {
@@ -212,7 +212,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/{id}/telefones")
     public Response updateTelefone(@PathParam("id") Long id, @Valid List<TelefoneRequestDTO> telefone) {
         LOG.info("Execucao do metodo updateTelefone. Id do funcionario: " + id);
@@ -221,7 +221,7 @@ public class FuncionarioResource {
     }
 
     @DELETE
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id do funcionario: " + id);
@@ -230,7 +230,7 @@ public class FuncionarioResource {
     }
 
     @PATCH
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/{id}/upload/imagem")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadImage(@PathParam("id") Long id, @MultipartForm ImageForm form) {
@@ -247,7 +247,7 @@ public class FuncionarioResource {
     }
 
     @GET
-    @RolesAllowed({ "Adm" })
+    // @RolesAllowed({ "Adm" })
     @Path("/download/imagem/{nomeImagem}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadImagem(@PathParam("nomeImagem") String nomeImagem) {
