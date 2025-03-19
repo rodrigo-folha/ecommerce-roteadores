@@ -32,17 +32,20 @@ import { loteResolver } from './components/lote/lote.resolver';
 import { FuncionarioListComponent } from './components/funcionario/funcionario-list/funcionario-list.component';
 import { FuncionarioFormComponent } from './components/funcionario/funcionario-form/funcionario-form.component';
 import { funcionarioResolver } from './components/funcionario/funcionario.resolver';
+import { SidebarComponent } from './components/template/sidebar/sidebar.component';
+import { AdminTemplateComponent } from './components/template/admin-template/admin-template.component';
 
 export const routes: Routes = [
 //   {path: 'estados', component: EstadoListComponent, title: 'Lista de Estados',},
 //   {path: 'cidades', component: CidadeListComponent, title: 'Lista de Cidades',},
-  {path: '', pathMatch: 'full', redirectTo: 'home'},
+  {path: '', pathMatch: 'full', redirectTo: 'admin'},
   {
-    path: '',
-    component: HomeComponent,
-    title: 'Home',
+    path: 'admin',
+    component: AdminTemplateComponent,
+    title: 'Administrativo',
     children: [
-        {path: '', component: EstadoListComponent},
+        // {path: 'sidebar', component: SidebarComponent},
+        {path: '', component: HomeComponent, title: 'Home'},
 
         {path: 'estados', component: EstadoListComponent},
         {path: 'estados/new', component: EstadoFormComponent},

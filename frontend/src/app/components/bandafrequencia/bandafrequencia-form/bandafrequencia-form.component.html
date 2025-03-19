@@ -30,7 +30,7 @@
         <mat-card-actions>
           <button 
             mat-raised-button 
-            routerLink="/bandafrequencias">
+            routerLink="/admin/bandafrequencias">
             Cancelar
           </button>
           <button
@@ -38,7 +38,7 @@
             *ngIf="formGroup?.get('id')?.value"
             color="warn"
             [disabled]="formGroup.invalid"
-            routerLink="/bandafrequencias"
+            routerLink="/admin/bandafrequencias"
             (click)="excluir()"
           >
             Excluir

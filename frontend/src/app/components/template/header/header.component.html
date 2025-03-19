@@ -1,10 +1,10 @@
 <mat-toolbar>
   
   <div class="toolbar">
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <button mat-icon-button (click)="toggleSidebar()">
         <mat-icon>menu</mat-icon>
       </button>
-      <button [routerLink]="''" class="voltar">
+      <button [routerLink]="'/admin'" class="voltar">
           <img src="../icons/logo-white.svg" alt="Logo" class="logo">
       </button>
 

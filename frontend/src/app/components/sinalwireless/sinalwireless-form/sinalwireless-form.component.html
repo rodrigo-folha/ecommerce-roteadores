@@ -30,7 +30,7 @@
         <mat-card-actions>
           <button 
             mat-raised-button 
-            routerLink="/sinalwireless">
+            routerLink="/admin/sinalwireless">
             Cancelar
           </button>
           <button
@@ -38,7 +38,7 @@
             *ngIf="formGroup?.get('id')?.value"
             color="warn"
             [disabled]="formGroup.invalid"
-            routerLink="/sinalwireless"
+            routerLink="/admin/sinalwireless"
             (click)="excluir()"
           >
             Excluir

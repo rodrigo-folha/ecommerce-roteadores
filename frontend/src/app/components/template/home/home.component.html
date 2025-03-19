@@ -1,3 +1,69 @@
-<app-header />
-<router-outlet></router-outlet>
-<app-footer />
+<div class="container">
+  <h2>Selecione uma Ação</h2>
+</div>
+
+<!-- <mat-grid-list cols="3" rowHeight="2:1" gutterSize="20px" class="action-grid"> -->
+<mat-grid-list cols="3" rowHeight="200px" gutterSize="20px" class="action-grid">
+  <mat-grid-tile>
+    <button mat-raised-button color="accent" class="action-button" routerLink="/admin/roteadores">
+        <mat-icon class="action-icon">router</mat-icon>
+        <span class="action-text">Roteadores</span>
+    </button>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button color="accent" class="action-button" routerLink="/admin/quantidadeantenas">
+        <mat-icon class="action-icon">settings_input_antenna</mat-icon>
+        <span class="action-text">Quantidade de Antenas</span>
+    </button>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button color="accent" class="action-button" routerLink="/admin/sinalwireless">
+        <mat-icon class="action-icon">wifi</mat-icon>
+        <span class="action-text">Sinal de Wireless</span>
+    </button>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button color="accent" class="action-button" routerLink="/admin/bandafrequencias">
+        <mat-icon class="action-icon">wifi</mat-icon>
+        <span class="action-text">Banda de Frequência</span>
+    </button>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button color="accent" class="action-button" routerLink="/admin/protocolosseguranca">
+        <mat-icon class="action-icon">security</mat-icon>
+        <span class="action-text">Protocolos de Segurança</span>
+    </button>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button color="accent" class="action-button" routerLink="/admin/sistemasoperacionais">
+        <mat-icon class="action-icon">settings_system_daydream</mat-icon>
+        <span class="action-text">Sistema Operacional</span>
+    </button>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button color="accent" class="action-button" routerLink="/admin/cupons">
+        <mat-icon class="action-icon">sell</mat-icon>
+        <span class="action-text">Cupons de Desconto</span>
+    </button>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button color="accent" class="action-button" routerLink="/admin/funcionarios">
+        <mat-icon class="action-icon">person</mat-icon>
+        <span class="action-text">Funcionarios</span>
+    </button>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button color="accent" class="action-button" routerLink="/admin/lotes">
+        <mat-icon class="action-icon">layers</mat-icon>
+        <span class="action-text">Lotes</span>
+    </button>
+  </mat-grid-tile>
+</mat-grid-list>

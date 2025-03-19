@@ -43,7 +43,7 @@
       <mat-card-actions>
         <button 
           mat-raised-button 
-          routerLink="/estados">
+          routerLink="/admin/estados">
           Cancelar
         </button>
         <button
@@ -51,7 +51,7 @@
           *ngIf="formGroup?.get('id')?.value"
           color="warn"
           [disabled]="formGroup.invalid"
-          routerLink="/estados"
+          routerLink="/admin/estados"
           (click)="excluir()"
         >
           Excluir

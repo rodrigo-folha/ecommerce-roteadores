@@ -1,10 +1,10 @@
 <mat-toolbar color="primary">
     <div class="flex-container">
-      <button mat-icon-button color="accent" routerLink="/funcionarios">
+      <button mat-icon-button color="accent" routerLink="/admin">
         <mat-icon>home</mat-icon>
       </button>
       <span class="toolbar-title">Controle de Funcionarios</span>
-      <button mat-fab color="accent" routerLink="/funcionarios/new">
+      <button mat-fab color="accent" routerLink="/admin/funcionarios/new">
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -47,14 +47,14 @@
       <td mat-cell *matCellDef="let funcionario">
         <button mat-icon-button 
                 color="primary"
-                routerLink="/funcionarios/edit/{{ funcionario.id }}">
+                routerLink="/admin/funcionarios/edit/{{ funcionario.id }}">
                 <mat-icon>edit</mat-icon>
         </button>
         <button 
           mat-icon-button 
           color="warn" 
           (click)="excluir(funcionario)"
-          routerLink="/funcionarios">
+          routerLink="/admin/funcionarios">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

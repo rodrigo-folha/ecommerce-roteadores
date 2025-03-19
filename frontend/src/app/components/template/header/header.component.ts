@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { SidebarService } from '../../../services/sidebar.service';
 
 @Component({
   selector: 'app-header',
@@ -25,12 +26,16 @@ import { FormsModule } from '@angular/forms';
 export class HeaderComponent implements OnInit {
   filterValue = '';
 
-  constructor() {}
+  constructor(private sidebarService: SidebarService) {}
 
   ngOnInit(): void {}
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filterValue = filterValue.trim().toLowerCase();
+  }
+
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
   }
 }

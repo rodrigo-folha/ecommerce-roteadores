@@ -76,7 +76,7 @@
                 <button
                   mat-fab
                   color="primary"
-                  routerLink="/sistemasoperacionais/new"
+                  routerLink="/admin/sistemasoperacionais/new"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -97,7 +97,7 @@
                 <button
                   mat-fab
                   color="primary"
-                  routerLink="/bandafrequencias/new"
+                  routerLink="/admin/bandafrequencias/new"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -118,7 +118,7 @@
                 <button
                   mat-fab
                   color="primary"
-                  routerLink="/protocolosseguranca/new"
+                  routerLink="/admin/protocolosseguranca/new"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -139,7 +139,7 @@
                 <button
                   mat-fab
                   color="primary"
-                  routerLink="/quantidadeantenas/new"
+                  routerLink="/admin/quantidadeantenas/new"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -157,7 +157,7 @@
                     }
                   </mat-select>
                 </mat-form-field>
-                <button mat-fab color="primary" routerLink="/sinalwireless/new">
+                <button mat-fab color="primary" routerLink="/admin/sinalwireless/new">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
@@ -168,13 +168,13 @@
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-raised-button routerLink="/roteadores">Cancelar</button>
+      <button mat-raised-button routerLink="/admin/roteadores">Cancelar</button>
       <button
         mat-raised-button
         *ngIf="formGroup?.get('id')?.value"
         color="warn"
         [disabled]="formGroup.invalid"
-        routerLink="/roteadores"
+        routerLink="/admin/roteadores"
         (click)="excluir()"
       >
         Excluir
