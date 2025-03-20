@@ -36,6 +36,6 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleSidebar() {
-    this.sidebarService.toggleSidebar();
+    this.sidebarService.toggle();
   }
 }

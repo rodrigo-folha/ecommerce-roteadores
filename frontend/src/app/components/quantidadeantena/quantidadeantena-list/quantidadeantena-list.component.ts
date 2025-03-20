@@ -70,7 +70,7 @@ export class QuantidadeantenaListComponent {
         this.quantidadeAntenaService.delete(quantidadeAntena).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/quantidadeantenas']);
+              this.router.navigate(['/admin/quantidadeantenas']);
             });
           },
           error: (e) => {

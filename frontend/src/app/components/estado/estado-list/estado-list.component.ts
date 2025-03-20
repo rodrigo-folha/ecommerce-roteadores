@@ -70,7 +70,7 @@ export class EstadoListComponent {
         this.estadoService.delete(estado).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/estados']);
+              this.router.navigate(['/admin/estados']);
             });
           },
           error: (e) => {

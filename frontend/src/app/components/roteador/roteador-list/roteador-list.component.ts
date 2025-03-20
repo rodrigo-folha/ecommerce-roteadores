@@ -10,9 +10,19 @@ import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Roteador } from '../../../models/roteador.model';
 import { RoteadorService } from '../../../services/roteador.service';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { LOCALE_ID } from '@angular/core';
+import {registerLocaleData} from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+registerLocaleData(localePt);
+
 
 @Component({
   selector: 'app-roteador-list',
+  providers: [provideNativeDateAdapter(), {
+      provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+      { provide: LOCALE_ID, useValue: 'pt-BR'}
+    ],
   imports: [
     MatToolbarModule,
     MatButtonModule,
@@ -85,7 +95,7 @@ export class RoteadorListComponent {
         this.roteadorservice.delete(roteador).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/roteadores']);
+              this.router.navigate(['/admin/roteadores']);
             });
           },
           error: (e) => {

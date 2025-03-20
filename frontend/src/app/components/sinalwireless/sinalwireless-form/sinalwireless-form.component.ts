@@ -73,7 +73,7 @@ export class SinalwirelessFormComponent {
   cadastrar(sinalWireless: any) {
     this.sinalWirelessService.insert(sinalWireless).subscribe({
       next: (sinalWirelessCadastrado) => {
-        this.router.navigateByUrl('/sinalwireless');
+        this.router.navigateByUrl('/admin/sinalwireless');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -84,7 +84,7 @@ export class SinalwirelessFormComponent {
   atualizar(sinalWireless: any) {
     this.sinalWirelessService.update(sinalWireless).subscribe({
       next: () => {
-        this.router.navigateByUrl('/sinalwireless');
+        this.router.navigateByUrl('/admin/sinalwireless');
       },
       error: (e) => {
         console.log('Erro ao atualizar', JSON.stringify(e));
@@ -96,7 +96,7 @@ export class SinalwirelessFormComponent {
     const sinalWireless = this.formGroup.value;
     this.sinalWirelessService.delete(sinalWireless).subscribe({
       next: () => {
-        this.router.navigateByUrl('/sinalwireless');
+        this.router.navigateByUrl('/admin/sinalwireless');
       },
       error: (e) => {
         console.log('Erro ao excluir', JSON.stringify(e));

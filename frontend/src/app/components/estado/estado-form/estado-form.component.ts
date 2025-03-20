@@ -78,7 +78,7 @@ export class EstadoFormComponent {
   cadastrar(estado: any) {
     this.estadoService.insert(estado).subscribe({
       next: (estadoCadastrado) => {
-        this.router.navigateByUrl('/estados');
+        this.router.navigateByUrl('/admin/estados');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -89,7 +89,7 @@ export class EstadoFormComponent {
   atualizar(estado: any) {
     this.estadoService.update(estado).subscribe({
       next: () => {
-        this.router.navigateByUrl('/estados');
+        this.router.navigateByUrl('/admin/estados');
       }
     });
   }
@@ -98,7 +98,7 @@ export class EstadoFormComponent {
     const estado = this.formGroup.value;
     this.estadoService.delete(estado).subscribe({
       next: () => {
-        this.router.navigateByUrl('/estados');
+        this.router.navigateByUrl('/admin/estados');
       },
       error: (e) => {
         console.log('Erro ao excluir', JSON.stringify(e));

@@ -152,7 +152,7 @@ export class FuncionarioFormComponent {
   cadastrar(funcionario: any) {
     this.funcionarioService.insert(funcionario).subscribe({
       next: () => {
-        this.router.navigateByUrl('/funcionarios');
+        this.router.navigateByUrl('/admin/funcionarios');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -163,7 +163,7 @@ export class FuncionarioFormComponent {
   atualizar(funcionario: any) {
     this.funcionarioService.update(funcionario).subscribe({
       next: () => {
-        this.router.navigateByUrl('/funcionarios');
+        this.router.navigateByUrl('/admin/funcionarios');
       },
       error: (e) => {
         console.log('Erro ao atualizar', JSON.stringify(e));
@@ -175,7 +175,7 @@ export class FuncionarioFormComponent {
     const funcionario = this.formGroup.value;
     this.funcionarioService.delete(funcionario).subscribe({
       next: () => {
-        this.router.navigateByUrl('/funcionarios');
+        this.router.navigateByUrl('/admin/funcionarios');
       },
       error: (e) => {
         console.log('Erro ao excluir', JSON.stringify(e));

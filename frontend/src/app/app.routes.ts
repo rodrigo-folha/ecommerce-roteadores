@@ -34,10 +34,15 @@ import { FuncionarioFormComponent } from './components/funcionario/funcionario-f
 import { funcionarioResolver } from './components/funcionario/funcionario.resolver';
 import { SidebarComponent } from './components/template/sidebar/sidebar.component';
 import { AdminTemplateComponent } from './components/template/admin-template/admin-template.component';
+import { CupomListComponent } from './components/cupom/cupom-list/cupom-list.component';
+import { CupomFormComponent } from './components/cupom/cupom-form/cupom-form.component';
+import { cupomResolver } from './components/cupom/cupom.resolver';
+import { HeaderAdminComponent } from './components/template/admin-template/header-admin/header-admin.component';
 
 export const routes: Routes = [
 //   {path: 'estados', component: EstadoListComponent, title: 'Lista de Estados',},
 //   {path: 'cidades', component: CidadeListComponent, title: 'Lista de Cidades',},
+  // {path: 'header-admin', component: HeaderAdminComponent},
   {path: '', pathMatch: 'full', redirectTo: 'admin'},
   {
     path: 'admin',
@@ -86,6 +91,12 @@ export const routes: Routes = [
         {path: 'funcionarios', component: FuncionarioListComponent},
         {path: 'funcionarios/new', component: FuncionarioFormComponent},
         {path: 'funcionarios/edit/:id', component: FuncionarioFormComponent, resolve: {funcionario: funcionarioResolver}},
+
+        {path: 'cupons', component: CupomListComponent},
+        {path: 'cupons/new', component: CupomFormComponent},
+        {path: 'cupons/edit/:id', component: CupomFormComponent, resolve: {cupom: cupomResolver}},
+
+
         
         {path: 'login', component: LoginComponent},
         {path: 'cadastrar', component: CadastroComponent},

@@ -1,0 +1,42 @@
+mat-drawer {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 0 2rem 2rem 1rem;
+    border-radius: 25px;
+    box-sizing: border-box;
+}
+
+.content {
+    padding: 0 3rem;
+    height: calc(100vh - 64px - 57px);
+}
+
+.mat-drawer-transition .mat-drawer {
+    transition: transform 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.panel-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.menu-label {
+    margin-bottom: 5px;
+    padding-left: 1.5rem;
+    font-weight: 300;
+}
+
+mat-list-item {
+    padding-left: 3rem;
+}
+
+.mdc-list-item.mdc-list-item--with-one-line {
+    height: var(--mdc-list-list-item-one-line-container-height, 35px);
+}
+
+.mat-drawer {
+    width: var(--mat-sidenav-container-width, 300px);
+}
+
+.mdc-list p {
+    padding-top: 0px;
+}

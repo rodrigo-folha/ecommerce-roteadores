@@ -1,0 +1,22 @@
+<mat-toolbar>
+    <div class="toolbar">
+        <div class="container" [class.is-mobile]="isMobile()">
+          <div class="toolbar-divisao">
+            <button mat-icon-button (click)="toggleSidebar()">
+              <mat-icon>menu</mat-icon>
+            </button>
+            <button [routerLink]="'/admin'" class="voltar">
+              <img src="../icons/logo-white.svg" alt="Logo" class="logo" />
+            </button>
+          </div>
+          <div class="toolbar-divisao">
+            <button mat-icon-button class="conta">
+              <mat-icon>account_circle</mat-icon>
+            </button>
+            <div class="usuario-logado">
+              <p>Fulano de Tal</p>
+            </div>
+          </div>
+        </div>
+    </div>
+</mat-toolbar>

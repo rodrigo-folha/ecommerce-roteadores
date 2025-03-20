@@ -73,7 +73,7 @@ export class SistemaoperacionalFormComponent {
   cadastrar(sistemaoperacional: any) {
     this.sistemasOperacionaisService.insert(sistemaoperacional).subscribe({
       next: (sistemaoperacionalCadastrado) => {
-        this.router.navigateByUrl('/sistemasoperacionais');
+        this.router.navigateByUrl('/admin/sistemasoperacionais');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -84,7 +84,7 @@ export class SistemaoperacionalFormComponent {
   atualizar(sistemaoperacional: any) {
     this.sistemasOperacionaisService.update(sistemaoperacional).subscribe({
       next: () => {
-        this.router.navigateByUrl('/sistemasoperacionais');
+        this.router.navigateByUrl('/admin/sistemasoperacionais');
       },
       error: (e) => {
         console.log('Erro ao atualizar', JSON.stringify(e));
@@ -96,7 +96,7 @@ export class SistemaoperacionalFormComponent {
     const sistemaoperacional = this.formGroup.value;
     this.sistemasOperacionaisService.delete(sistemaoperacional).subscribe({
       next: () => {
-        this.router.navigateByUrl('/sistemasoperacionais');
+        this.router.navigateByUrl('/admin/sistemasoperacionais');
       },
       error: (e) => {
         console.log('Erro ao excluir', JSON.stringify(e));

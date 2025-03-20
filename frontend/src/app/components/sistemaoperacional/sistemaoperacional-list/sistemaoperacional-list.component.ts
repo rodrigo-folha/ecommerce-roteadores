@@ -70,7 +70,7 @@ export class SistemaoperacionalListComponent {
         this.sistemaOperacionalService.delete(sistemaOperacional).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/sistemasoperacionais']);
+              this.router.navigate(['/admin/sistemasoperacionais']);
             });
           },
           error: (e) => {

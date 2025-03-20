@@ -70,7 +70,7 @@ export class ProtocolosegurancaListComponent {
         this.protocoloSegurancaService.delete(protocolosSeguranca).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/protocolosseguranca']);
+              this.router.navigate(['/admin/protocolosseguranca']);
             });
           },
           error: (e) => {

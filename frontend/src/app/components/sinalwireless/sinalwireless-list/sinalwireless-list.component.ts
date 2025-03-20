@@ -70,7 +70,7 @@ export class SinalwirelessListComponent {
         this.sinalWirelessService.delete(sinalWireless).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/sinalwireless']);
+              this.router.navigate(['/admin/sinalwireless']);
             });
           },
           error: (e) => {

@@ -18,10 +18,10 @@ export class SidebarComponent {
 
   constructor(private sidebarService: SidebarService) {}
 
-  ngOnInit(): void {
-    this.sidebarService.sidebarVisibleSource.subscribe(() => {
+  ngAfterViewInit(): void {
+    this.sidebarService.sideNavToggleSubject.subscribe(() => {
       this.drawer.toggle();
-    })
+    });
   }
   
 }

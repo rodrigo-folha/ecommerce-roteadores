@@ -87,7 +87,7 @@ export class CidadeFormComponent {
   cadastrar(cidade: any) {
     this.cidadeService.insert(cidade).subscribe({
       next: (cidadeCadastrado) => {
-        this.router.navigateByUrl('/cidades');
+        this.router.navigateByUrl('/admin/cidades');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -98,7 +98,7 @@ export class CidadeFormComponent {
   atualizar(cidade: any) {
     this.cidadeService.update(cidade).subscribe({
       next: () => {
-        this.router.navigateByUrl('/cidades');
+        this.router.navigateByUrl('/admin/cidades');
       },
     });
   }
@@ -107,7 +107,7 @@ export class CidadeFormComponent {
     const cidade = this.formGroup.value;
     this.cidadeService.delete(cidade).subscribe({
       next: () => {
-        this.router.navigateByUrl('/cidades');
+        this.router.navigateByUrl('/admin/cidades');
       },
       error: (e) => {
         console.log('Erro ao excluir', JSON.stringify(e));

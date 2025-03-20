@@ -1,29 +1,32 @@
 <mat-drawer-container class="container">
-  <mat-drawer #drawer mode="side" opened>
+  <mat-drawer #drawer mode="side" opened="">
     <mat-toolbar>
-        <span>Menu</span>
+        <p class="panel-title">Painel Administrativo</p>
     </mat-toolbar>
     <mat-nav-list>
-      <mat-list-item routerLink="/admin/roteadores">Controle de Roteadores</mat-list-item>
-      <mat-list-item routerLink="/admin/quantidadeantenas">Controle de Quantidade de Antenas</mat-list-item>
-      <mat-list-item routerLink="/admin/bandafrequencias">Controle de Banda de Frequência</mat-list-item>
-      <mat-list-item routerLink="/admin/protocolosseguranca">Controle de Protocolos de Segurança</mat-list-item>
-      <mat-list-item routerLink="/admin/sistemasoperacionais">Controle de Sistemas Operacionais</mat-list-item>
-      <mat-list-item routerLink="/admin/sinalwireless">Controle de Sinal de Wireless</mat-list-item>
-      <mat-list-item routerLink="/admin/funcionarios">Controle de Funcionários</mat-list-item>
-      <mat-list-item routerLink="/admin/lotes">Controle de Lotes</mat-list-item>
-      <mat-list-item routerLink="/admin/cidades">Controle de Cidades</mat-list-item>
-      <mat-list-item routerLink="/admin/estados">Controle de Estados</mat-list-item>
-      <mat-list-item routerLink="/admin/enderecos">Controle de Endereços</mat-list-item>
+      <p class="menu-label">GESTÃO DE PRODUTOS</p>
+      <mat-list-item routerLink="/admin/roteadores">Roteadores</mat-list-item>
+      <mat-list-item routerLink="/admin/quantidadeantenas">Quantidade de Antenas</mat-list-item>
+      <mat-list-item routerLink="/admin/bandafrequencias">Banda de Frequência</mat-list-item>
+      <mat-list-item routerLink="/admin/protocolosseguranca">Protocolos de Segurança</mat-list-item>
+      <mat-list-item routerLink="/admin/sistemasoperacionais">Sistemas Operacionais</mat-list-item>
+      <mat-list-item routerLink="/admin/sinalwireless">Sinal de Wireless</mat-list-item>
+      <mat-list-item routerLink="/admin/lotes">Lotes</mat-list-item>
+      <p class="menu-label">GESTÃO DE PESSOAS</p>
+      <mat-list-item routerLink="/admin/funcionarios">Funcionários</mat-list-item>
+      <mat-list-item routerLink="/">Clientes</mat-list-item>
+      <p class="menu-label">GESTÃO DE PEDIDOS</p>
+      <mat-list-item routerLink="/">Pedidos</mat-list-item>
+      <mat-list-item routerLink="/admin/cupons">Cupons de Desconto</mat-list-item>
+      <p class="menu-label">GESTÃO DE ENDEREÇO</p>
+      <mat-list-item routerLink="/admin/cidades">Cidades</mat-list-item>
+      <mat-list-item routerLink="/admin/estados">Estados</mat-list-item>
+      <mat-list-item routerLink="/admin/enderecos">Endereços</mat-list-item>
+      <p class="menu-label">CONTA DE FUNCIONÁRIO</p>
+      <mat-list-item routerLink="/">Sair</mat-list-item>
     </mat-nav-list>
   </mat-drawer>
-  <mat-drawer-content>
+  <mat-drawer-content class="content">
     <router-outlet></router-outlet>
   </mat-drawer-content>
-
-  <div class="example-sidenav-content">
-    <button type="button" mat-button (click)="drawer.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-  </div>
 </mat-drawer-container>

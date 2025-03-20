@@ -74,7 +74,7 @@ export class BandafrequenciaListComponent {
             this.router
               .navigateByUrl('/', { skipLocationChange: true })
               .then(() => {
-                this.router.navigate(['/bandafrequencias']);
+                this.router.navigate(['/admin/bandafrequencias']);
               });
           },
           error: (e) => {

@@ -86,7 +86,7 @@ export class FuncionarioListComponent {
         this.funcionarioService.delete(funcionario).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/funcionarios']);
+              this.router.navigate(['/admin/funcionarios']);
             });
           },
           error: (e) => {

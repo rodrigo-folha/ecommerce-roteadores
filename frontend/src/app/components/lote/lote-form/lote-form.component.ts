@@ -110,7 +110,7 @@ export class LoteFormComponent {
           'Lote cadastrado com sucesso',
           JSON.stringify(loteCadastrado)
         );
-        this.router.navigateByUrl('/lotes');
+        this.router.navigateByUrl('/admin/lotes');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -125,7 +125,7 @@ export class LoteFormComponent {
           'Lote atualizado com sucesso',
           JSON.stringify(loteAtualizado)
         );
-        this.router.navigateByUrl('/lotes');
+        this.router.navigateByUrl('/admin/lotes');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -138,7 +138,7 @@ export class LoteFormComponent {
     this.loteService.delete(lote).subscribe({
       next: (loteExcluido) => {
         console.log('Lote excluído com sucesso', JSON.stringify(loteExcluido));
-        this.router.navigateByUrl('/lotes');
+        this.router.navigateByUrl('/admin/lotes');
       },
       error: (e) => {
         console.log('Erro ao excluir', JSON.stringify(e));

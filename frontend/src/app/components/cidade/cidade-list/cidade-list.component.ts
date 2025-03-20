@@ -70,7 +70,7 @@ export class CidadeListComponent {
         this.cidadeService.delete(cidade).subscribe({
           next: () => {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/cidades']);
+              this.router.navigate(['/admin/cidades']);
             });
           },
           error: (e) => {

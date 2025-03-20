@@ -73,7 +73,7 @@ export class BandafrequenciaFormComponent {
   cadastrar(bandaFrequencia: any) {
     this.bandaFrequenciaService.insert(bandaFrequencia).subscribe({
       next: (bandaFrequenciaCadastrado) => {
-        this.router.navigateByUrl('/bandafrequencias');
+        this.router.navigateByUrl('/admin/bandafrequencias');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -84,7 +84,7 @@ export class BandafrequenciaFormComponent {
   atualizar(bandaFrequencia: any) {
     this.bandaFrequenciaService.update(bandaFrequencia).subscribe({
       next: () => {
-        this.router.navigateByUrl('/bandafrequencias');
+        this.router.navigateByUrl('/admin/bandafrequencias');
       }
     });
   }
@@ -93,7 +93,7 @@ export class BandafrequenciaFormComponent {
     const bandaFrequencia = this.formGroup.value;
     this.bandaFrequenciaService.delete(bandaFrequencia).subscribe({
       next: () => {
-        this.router.navigateByUrl('/bandafrequencias');
+        this.router.navigateByUrl('/admin/bandafrequencias');
       },
       error: (e) => {
         console.log('Erro ao excluir', JSON.stringify(e));

@@ -73,7 +73,7 @@ export class QuantidadeantenaFormComponent {
   cadastrar(quantidadeAntena: any) {
     this.quantidadeAntenasService.insert(quantidadeAntena).subscribe({
       next: (quantidadeAntenaCadastrado) => {
-        this.router.navigateByUrl('/quantidadeantenas');
+        this.router.navigateByUrl('/admin/quantidadeantenas');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -84,7 +84,7 @@ export class QuantidadeantenaFormComponent {
   atualizar(quantidadeAntena: any) {
     this.quantidadeAntenasService.update(quantidadeAntena).subscribe({
       next: () => {
-        this.router.navigateByUrl('/quantidadeantenas');
+        this.router.navigateByUrl('/admin/quantidadeantenas');
       },
       error: (e) => {
         console.log('Erro ao atualizar', JSON.stringify(e));
@@ -96,7 +96,7 @@ export class QuantidadeantenaFormComponent {
     const quantidadeAntena = this.formGroup.value;
     this.quantidadeAntenasService.delete(quantidadeAntena).subscribe({
       next: () => {
-        this.router.navigateByUrl('/quantidadeantenas');
+        this.router.navigateByUrl('/admin/quantidadeantenas');
       },
       error: (e) => {
         console.log('Erro ao excluir', JSON.stringify(e));

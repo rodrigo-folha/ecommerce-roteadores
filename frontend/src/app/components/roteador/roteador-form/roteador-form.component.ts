@@ -135,7 +135,7 @@ export class RoteadorFormComponent {
   cadastrar(roteador: any) {
     this.roteadorService.insert(roteador).subscribe({
       next: (roteadorCadastrado) => {
-        this.router.navigateByUrl('/roteadores');
+        this.router.navigateByUrl('/admin/roteadores');
       },
       error: (e) => {
         console.log('Erro ao salvar', JSON.stringify(e));
@@ -146,7 +146,7 @@ export class RoteadorFormComponent {
   atualizar(roteador: any) {
     this.roteadorService.update(roteador).subscribe({
       next: () => {
-        this.router.navigateByUrl('/roteadores');
+        this.router.navigateByUrl('/admin/roteadores');
       },
       error: (e) => {
         console.log('Erro ao atualizar', JSON.stringify(e));
@@ -158,7 +158,7 @@ export class RoteadorFormComponent {
     const roteador = this.formGroup.value;
     this.roteadorService.delete(roteador).subscribe({
       next: () => {
-        this.router.navigateByUrl('/roteadores');
+        this.router.navigateByUrl('/admin/roteadores');
       },
       error: (e) => {
         console.log('Erro ao excluir', JSON.stringify(e));
