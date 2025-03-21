@@ -42,7 +42,6 @@ import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/cor
   ],
   templateUrl: './lote-form.component.html',
   styleUrl: './lote-form.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoteFormComponent {
   formGroup: FormGroup;
@@ -61,7 +60,7 @@ export class LoteFormComponent {
       codigo: ['', Validators.required],
       estoque: ['', Validators.required],
       data: ['', Validators.required],
-      roteador: ['', Validators.required],
+      idRoteador: ['', Validators.required],
     });
   }
 
@@ -88,7 +87,7 @@ export class LoteFormComponent {
         Validators.required,
       ],
       data: [lote && lote.data ? lote.data : null, Validators.required],
-      roteador: [roteador?.id || null, Validators.required],
+      idRoteador: [roteador?.id || null, Validators.required],
     });
   }
 
@@ -106,10 +105,6 @@ export class LoteFormComponent {
   cadastrar(lote: any) {
     this.loteService.insert(lote).subscribe({
       next: (loteCadastrado) => {
-        console.log(
-          'Lote cadastrado com sucesso',
-          JSON.stringify(loteCadastrado)
-        );
         this.router.navigateByUrl('/admin/lotes');
       },
       error: (e) => {
@@ -120,11 +115,7 @@ export class LoteFormComponent {
 
   atualizar(lote: any) {
     this.loteService.update(lote).subscribe({
-      next: (loteAtualizado) => {
-        console.log(
-          'Lote atualizado com sucesso',
-          JSON.stringify(loteAtualizado)
-        );
+      next: () => {
         this.router.navigateByUrl('/admin/lotes');
       },
       error: (e) => {
@@ -136,8 +127,7 @@ export class LoteFormComponent {
   excluir() {
     const lote = this.formGroup.value;
     this.loteService.delete(lote).subscribe({
-      next: (loteExcluido) => {
-        console.log('Lote excluído com sucesso', JSON.stringify(loteExcluido));
+      next: () => {
         this.router.navigateByUrl('/admin/lotes');
       },
       error: (e) => {

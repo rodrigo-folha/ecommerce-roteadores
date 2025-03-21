@@ -35,11 +35,11 @@ export class LoteService {
         codigo: lote.codigo,
         estoque: lote.estoque
       }
-
+      
       return this.httpClient.post<Lote>(this.baseUrl, data);
     }
-  
-    update(lote: Lote): Observable<any> {
+    
+    update(lote: Lote): Observable<Lote> {
       const data = {
         idRoteador: lote.idRoteador,
         data: lote.data,

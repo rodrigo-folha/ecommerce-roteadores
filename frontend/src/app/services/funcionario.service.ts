@@ -43,7 +43,7 @@ export class FuncionarioService {
           senha: usuario.senha,
           telefones: usuario.telefones.map(telefone => ({
             codigoArea: telefone.codigoArea,
-            numerro: telefone.numero
+            numero: telefone.numero
           })),
           enderecos: usuario.enderecos.map(endereco => ({
             logradouro: endereco.logradouro,

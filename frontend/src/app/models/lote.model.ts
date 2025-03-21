@@ -7,5 +7,4 @@ export class Lote {
     estoque!: number;
     data!: Date;
     idRoteador!: number;
-    // roteador!: Roteador;
 }

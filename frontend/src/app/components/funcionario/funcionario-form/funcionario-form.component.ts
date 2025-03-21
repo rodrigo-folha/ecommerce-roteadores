@@ -19,6 +19,7 @@ import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/cor
 import { Telefone } from '../../../models/telefone.model';
 import { Cidade } from '../../../models/cidade.model';
 import { CidadeService } from '../../../services/cidade.service';
+import { Endereco } from '../../../models/endereco.model';
 
 @Component({
   selector: 'app-funcionario-form',
@@ -90,6 +91,14 @@ export class FuncionarioFormComponent {
       enderecos: this.formBuilder.array([]),
     });
 
+    usuario?.telefones.forEach(telefone => {
+      this.adicionarTelefone(telefone);
+    })
+
+    usuario?.enderecos.forEach(endereco => {
+      this.adicionarEndereco(endereco);
+    })
+
   }
 
   get telefones(): FormArray {
@@ -98,36 +107,27 @@ export class FuncionarioFormComponent {
 
   adicionarTelefone(telefone?: Telefone): void {
     const telefoneForm = this.formBuilder.group({
-      codigoArea: [telefone ? telefone.codigoArea : ''],
-      numero: [telefone ? telefone.numero : '']
+      codigoArea: [telefone ? telefone.codigoArea : '',[Validators.required]],
+      numero: [telefone ? telefone.numero : '',[Validators.required]]
     });
     this.telefones.push(telefoneForm);
-  }
-
-  criarTelefoneFormGroup(): FormGroup {
-    return this.formBuilder.group({
-      codigoArea: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
-      numero: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(9)]],
-    });
   }
 
   get enderecos(): FormArray {
     return this.formGroup.get('enderecos') as FormArray;
   }
 
-  adicionarEndereco(endereco?: any): void {
-    this.enderecos.push(this.criarEnderecoFormGroup());
-  }
-
-  criarEnderecoFormGroup(): FormGroup {
-    return this.formBuilder.group({
-      logradouro: ['', Validators.required],
-      bairro: ['', Validators.required],
-      numero: ['', Validators.required],
-      complemento: [''],
-      cep: ['', Validators.required],
-      cidade: ['', Validators.required],
-    });
+  adicionarEndereco(endereco?: Endereco): void {
+    console.log('Endereco', endereco);
+    const enderecoForm = this.formBuilder.group({
+      logradouro: [endereco ? endereco.logradouro : '',[Validators.required]],
+      bairro: [endereco ? endereco.bairro : '',[Validators.required]],
+      numero: [endereco ? endereco.numero : '',[Validators.required]],
+      complemento: [endereco ? endereco.complemento : ''],
+      cep: [endereco ? endereco.cep : '',[Validators.required]],
+      cidade: [endereco ? endereco.cidade : '',[Validators.required]],
+    })
+    this.enderecos.push(enderecoForm);
   }
 
   removeEndereco(index: number) {
@@ -181,5 +181,9 @@ export class FuncionarioFormComponent {
         console.log('Erro ao excluir', JSON.stringify(e));
       },
     });
+  }
+
+  compareCidades(c1: Cidade, c2: Cidade): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 }

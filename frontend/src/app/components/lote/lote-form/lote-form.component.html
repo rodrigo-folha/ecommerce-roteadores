@@ -56,9 +56,9 @@
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Roteador</mat-label>
-          <mat-select formControlName="roteador">
+          <mat-select formControlName="idRoteador">
             @for (item of roteadores; track item) {
-            <mat-option [value]="item">
+            <mat-option [value]="item.id">
               {{ item.nome }}
             </mat-option>
             }
