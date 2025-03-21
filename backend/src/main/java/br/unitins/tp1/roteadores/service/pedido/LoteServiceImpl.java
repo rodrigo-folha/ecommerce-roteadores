@@ -60,7 +60,7 @@ public class LoteServiceImpl implements LoteService {
         if (dto == null)
             throw new ValidationException("dto", "Informe os campos necessarios");
             
-        if (loteRepository.findByIdRoteador(dto.idRoteador()) == null)
+        if (roteadorService.findById(dto.idRoteador()) == null)
             throw new ValidationException("idRoteador", "id do roteador nao encontrado.");
 
         // buscando o estado a partir de um id do lote
@@ -82,7 +82,7 @@ public class LoteServiceImpl implements LoteService {
         if (loteRepository.findById(id) == null)
             throw new ValidationException("id", "id nao encontrado");
 
-        if (loteRepository.findByIdRoteador(dto.idRoteador()) == null)
+        if (roteadorService.findById(dto.idRoteador()) == null)
             throw new ValidationException("idRoteador", "id do roteador nao encontrado.");
 
         Lote lote = loteRepository.findById(id);

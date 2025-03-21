@@ -254,7 +254,9 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Override
     @Transactional
     public void delete(Long id) {
+        Usuario usuario = funcionarioRepository.findById(id).getUsuario();
         funcionarioRepository.deleteById(id);
+        usuarioRepository.deleteById(usuario.getId());
     }
 
     @Override
