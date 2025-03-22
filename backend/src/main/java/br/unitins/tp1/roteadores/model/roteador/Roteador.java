@@ -3,6 +3,7 @@ package br.unitins.tp1.roteadores.model.roteador;
 import java.util.List;
 
 import br.unitins.tp1.roteadores.model.DefaultEntity;
+import br.unitins.tp1.roteadores.model.Fornecedor;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -41,6 +42,10 @@ public class Roteador extends DefaultEntity {
     @ManyToOne
     @JoinColumn(name = "id_quantidadeAntena")
     private QuantidadeAntena quantidadeAntena;
+
+    @ManyToOne
+    @JoinColumn(name = "id_fornecedor")
+    private Fornecedor fornecedor;
 
     @ElementCollection
     @CollectionTable(name = "imagem_roteador", joinColumns = @JoinColumn(name = "id_roteador"))
@@ -108,6 +113,14 @@ public class Roteador extends DefaultEntity {
 
     public void setQuantidadeAntena(QuantidadeAntena quantidadeAntena) {
         this.quantidadeAntena = quantidadeAntena;
+    }
+
+    public Fornecedor getFornecedor() {
+        return fornecedor;
+    }
+
+    public void setFornecedor(Fornecedor fornecedor) {
+        this.fornecedor = fornecedor;
     }
 
     public List<String> getListaImagem() {

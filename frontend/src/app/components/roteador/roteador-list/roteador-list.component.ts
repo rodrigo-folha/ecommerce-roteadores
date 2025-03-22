@@ -53,6 +53,7 @@ export class RoteadorListComponent {
     'protocoloSeguranca',
     'quantidadeAntena',
     'sinalWireless',
+    'fornecedor',
     'acao'
   ];
 

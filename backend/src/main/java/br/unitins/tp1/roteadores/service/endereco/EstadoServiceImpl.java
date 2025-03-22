@@ -6,6 +6,7 @@ import br.unitins.tp1.roteadores.dto.endereco.EstadoRequestDTO;
 import br.unitins.tp1.roteadores.model.endereco.Estado;
 import br.unitins.tp1.roteadores.repository.EstadoRepository;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -23,15 +24,15 @@ public class EstadoServiceImpl implements EstadoService {
         return estadoRepository.findById(id);
     }
 
-    @Override
-    public List<Estado> findByNome(String nome) {
-        return estadoRepository.findByNome(nome);
-    }
+    // @Override
+    // public List<Estado> findByNome(String nome) {
+    //     return estadoRepository.findByNome(nome);
+    // }
 
-    @Override
-    public List<Estado> findAll() {
-        return estadoRepository.findAll().list();
-    }
+    // @Override
+    // public List<Estado> findAll() {
+    //     return estadoRepository.findAll().list();
+    // }
 
     @Override
     @Transactional
@@ -63,5 +64,36 @@ public class EstadoServiceImpl implements EstadoService {
     public void delete(Long id) {
         estadoRepository.deleteById(id);
     }
+
+
+
+    @Override
+    public List<Estado> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<Estado> query = null;
+        if (page == null || pageSize == null)
+            query = estadoRepository.findAll();
+        else
+            query = estadoRepository.findAll().page(page, pageSize);
+
+        return query.list();
+    }
+
+    @Override
+    public List<Estado> findByNome(String nome, Integer page, Integer pageSize) {
+        return estadoRepository.findByNome(nome).page(page, pageSize).list();
+    }
+
+    @Override
+    public long count() {
+        return estadoRepository.findAll().count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return estadoRepository.findByNome(nome).count();
+    }
+
+    
+
     
 }

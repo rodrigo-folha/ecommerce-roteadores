@@ -57,7 +57,8 @@ export class RoteadorService {
       idSistemaOperacional: roteador.sistemaOperacional.id,
       idBandaFrequencia: roteador.bandaFrequencia.id,
       idProtocoloSeguranca: roteador.protocoloSeguranca.id,
-      idQuantidadeAntena: roteador.quantidadeAntena.id
+      idQuantidadeAntena: roteador.quantidadeAntena.id,
+      idFornecedor: roteador.fornecedor.id
     }
 
     return this.httpClient.post<Roteador>(`${this.baseUrl}`, data);
@@ -72,7 +73,8 @@ export class RoteadorService {
       idSistemaOperacional: roteador.sistemaOperacional.id,
       idBandaFrequencia: roteador.bandaFrequencia.id,
       idProtocoloSeguranca: roteador.protocoloSeguranca.id,
-      idQuantidadeAntena: roteador.quantidadeAntena.id
+      idQuantidadeAntena: roteador.quantidadeAntena.id,
+      idFornecedor: roteador.fornecedor.id
     }
 
     return this.httpClient.put<Roteador>(`${this.baseUrl}/${roteador.id}`, data);

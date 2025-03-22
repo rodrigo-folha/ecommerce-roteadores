@@ -1,21 +1,26 @@
 package br.unitins.tp1.roteadores.resource;
 
+import java.util.List;
+
 import org.jboss.logging.Logger;
 
 import br.unitins.tp1.roteadores.dto.endereco.EstadoRequestDTO;
 import br.unitins.tp1.roteadores.dto.endereco.EstadoResponseDTO;
+import br.unitins.tp1.roteadores.model.endereco.Estado;
 import br.unitins.tp1.roteadores.service.endereco.EstadoService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -38,26 +43,46 @@ public class EstadoResource {
         return Response.ok(EstadoResponseDTO.valueOf(estadoService.findById(id))).build();
     }
 
+    // @GET
+    // // @RolesAllowed({"Adm", "User"})
+    // @Path("/search/{nome}")
+    // public Response findByNome(@PathParam("nome") String nome) {
+    //     LOG.info("Execucao do metodo findByNome. Nome: " + nome);
+    //     return Response.ok(estadoService.findByNome(nome)
+    //             .stream()
+    //             .map(EstadoResponseDTO::valueOf)
+    //             .toList()).build();
+    // }
+
     @GET
-    // @RolesAllowed({"Adm", "User"})
-    @Path("/search/{nome}")
-    public Response findByNome(@PathParam("nome") String nome) {
-        LOG.info("Execucao do metodo findByNome. Nome: " + nome);
-        return Response.ok(estadoService.findByNome(nome)
-                .stream()
-                .map(EstadoResponseDTO::valueOf)
-                .toList()).build();
+    @Path("/count")
+    public long total() {
+        return estadoService.count();
     }
 
     @GET
-    // @RolesAllowed({"Adm", "User"})
-    public Response findAll() {
-        LOG.info("Execucao do metodo findAll");
-        return Response.ok(estadoService.findAll()
-                .stream()
-                .map(o -> EstadoResponseDTO.valueOf(o))
-                .toList()).build();
+    @Path("nome/{nome}/count")
+    public long totalPorNome(@PathParam("nome") String nome) {
+        return estadoService.count();
     }
+
+    @GET
+    public List<Estado> buscarTodos(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) { 
+        return estadoService.findAll(page, pageSize);
+    }
+
+    // @GET
+    // // @RolesAllowed({"Adm", "User"})
+    // public Response findAll() {
+    //     LOG.info("Execucao do metodo findAll");
+    //     return Response.ok(estadoService.findAll()
+    //             .stream()
+    //             .map(o -> EstadoResponseDTO.valueOf(o))
+    //             .toList()).build();
+    // }
 
     @POST
     // @RolesAllowed({"Adm"})

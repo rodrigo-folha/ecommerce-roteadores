@@ -23,6 +23,8 @@ import { SinalWireless } from '../../../models/sinal-wireless.model';
 import { QuantidadeAntena } from '../../../models/quantidade-antena.model';
 import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
 import { BandaFrequencia } from '../../../models/banda-frequencia.model';
+import { Fornecedor } from '../../../models/fornecedor.model';
+import { FornecedorService } from '../../../services/fornecedor.service';
 
 @Component({
   selector: 'app-roteador-form',
@@ -50,6 +52,7 @@ export class RoteadorFormComponent {
   protocolosSeguranca: ProtocoloSeguranca[] = [];
   quantidadeAntenas: QuantidadeAntena[] = [];
   sinalWireless: SinalWireless[] = [];
+  fornecedores: Fornecedor[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -60,7 +63,8 @@ export class RoteadorFormComponent {
     private bandaFrequenciaService: BandaFrequenciaService,
     private protocoloSegurancaService: ProtocoloSegurancaService,
     private quantidadeAntenaService: QuantidadeAntenaService,
-    private sinalWirelessService: SinalWirelessService
+    private sinalWirelessService: SinalWirelessService,
+    private fornecedorService: FornecedorService,
   ) {
     this.formGroup = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -71,6 +75,7 @@ export class RoteadorFormComponent {
       protocoloSeguranca: ['', Validators.required],
       quantidadeAntena: ['', Validators.required],
       sinalWireless: ['', Validators.required],
+      fornecedor: ['', Validators.required],
     });
   }
 
@@ -81,12 +86,14 @@ export class RoteadorFormComponent {
       protocolosSeguranca: this.protocoloSegurancaService.findAll(),
       quantidadeAntenas: this.quantidadeAntenaService.findAll(),
       sinaisWireless: this.sinalWirelessService.findAll(),
+      fornecedores: this.fornecedorService.findAll(),
     }).subscribe((response) => {
       this.sistemasOperacionais = response.sistemasOperacionais;
       this.bandaFrequencias = response.bandasFrequencia;
       this.protocolosSeguranca = response.protocolosSeguranca;
       this.quantidadeAntenas = response.quantidadeAntenas;
       this.sinalWireless = response.sinaisWireless;
+      this.fornecedores = response.fornecedores;
       this.initializeForm();
     });
 
@@ -100,6 +107,7 @@ export class RoteadorFormComponent {
     const protocoloSeguranca = this.protocolosSeguranca.find((item) => item.id === (roteador?.protocoloSeguranca?.id || null));
     const quantidadeAntena = this.quantidadeAntenas.find((item) => item.id === (roteador?.quantidadeAntena?.id || null));
     const sinalWireless = this.sinalWireless.find((item) => item.id === (roteador?.sinalWireless?.id || null));
+    const fornecedor = this.fornecedores.find((item) => item.id === (roteador?.fornecedor?.id || null));
 
     this.formGroup = this.formBuilder.group({
       id: [ 
@@ -118,6 +126,7 @@ export class RoteadorFormComponent {
       protocoloSeguranca: [protocoloSeguranca, Validators.required],
       quantidadeAntena: [quantidadeAntena, Validators.required],
       sinalWireless: [sinalWireless, Validators.required],
+      fornecedor: [fornecedor, Validators.required],
     })
   }
 

@@ -161,6 +161,23 @@
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Fornecedor</mat-label>
+                  <mat-select formControlName="fornecedor">
+                    <mat-option>None</mat-option>
+                    @for (item of fornecedores; track item) {
+                    <mat-option [value]="item">
+                      {{ item.nome }}
+                    </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <button mat-fab color="primary" routerLink="/admin/fornecedores/new">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
             </div>
           </div>
         </div>

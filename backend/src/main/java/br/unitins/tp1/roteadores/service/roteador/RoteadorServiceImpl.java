@@ -7,6 +7,7 @@ import br.unitins.tp1.roteadores.dto.roteador.RoteadorRequestDTO;
 import br.unitins.tp1.roteadores.model.roteador.Roteador;
 import br.unitins.tp1.roteadores.repository.LoteRepository;
 import br.unitins.tp1.roteadores.repository.RoteadorRepository;
+import br.unitins.tp1.roteadores.service.FornecedorService;
 import br.unitins.tp1.roteadores.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -32,6 +33,9 @@ public class RoteadorServiceImpl implements RoteadorService {
 
     @Inject
     public QuantidadeAntenaService quantidadeAntenaService;
+
+    @Inject
+    public FornecedorService fornecedorService;
 
     @Inject
     public LoteRepository loteRepository;
@@ -99,6 +103,7 @@ public class RoteadorServiceImpl implements RoteadorService {
         roteador.setBandaFrequencia(bandaFrequenciaService.findById(dto.idBandaFrequencia()));
         roteador.setProtocoloSeguranca(protocoloSegurancaService.findById(dto.idProtocoloSeguranca()));
         roteador.setQuantidadeAntena(quantidadeAntenaService.findById(dto.idQuantidadeAntena()));
+        roteador.setFornecedor(fornecedorService.findById(dto.idFornecedor()));
         roteadorRepository.persist(roteador);
 
         return roteador;
@@ -122,6 +127,7 @@ public class RoteadorServiceImpl implements RoteadorService {
         roteador.setBandaFrequencia(bandaFrequenciaService.findById(dto.idBandaFrequencia()));
         roteador.setProtocoloSeguranca(protocoloSegurancaService.findById(dto.idProtocoloSeguranca()));
         roteador.setQuantidadeAntena(quantidadeAntenaService.findById(dto.idQuantidadeAntena()));
+        roteador.setFornecedor(fornecedorService.findById(dto.idFornecedor()));
 
         return roteador;
     }

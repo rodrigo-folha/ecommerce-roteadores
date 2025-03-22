@@ -28,7 +28,10 @@ public record RoteadorRequestDTO (
     Long idProtocoloSeguranca,
     @NotNull
     @Positive(message = "Informe um campo valido para o id de Quantidade de Antenas")
-    Long idQuantidadeAntena
+    Long idQuantidadeAntena,
+    @NotNull
+    @Positive(message = "Informe um campo valido para o id de Fornecedor")
+    Long idFornecedor
     
 ){
 

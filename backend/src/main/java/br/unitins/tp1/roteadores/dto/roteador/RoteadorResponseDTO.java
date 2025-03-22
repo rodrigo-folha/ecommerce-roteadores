@@ -2,6 +2,7 @@ package br.unitins.tp1.roteadores.dto.roteador;
 
 import java.util.List;
 
+import br.unitins.tp1.roteadores.dto.FornecedorResponseDTO;
 import br.unitins.tp1.roteadores.model.roteador.Roteador;
 
 public record RoteadorResponseDTO(
@@ -14,6 +15,7 @@ public record RoteadorResponseDTO(
     BandaFrequenciaResponseDTO bandaFrequencia,
     ProtocoloSegurancaResponseDTO protocoloSeguranca,
     QuantidadeAntenaResponseDTO quantidadeAntena,
+    FornecedorResponseDTO fornecedor,
     List<String> listaImagem
 ) {
     public static RoteadorResponseDTO valueOf(Roteador roteador) {
@@ -27,6 +29,7 @@ public record RoteadorResponseDTO(
             BandaFrequenciaResponseDTO.valueOf(roteador.getBandaFrequencia()),
             ProtocoloSegurancaResponseDTO.valueOf(roteador.getProtocoloSeguranca()),
             QuantidadeAntenaResponseDTO.valueOf(roteador.getQuantidadeAntena()),
+            FornecedorResponseDTO.valueOf(roteador.getFornecedor()),
             roteador.getListaImagem()
         );
     }
