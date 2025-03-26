@@ -68,7 +68,7 @@ public class ClienteBasicoResource {
     }
 
     @GET
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     public Response getMinhasInformacoes() {
         LOG.info("Execucao do metodo getMinhasInformacoes");
         String email = jsonWebToken.getSubject();
@@ -76,7 +76,7 @@ public class ClienteBasicoResource {
     }
 
     @PUT
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update")
     public Response update(@Valid ClienteUpdateRequestDTO cliente) {
         LOG.info("Execucao do metodo update");
@@ -87,7 +87,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update/senha")
     public Response updateSenha(@Valid SenhaPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateSenha");
@@ -98,7 +98,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update/nome")
     public Response updateNome(@Valid NomePatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateNome");
@@ -109,7 +109,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update/cpf")
     public Response updateCpf(@Valid CpfPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateCpf");
@@ -120,7 +120,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update/datanascimento")
     public Response updateDataNascimento(@Valid DataNascimentoPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateDataNascimento");
@@ -131,7 +131,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update/email")
     public Response updateEmail(@Valid EmailPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateEmail");
@@ -142,7 +142,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update/enderecos/{idEndereco}")
     public Response updateEnderecoEspecifico(@PathParam("idEndereco") Long idEndereco, @Valid EnderecoRequestDTO endereco) {
         LOG.info("Execucao do metodo updateEnderecoEspecifico. Id do endereco: " + idEndereco);
@@ -152,7 +152,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update/enderecos")
     public Response updateEndereco(@Valid List<EnderecoRequestDTO> endereco) {
         LOG.info("Execucao do metodo updateEndereco.");
@@ -162,7 +162,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update/telefones/{idTelefone}")
     public Response updateTelefoneEspecifico(@PathParam("idTelefone") Long idTelefone, @Valid TelefoneRequestDTO telefone) {
         LOG.info("Execucao do metodo updateTelefoneEspecifico. Id do telefone: " + idTelefone);
@@ -172,7 +172,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/update/telefones")
     public Response updateTelefone(@Valid List<TelefoneRequestDTO> telefone) {
         LOG.info("Execucao do metodo updateTelefone.");
@@ -182,7 +182,7 @@ public class ClienteBasicoResource {
     }
 
     @GET
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/desejos")
     public Response getListaDesejos() {
         LOG.info("Execucao do metodo getListaDesejos");
@@ -194,7 +194,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/desejos/adicionar/{idProduto}")
     public Response adicionarProdutoListaDesejo(@PathParam("idProduto") Long idProduto) {
         String email = jsonWebToken.getSubject();
@@ -204,7 +204,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/desejos/remover/{idProduto}")
     public Response removerProdutoListaDesejo(@PathParam("idProduto") Long idProduto) {
         String email = jsonWebToken.getSubject();
@@ -214,7 +214,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/imagem/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadImage(@MultipartForm ImageForm form) {
@@ -231,7 +231,7 @@ public class ClienteBasicoResource {
     }
 
     @GET
-    @RolesAllowed({"User"})
+    // @RolesAllowed({"User"})
     @Path("/imagem/download/{nomeImagem}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadImage(@PathParam("nomeImagem") String nomeImagem) {

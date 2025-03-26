@@ -42,7 +42,7 @@ public class ClienteResource {
     public ClienteFileServiceImpl clienteFileService;
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
@@ -50,7 +50,7 @@ public class ClienteResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
@@ -61,7 +61,7 @@ public class ClienteResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/email/{email}")
     public Response findByEmail(@PathParam("email") String email) {
         LOG.info("Execucao do metodo findByEmail. Email: " + email);
@@ -72,7 +72,7 @@ public class ClienteResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/search/cpf/{cpf}")
     public Response findByCpf(@PathParam("cpf") String cpf) {
         LOG.info("Execucao do metodo findByCpf. Cpf: " + cpf);
@@ -83,7 +83,7 @@ public class ClienteResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     public Response findAll() {
         LOG.info("Execucao do metodo findAll");
         return Response.ok(clienteService.findAll()
@@ -101,7 +101,7 @@ public class ClienteResource {
     }
 
     @POST
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/gerarcliente/{email}")
     public Response gerarClienteFromFuncionario(@PathParam("email") String email) {
         LOG.info("Execucao do metodo gerarClienteFromFuncionario");
@@ -111,7 +111,7 @@ public class ClienteResource {
     }
 
     @DELETE
-    @RolesAllowed({"Adm"})
+    // @RolesAllowed({"Adm"})
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id do cliente: " + id);

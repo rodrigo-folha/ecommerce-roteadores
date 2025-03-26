@@ -298,7 +298,9 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public void delete(Long id) {
+        Usuario usuario = clienteRepository.findById(id).getUsuario();
         clienteRepository.deleteById(id);
+        usuarioRepository.delete(usuario);
     }
 
     @Override
