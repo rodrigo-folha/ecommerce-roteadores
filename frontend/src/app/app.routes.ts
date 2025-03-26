@@ -38,6 +38,12 @@ import { CupomListComponent } from './components/cupom/cupom-list/cupom-list.com
 import { CupomFormComponent } from './components/cupom/cupom-form/cupom-form.component';
 import { cupomResolver } from './components/cupom/cupom.resolver';
 import { HeaderAdminComponent } from './components/template/admin-template/header-admin/header-admin.component';
+import { FornecedorListComponent } from './components/fornecedor/fornecedor-list/fornecedor-list.component';
+import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form/fornecedor-form.component';
+import { fornecedorResolver } from './components/fornecedor/fornecedor.resolver';
+import { ClienteListComponent } from './components/cliente/cliente-list/cliente-list.component';
+import { ClienteFormComponent } from './components/cliente/cliente-form/cliente-form.component';
+import { clienteResolver } from './components/cliente/cliente.resolver';
 
 export const routes: Routes = [
 //   {path: 'estados', component: EstadoListComponent, title: 'Lista de Estados',},
@@ -88,10 +94,18 @@ export const routes: Routes = [
         {path: 'protocolosseguranca/new', component: ProtocolosegurancaFormComponent},
         {path: 'protocolosseguranca/edit/:id', component: ProtocolosegurancaFormComponent, resolve: {protocoloseguranca: protocoloSegurancaResolver}},
 
+        {path: 'clientes', component: ClienteListComponent},
+        {path: 'clientes/new', component: ClienteFormComponent},
+        {path: 'clientes/edit/:id', component: ClienteFormComponent, resolve: {cliente: clienteResolver}},
+
         {path: 'funcionarios', component: FuncionarioListComponent},
         {path: 'funcionarios/new', component: FuncionarioFormComponent},
         {path: 'funcionarios/edit/:id', component: FuncionarioFormComponent, resolve: {funcionario: funcionarioResolver}},
 
+        {path: 'fornecedores', component: FornecedorListComponent},
+        {path: 'fornecedores/new', component: FornecedorFormComponent},
+        {path: 'fornecedores/edit/:id', component: FornecedorFormComponent, resolve: {fornecedor: fornecedorResolver}},
+        
         {path: 'cupons', component: CupomListComponent},
         {path: 'cupons/new', component: CupomFormComponent},
         {path: 'cupons/edit/:id', component: CupomFormComponent, resolve: {cupom: cupomResolver}},

@@ -89,7 +89,7 @@ export class CadastroComponent {
     if (this.loginClienteForm.valid) {
       const cliente = this.loginClienteForm.value;
 
-      this.clienteService.create(cliente).subscribe({
+      this.clienteService.insertBasico(cliente).subscribe({
         next: () => {
           this.showNotification('Cliente cadastrado com sucesso!', 'success');
           this.navigationService.navigateTo('login');

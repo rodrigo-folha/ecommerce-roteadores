@@ -18,7 +18,7 @@ export class ClienteService {
     return this.httpClient.get<Cliente[]>(this.baseUrl);
   }
 
-  findById(id: number): Observable<Cliente> {
+  findById(id: string): Observable<Cliente> {
     return this.httpClient.get<Cliente>(`${this.baseUrl}/${id}`);
   }
 
@@ -34,7 +34,7 @@ export class ClienteService {
     return this.httpClient.get<Cliente>(`${this.baseUrl}/email/${email}`);
   }
 
-  create(usuario: Usuario): Observable<Cliente> {
+  insertBasico(usuario: Usuario): Observable<Cliente> {
     const data = {
       usuario: {
         nome: usuario.nome,
@@ -44,6 +44,59 @@ export class ClienteService {
       }
     }
     return this.httpClient.post<Cliente>(`${this.baseUrlClientesBasicos}/cadastrar-cliente/`, data);
+  }
+
+  insert(usuario: Usuario): Observable<Cliente> {
+        const data = {
+          usuario: {
+            nome: usuario.nome,
+            cpf: usuario.cpf,
+            dataNascimento: usuario.dataNascimento,
+            email: usuario.email,
+            senha: usuario.senha,
+            telefones: usuario.telefones.map(telefone => ({
+              codigoArea: telefone.codigoArea,
+              numero: telefone.numero
+            })),
+            enderecos: usuario.enderecos.map(endereco => ({
+              logradouro: endereco.logradouro,
+              bairro: endereco.bairro,
+              numero: endereco.numero,
+              complemento: endereco.complemento,
+              cep: endereco.cep,
+              idCidade: endereco.cidade.id
+            }))
+          }
+        };
+        return this.httpClient.post<Cliente>(`${this.baseUrl}`, data);
+      }
+
+  update(usuario: Usuario): Observable<Cliente> {
+        const data = {
+          nome: usuario.nome,
+          cpf: usuario.cpf,
+          dataNascimento: usuario.dataNascimento,
+          email: usuario.email,
+          senha: usuario.senha,
+          telefones: usuario.telefones.map(telefone => ({
+            codigoArea: telefone.codigoArea,
+            numero: telefone.numero
+          })),
+          enderecos: usuario.enderecos.map(endereco => ({
+            logradouro: endereco.logradouro,
+            bairro: endereco.bairro,
+            numero: endereco.numero,
+            complemento: endereco.complemento,
+            cep: endereco.cep,
+            idCidade: endereco.cidade.id
+          }))
+        };
+  
+        return this.httpClient.put<Cliente>(`${this.baseUrl}/${usuario.id}`, data);
+      }
+
+  delete(cliente: Cliente): Observable<Cliente> {
+    return this.httpClient.delete<Cliente>(`${this.baseUrl}/${cliente.id}`);
   }
 
 }
