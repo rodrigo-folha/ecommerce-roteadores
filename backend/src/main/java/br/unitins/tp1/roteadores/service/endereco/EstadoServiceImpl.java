@@ -65,8 +65,6 @@ public class EstadoServiceImpl implements EstadoService {
         estadoRepository.deleteById(id);
     }
 
-
-
     @Override
     public List<Estado> findAll(Integer page, Integer pageSize) {
         PanacheQuery<Estado> query = null;

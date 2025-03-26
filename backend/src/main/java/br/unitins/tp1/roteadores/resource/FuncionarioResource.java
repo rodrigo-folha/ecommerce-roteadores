@@ -21,7 +21,6 @@ import br.unitins.tp1.roteadores.form.ImageForm;
 import br.unitins.tp1.roteadores.service.file.FuncionarioFileServiceImpl;
 import br.unitins.tp1.roteadores.service.usuario.FuncionarioService;
 import br.unitins.tp1.roteadores.service.usuario.UsuarioService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;

@@ -1,14 +1,11 @@
 package br.unitins.tp1.roteadores.resource;
 
-import java.util.List;
-
 import org.jboss.logging.Logger;
 
+import br.unitins.tp1.roteadores.dto.PaginacaoResponseDTO;
 import br.unitins.tp1.roteadores.dto.endereco.EstadoRequestDTO;
 import br.unitins.tp1.roteadores.dto.endereco.EstadoResponseDTO;
-import br.unitins.tp1.roteadores.model.endereco.Estado;
 import br.unitins.tp1.roteadores.service.endereco.EstadoService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -43,16 +40,20 @@ public class EstadoResource {
         return Response.ok(EstadoResponseDTO.valueOf(estadoService.findById(id))).build();
     }
 
-    // @GET
-    // // @RolesAllowed({"Adm", "User"})
-    // @Path("/search/{nome}")
-    // public Response findByNome(@PathParam("nome") String nome) {
-    //     LOG.info("Execucao do metodo findByNome. Nome: " + nome);
-    //     return Response.ok(estadoService.findByNome(nome)
-    //             .stream()
-    //             .map(EstadoResponseDTO::valueOf)
-    //             .toList()).build();
-    // }
+    @GET
+    // @RolesAllowed({"Adm", "User"})
+    @Path("/search/{nome}")
+    public Response findByNome(@PathParam("nome") String nome,
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = estadoService.count(nome);
+        LOG.info("Execucao do metodo findByNome. Nome: " + nome);
+        PaginacaoResponseDTO<EstadoResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, estadoService.findByNome(nome, page, pageSize).stream().map(EstadoResponseDTO::valueOf).toList());
+        
+        return Response.ok(paginacao).build();
+    }
 
     @GET
     @Path("/count")
@@ -63,26 +64,23 @@ public class EstadoResource {
     @GET
     @Path("nome/{nome}/count")
     public long totalPorNome(@PathParam("nome") String nome) {
-        return estadoService.count();
+        return estadoService.count(nome);
     }
 
     @GET
-    public List<Estado> buscarTodos(
+    // @RolesAllowed({"Adm", "User"})
+    public Response findAll(
         @QueryParam("page") @DefaultValue("0") int page,
         @QueryParam("pageSize") @DefaultValue("100") int pageSize
-    ) { 
-        return estadoService.findAll(page, pageSize);
-    }
+    ) {
 
-    // @GET
-    // // @RolesAllowed({"Adm", "User"})
-    // public Response findAll() {
-    //     LOG.info("Execucao do metodo findAll");
-    //     return Response.ok(estadoService.findAll()
-    //             .stream()
-    //             .map(o -> EstadoResponseDTO.valueOf(o))
-    //             .toList()).build();
-    // }
+        Long count = estadoService.count();
+        LOG.info("Execucao do metodo findAll");
+        PaginacaoResponseDTO<EstadoResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, estadoService.findAll(page, pageSize).stream().map(EstadoResponseDTO::valueOf).toList());
+        
+        return Response.ok(paginacao).build();
+    }
 
     @POST
     // @RolesAllowed({"Adm"})

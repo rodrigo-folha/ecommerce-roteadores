@@ -10,7 +10,6 @@ import br.unitins.tp1.roteadores.dto.roteador.RoteadorResponseDTO;
 import br.unitins.tp1.roteadores.form.ImageForm;
 import br.unitins.tp1.roteadores.service.file.RoteadorFileServiceImpl;
 import br.unitins.tp1.roteadores.service.roteador.RoteadorService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;

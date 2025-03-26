@@ -5,7 +5,6 @@ import org.jboss.logging.Logger;
 import br.unitins.tp1.roteadores.dto.pedido.CupomDescontoRequestDTO;
 import br.unitins.tp1.roteadores.dto.pedido.CupomDescontoResponseDTO;
 import br.unitins.tp1.roteadores.service.pedido.CupomDescontoService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;

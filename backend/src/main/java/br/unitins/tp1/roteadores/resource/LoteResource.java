@@ -5,7 +5,6 @@ import org.jboss.logging.Logger;
 import br.unitins.tp1.roteadores.dto.pedido.LoteRequestDTO;
 import br.unitins.tp1.roteadores.dto.pedido.LoteResponseDTO;
 import br.unitins.tp1.roteadores.service.pedido.LoteService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;

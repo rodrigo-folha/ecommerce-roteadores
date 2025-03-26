@@ -9,7 +9,6 @@ import br.unitins.tp1.roteadores.dto.pagamento.CartaoRequestDTO;
 import br.unitins.tp1.roteadores.dto.pagamento.CartaoResponseDTO;
 import br.unitins.tp1.roteadores.model.pagamento.Cartao;
 import br.unitins.tp1.roteadores.service.CartaoService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;

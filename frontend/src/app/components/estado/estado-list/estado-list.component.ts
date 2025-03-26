@@ -1,10 +1,12 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Estado } from '../../../models/estado.model';
 import { EstadoService } from '../../../services/estado.service';
@@ -14,9 +16,12 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-estado-list',
   imports: [
+    NgIf,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     CommonModule,
     MatPaginatorModule,
@@ -27,28 +32,66 @@ import Swal from 'sweetalert2';
 })
 export class EstadoListComponent {
   estados: Estado[] = [];
+  displayedColumns: string[] = ['id', 'nome', 'sigla', 'acao'];
+  totalRecords = 0;
+  pageSize = 5;
+  page = 0;
+  showSearch = false;
+  filterValue = '';
+  estadosFiltrados: Estado[] = [];
 
   constructor(private estadoService: EstadoService, private router: Router) {}
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
 
   ngOnInit(): void {
     this.carregarEstados();
   }
 
   carregarEstados(): void {
-    this.estadoService.findAll().subscribe((estados) => {
-      this.estados = estados;
-      this.dataSource.data = this.estados;
+    this.estadoService.findAll().subscribe(data => {
+      this.estados = data.resultado;
+      this.applyCurrentFilter();
+      this.totalRecords = data.total;
     });
+    
   }
 
-  displayedColumns: string[] = ['id', 'nome', 'sigla', 'acao'];
-  dataSource = new MatTableDataSource<any>();
+  applyCurrentFilter(): void {
+    const normalizedFilter = this.filterValue.trim().toLowerCase();
+    
+    const filtered = this.estados.filter(
+      (data) => 
+        data.nome.toString().toLowerCase().includes(normalizedFilter) ||
+        data.sigla.toString().toLowerCase().includes(normalizedFilter)
+    );
+  
+    this.estadosFiltrados = filtered.slice(
+      this.page * this.pageSize,
+      (this.page + 1) * this.pageSize
+    );
+  
+    this.totalRecords = filtered.length;  
+  }
+
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  this.page = 0;
+  this.applyCurrentFilter();
+  }
+
+  toggleSearch():void {
+    this.showSearch = !this.showSearch;
+  }
+
+  paginar(event: PageEvent): void {
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    if (this.filterValue) {
+      this.applyCurrentFilter();
+    } else {
+      this.carregarEstados();
+    }
+  }
 
   excluir(estado: Estado): void {
     Swal.fire({

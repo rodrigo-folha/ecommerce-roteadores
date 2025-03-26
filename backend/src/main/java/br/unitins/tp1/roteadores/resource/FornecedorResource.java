@@ -9,7 +9,6 @@ import br.unitins.tp1.roteadores.dto.FornecedorResponseDTO;
 import br.unitins.tp1.roteadores.dto.TelefoneRequestDTO;
 import br.unitins.tp1.roteadores.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.roteadores.service.FornecedorService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;

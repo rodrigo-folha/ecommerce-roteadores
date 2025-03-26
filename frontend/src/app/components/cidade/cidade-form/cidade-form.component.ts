@@ -54,7 +54,7 @@ export class CidadeFormComponent {
 
   ngOnInit(): void {
     this.estadoService.findAll().subscribe((data) => {
-      this.estados = data;
+      this.estados = data.resultado;
       this.initializeForm();
     });
   }

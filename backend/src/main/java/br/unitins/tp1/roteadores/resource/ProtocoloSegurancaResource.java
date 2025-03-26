@@ -5,7 +5,6 @@ import org.jboss.logging.Logger;
 import br.unitins.tp1.roteadores.dto.roteador.ProtocoloSegurancaRequestDTO;
 import br.unitins.tp1.roteadores.dto.roteador.ProtocoloSegurancaResponseDTO;
 import br.unitins.tp1.roteadores.service.roteador.ProtocoloSegurancaService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;

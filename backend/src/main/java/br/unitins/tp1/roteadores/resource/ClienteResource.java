@@ -8,7 +8,6 @@ import br.unitins.tp1.roteadores.dto.usuario.ClienteResponseDTO;
 import br.unitins.tp1.roteadores.service.file.ClienteFileServiceImpl;
 import br.unitins.tp1.roteadores.service.usuario.ClienteService;
 import br.unitins.tp1.roteadores.service.usuario.UsuarioService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
