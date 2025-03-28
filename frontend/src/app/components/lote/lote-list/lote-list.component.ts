@@ -80,14 +80,13 @@ export class LoteListComponent {
       confirmButtonText: "Sim, deletar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deletado!",
-          text: "Lote deletado com sucesso!",
-          icon: "success"
-        });
-
         this.loteService.delete(lote).subscribe({
           next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Lote deletado com sucesso!",
+              icon: "success"
+            });
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
               this.router.navigate(['/admin/lotes']);
             });
@@ -98,7 +97,5 @@ export class LoteListComponent {
         });
       }
     });
-
-
   }
 }

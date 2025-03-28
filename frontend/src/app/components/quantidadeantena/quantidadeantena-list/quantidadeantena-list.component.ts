@@ -103,14 +103,13 @@ export class QuantidadeantenaListComponent {
       confirmButtonText: "Sim, deletar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deletado!",
-          text: "Quantidade de Antena deletado com sucesso!",
-          icon: "success"
-        });
-
         this.quantidadeAntenaService.delete(quantidadeAntena).subscribe({
           next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Quantidade de Antena deletado com sucesso!",
+              icon: "success"
+            });
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
               this.router.navigate(['/admin/quantidadeantenas']);
             });

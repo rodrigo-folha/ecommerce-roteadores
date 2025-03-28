@@ -11,6 +11,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
 import { Estado } from '../../../models/estado.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-estado-form',
@@ -96,13 +97,32 @@ export class EstadoFormComponent {
 
   excluir() {
     const estado = this.formGroup.value;
-    this.estadoService.delete(estado).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/estados');
-      },
-      error: (e) => {
-        console.log('Erro ao excluir', JSON.stringify(e));
-      },
-    });
+    Swal.fire({
+          title: "Você tem certeza?",
+          text: "Vou não vai poder reverter isso!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Sim, deletar!"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.estadoService.delete(estado).subscribe({
+              next: () => {
+                Swal.fire({
+                  title: "Deletado!",
+                  text: "Estado deletado com sucesso!",
+                  icon: "success"
+                });
+                this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                  this.router.navigate(['/admin/estados']);
+                });
+              },
+              error: (e) => {
+                console.log('Erro ao excluir', JSON.stringify(e));
+              }
+            });
+          }
+        });
   }
 }

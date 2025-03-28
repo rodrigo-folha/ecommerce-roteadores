@@ -66,14 +66,13 @@ export class CupomListComponent {
       confirmButtonText: "Sim, deletar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deletado!",
-          text: "Cupom deletado com sucesso!",
-          icon: "success"
-        });
-
         this.cupomService.delete(cupom).subscribe({
           next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Cupom deletado com sucesso!",
+              icon: "success"
+            });
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
               this.router.navigate(['/admin/cupons']);
             });

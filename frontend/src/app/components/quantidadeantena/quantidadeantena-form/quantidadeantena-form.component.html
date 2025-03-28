@@ -13,7 +13,7 @@
           <form [formGroup]="formGroup">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Quantidade</mat-label>
-              <input matInput type="text" formControlName="quantidade" />
+              <input matInput type="text" formControlName="quantidade" onkeypress="return /^[0-9]+$/.test(event.key)" />
               <mat-error
                 *ngIf="
                   formGroup.get('quantidade') &&
@@ -38,7 +38,6 @@
             *ngIf="formGroup?.get('id')?.value"
             color="warn"
             [disabled]="formGroup.invalid"
-            routerLink="/admin/quantidadeantenas"
             (click)="excluir()"
           >
             Excluir

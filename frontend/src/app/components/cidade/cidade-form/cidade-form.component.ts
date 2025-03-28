@@ -13,6 +13,7 @@ import { Cidade } from '../../../models/cidade.model';
 import { Estado } from '../../../models/estado.model';
 import { CidadeService } from '../../../services/cidade.service';
 import { EstadoService } from '../../../services/estado.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cidade-form',
@@ -103,13 +104,32 @@ export class CidadeFormComponent {
 
   excluir() {
     const cidade = this.formGroup.value;
-    this.cidadeService.delete(cidade).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/cidades');
-      },
-      error: (e) => {
-        console.log('Erro ao excluir', JSON.stringify(e));
-      },
-    });
+    Swal.fire({
+          title: "Você tem certeza?",
+          text: "Vou não vai poder reverter isso!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Sim, deletar!"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.cidadeService.delete(cidade).subscribe({
+              next: () => {
+                Swal.fire({
+                  title: "Deletado!",
+                  text: "Cidade deletado com sucesso!",
+                  icon: "success"
+                });
+                this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                  this.router.navigate(['/admin/cidades']);
+                });
+              },
+              error: (e) => {
+                console.log('Erro ao excluir', JSON.stringify(e));
+              }
+            });
+          }
+        });
   }
 }

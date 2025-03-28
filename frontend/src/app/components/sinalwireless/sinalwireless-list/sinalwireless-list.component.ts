@@ -105,14 +105,13 @@ export class SinalwirelessListComponent {
       confirmButtonText: "Sim, deletar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deletado!",
-          text: "Sinal Wireless deletado com sucesso!",
-          icon: "success"
-        });
-
         this.sinalWirelessService.delete(sinalWireless).subscribe({
           next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Sinal Wireless deletado com sucesso!",
+              icon: "success"
+            });
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
               this.router.navigate(['/admin/sinalwireless']);
             });
@@ -123,7 +122,5 @@ export class SinalwirelessListComponent {
         });
       }
     });
-
-
   }
 }

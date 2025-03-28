@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SinalWirelessService } from '../../../services/sinal-wireless.service';
 import { SinalWireless } from '../../../models/sinal-wireless.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sinalwireless-form',
@@ -94,13 +95,32 @@ export class SinalwirelessFormComponent {
 
   excluir() {
     const sinalWireless = this.formGroup.value;
-    this.sinalWirelessService.delete(sinalWireless).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/sinalwireless');
-      },
-      error: (e) => {
-        console.log('Erro ao excluir', JSON.stringify(e));
-      },
+    Swal.fire({
+      title: "Você tem certeza?",
+      text: "Vou não vai poder reverter isso!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, deletar!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.sinalWirelessService.delete(sinalWireless).subscribe({
+          next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Sinal Wireless deletado com sucesso!",
+              icon: "success"
+            });
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/admin/sinalwireless']);
+            });
+          },
+          error: (e) => {
+            console.log('Erro ao excluir', JSON.stringify(e));
+          }
+        });
+      }
     });
   }
 

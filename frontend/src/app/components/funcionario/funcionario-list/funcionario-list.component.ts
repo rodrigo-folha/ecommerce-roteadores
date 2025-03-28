@@ -77,14 +77,13 @@ export class FuncionarioListComponent {
       confirmButtonText: "Sim, deletar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deletado!",
-          text: "Funcionario deletado com sucesso!",
-          icon: "success"
-        });
-
         this.funcionarioService.delete(funcionario).subscribe({
           next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Funcionario deletado com sucesso!",
+              icon: "success"
+            });
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
               this.router.navigate(['/admin/funcionarios']);
             });
@@ -95,7 +94,5 @@ export class FuncionarioListComponent {
         });
       }
     });
-
-
   }
 }

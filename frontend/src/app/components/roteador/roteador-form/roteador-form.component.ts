@@ -25,6 +25,7 @@ import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
 import { BandaFrequencia } from '../../../models/banda-frequencia.model';
 import { Fornecedor } from '../../../models/fornecedor.model';
 import { FornecedorService } from '../../../services/fornecedor.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-roteador-form',
@@ -165,13 +166,32 @@ export class RoteadorFormComponent {
 
   excluir() {
     const roteador = this.formGroup.value;
-    this.roteadorService.delete(roteador).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/roteadores');
-      },
-      error: (e) => {
-        console.log('Erro ao excluir', JSON.stringify(e));
-      },
+    Swal.fire({
+      title: "Você tem certeza?",
+      text: "Vou não vai poder reverter isso!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, deletar!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.roteadorService.delete(roteador).subscribe({
+          next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Roteador deletado com sucesso!",
+              icon: "success"
+            });
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/admin/roteadores']);
+            });
+          },
+          error: (e) => {
+            console.log('Erro ao excluir', JSON.stringify(e));
+          }
+        });
+      }
     });
   }
 }

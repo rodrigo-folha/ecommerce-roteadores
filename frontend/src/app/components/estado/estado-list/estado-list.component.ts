@@ -104,14 +104,13 @@ export class EstadoListComponent {
       confirmButtonText: "Sim, deletar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deletado!",
-          text: "Estado deletado com sucesso!",
-          icon: "success"
-        });
-
         this.estadoService.delete(estado).subscribe({
           next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Estado deletado com sucesso!",
+              icon: "success"
+            });
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
               this.router.navigate(['/admin/estados']);
             });
@@ -122,7 +121,5 @@ export class EstadoListComponent {
         });
       }
     });
-
-
   }
 }

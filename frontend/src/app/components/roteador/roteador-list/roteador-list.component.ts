@@ -60,14 +60,14 @@ export class RoteadorListComponent {
   filterValue = '';
   roteadoresFiltrados: Roteador[] = [];
 
-  constructor(private roteadorservice: RoteadorService, private router: Router) {}
+  constructor(private roteadorService: RoteadorService, private router: Router) {}
 
   ngOnInit(): void {
     this.carregarRoteadores();
   }
 
   carregarRoteadores(): void {
-    this.roteadorservice.findAll().subscribe((roteadores) => {
+    this.roteadorService.findAll().subscribe((roteadores) => {
       this.roteadores = roteadores.resultado;
       this.applyCurrentFilter();
       this.totalRecords = roteadores.total;
@@ -132,14 +132,13 @@ export class RoteadorListComponent {
       confirmButtonText: "Sim, deletar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deletado!",
-          text: "Roteador deletado com sucesso!",
-          icon: "success"
-        });
-
-        this.roteadorservice.delete(roteador).subscribe({
+        this.roteadorService.delete(roteador).subscribe({
           next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Roteador deletado com sucesso!",
+              icon: "success"
+            });
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
               this.router.navigate(['/admin/roteadores']);
             });
@@ -150,7 +149,5 @@ export class RoteadorListComponent {
         });
       }
     });
-
-
   }
 }

@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SistemaOperacionalService } from '../../../services/sistema-operacional.service';
 import { SistemaOperacional } from '../../../models/sistema-operacional.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sistemaoperacional-form',
@@ -34,7 +35,7 @@ export class SistemaoperacionalFormComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private sistemasOperacionaisService: SistemaOperacionalService,
+    private sistemaOperacionalService: SistemaOperacionalService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -71,7 +72,7 @@ export class SistemaoperacionalFormComponent {
   }
 
   cadastrar(sistemaoperacional: any) {
-    this.sistemasOperacionaisService.insert(sistemaoperacional).subscribe({
+    this.sistemaOperacionalService.insert(sistemaoperacional).subscribe({
       next: (sistemaoperacionalCadastrado) => {
         this.router.navigateByUrl('/admin/sistemasoperacionais');
       },
@@ -82,7 +83,7 @@ export class SistemaoperacionalFormComponent {
   }
 
   atualizar(sistemaoperacional: any) {
-    this.sistemasOperacionaisService.update(sistemaoperacional).subscribe({
+    this.sistemaOperacionalService.update(sistemaoperacional).subscribe({
       next: () => {
         this.router.navigateByUrl('/admin/sistemasoperacionais');
       },
@@ -93,15 +94,36 @@ export class SistemaoperacionalFormComponent {
   }
 
   excluir() {
-    const sistemaoperacional = this.formGroup.value;
-    this.sistemasOperacionaisService.delete(sistemaoperacional).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/sistemasoperacionais');
-      },
-      error: (e) => {
-        console.log('Erro ao excluir', JSON.stringify(e));
-      },
-    });
+    const sistemaOperacional = this.formGroup.value;
+    Swal.fire({
+          title: 'Você tem certeza?',
+          text: 'Vou não vai poder reverter isso!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sim, deletar!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.sistemaOperacionalService.delete(sistemaOperacional).subscribe({
+              next: () => {
+                Swal.fire({
+                  title: 'Deletado!',
+                  text: 'Sistema Operacional deletado com sucesso!',
+                  icon: 'success',
+                });
+                this.router
+                  .navigateByUrl('/', { skipLocationChange: true })
+                  .then(() => {
+                    this.router.navigate(['/admin/sistemasoperacionais']);
+                  });
+              },
+              error: (e) => {
+                console.log('Erro ao excluir', JSON.stringify(e));
+              },
+            });
+          }
+        });
   }
 
 }

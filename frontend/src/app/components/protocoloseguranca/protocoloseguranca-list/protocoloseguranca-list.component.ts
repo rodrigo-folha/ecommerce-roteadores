@@ -105,14 +105,13 @@ export class ProtocolosegurancaListComponent {
       confirmButtonText: 'Sim, deletar!',
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Deletado!',
-          text: 'Protocolo de Segurança deletado com sucesso!',
-          icon: 'success',
-        });
-
         this.protocoloSegurancaService.delete(protocoloSeguranca).subscribe({
           next: () => {
+            Swal.fire({
+              title: 'Deletado!',
+              text: 'Protocolo de Segurança deletado com sucesso!',
+              icon: 'success',
+            });
             this.router
               .navigateByUrl('/', { skipLocationChange: true })
               .then(() => {

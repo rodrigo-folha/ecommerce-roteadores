@@ -106,14 +106,13 @@ export class FornecedorListComponent {
       confirmButtonText: "Sim, deletar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deletado!",
-          text: "Fornecedor deletado com sucesso!",
-          icon: "success"
-        });
-
         this.fornecedorService.delete(fornecedor).subscribe({
           next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Fornecedor deletado com sucesso!",
+              icon: "success"
+            });
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
               this.router.navigate(['/admin/fornecedores']);
             });
@@ -124,7 +123,5 @@ export class FornecedorListComponent {
         });
       }
     });
-
-
   }
 }

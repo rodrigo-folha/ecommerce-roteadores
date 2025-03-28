@@ -102,14 +102,13 @@ export class BandafrequenciaFormComponent {
       confirmButtonText: 'Sim, deletar!',
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Deletado!',
-          text: 'Banda de Frequência deletada com sucesso!',
-          icon: 'success',
-        });
-        
         this.bandaFrequenciaService.delete(bandaFrequencia).subscribe({
           next: () => {
+            Swal.fire({
+              title: 'Deletado!',
+              text: 'Banda de Frequência deletada com sucesso!',
+              icon: 'success',
+            });
             this.router
               .navigateByUrl('/', { skipLocationChange: true })
               .then(() => {

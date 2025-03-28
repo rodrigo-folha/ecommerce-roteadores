@@ -77,14 +77,13 @@ export class ClienteListComponent {
       confirmButtonText: "Sim, deletar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deletado!",
-          text: "Cliente deletado com sucesso!",
-          icon: "success"
-        });
-
         this.clienteService.delete(cliente).subscribe({
           next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Cliente deletado com sucesso!",
+              icon: "success"
+            });
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
               this.router.navigate(['/admin/clientes']);
             });

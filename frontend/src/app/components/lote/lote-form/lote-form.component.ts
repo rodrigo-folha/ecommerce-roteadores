@@ -21,6 +21,7 @@ import { Roteador } from '../../../models/roteador.model';
 import { LoteService } from '../../../services/lote.service';
 import { RoteadorService } from '../../../services/roteador.service';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-lote-form',
@@ -126,13 +127,32 @@ export class LoteFormComponent {
 
   excluir() {
     const lote = this.formGroup.value;
-    this.loteService.delete(lote).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/lotes');
-      },
-      error: (e) => {
-        console.log('Erro ao excluir', JSON.stringify(e));
-      },
+    Swal.fire({
+      title: "Você tem certeza?",
+      text: "Vou não vai poder reverter isso!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, deletar!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loteService.delete(lote).subscribe({
+          next: () => {
+            Swal.fire({
+              title: "Deletado!",
+              text: "Lote deletado com sucesso!",
+              icon: "success"
+            });
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/admin/lotes']);
+            });
+          },
+          error: (e) => {
+            console.log('Erro ao excluir', JSON.stringify(e));
+          }
+        });
+      }
     });
   }
 }
