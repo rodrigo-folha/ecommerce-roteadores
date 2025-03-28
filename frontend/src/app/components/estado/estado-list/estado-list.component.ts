@@ -1,17 +1,17 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Estado } from '../../../models/estado.model';
-import { EstadoService } from '../../../services/estado.service';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import { Estado } from '../../../models/estado.model';
+import { EstadoService } from '../../../services/estado.service';
 
 @Component({
   selector: 'app-estado-list',

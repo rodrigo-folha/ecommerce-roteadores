@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BandaFrequencia } from '../models/banda-frequencia.model';
+import { IPaginator } from '../interfaces/ipaginator';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,16 @@ export class BandaFrequenciaService {
 
   constructor(private httpClient: HttpClient) { }
 
-  findAll(): Observable<BandaFrequencia[]> {
-    return this.httpClient.get<BandaFrequencia[]>(this.baseUrl);
+  findAll(page?: number, pageSize?: number): Observable<IPaginator<BandaFrequencia>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<BandaFrequencia>>(this.baseUrl, {params});
   }
 
   findById(id: String): Observable<BandaFrequencia> {

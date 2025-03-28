@@ -1,19 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { LOCALE_ID } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Roteador } from '../../../models/roteador.model';
 import { RoteadorService } from '../../../services/roteador.service';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
-import { LOCALE_ID } from '@angular/core';
-import {registerLocaleData} from '@angular/common';
-import localePt from '@angular/common/locales/pt';
 registerLocaleData(localePt);
 
 
@@ -26,6 +28,8 @@ registerLocaleData(localePt);
   imports: [
     MatToolbarModule,
     MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatIconModule,
     MatTableModule,
     CommonModule,
@@ -36,14 +40,7 @@ registerLocaleData(localePt);
   styleUrl: './roteador-list.component.css',
 })
 export class RoteadorListComponent {
-  // controle de paginacao
-  totalRegistros = 0;
-  pageSize = 5;
-  page = 0;
   roteadores: Roteador[] = [];
-
-  constructor(private roteadorservice: RoteadorService, private router: Router) {}
-
   displayedColumns: string[] = [
     'id',
     'nome',
@@ -56,14 +53,14 @@ export class RoteadorListComponent {
     'fornecedor',
     'acao'
   ];
+  totalRecords = 0;
+  pageSize = 5;
+  page = 0;
+  showSearch = false;
+  filterValue = '';
+  roteadoresFiltrados: Roteador[] = [];
 
-  dataSource = new MatTableDataSource<any>();
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
+  constructor(private roteadorservice: RoteadorService, private router: Router) {}
 
   ngOnInit(): void {
     this.carregarRoteadores();
@@ -71,9 +68,57 @@ export class RoteadorListComponent {
 
   carregarRoteadores(): void {
     this.roteadorservice.findAll().subscribe((roteadores) => {
-      this.roteadores = roteadores;
-      this.dataSource.data = this.roteadores;
+      this.roteadores = roteadores.resultado;
+      this.applyCurrentFilter();
+      this.totalRecords = roteadores.total;
     });
+  }
+
+  applyCurrentFilter(): void {
+    const normalizedFilter = this.filterValue.trim().toLowerCase();
+
+    const filtered = this.roteadores.filter(
+      (data) => 
+        data.nome.toString().toLowerCase().includes(normalizedFilter) ||
+        data.descricao.toString().toLowerCase().includes(normalizedFilter) ||
+        data.fornecedor.nome.toString().toLowerCase().includes(normalizedFilter) ||
+        data.sistemaOperacional.nome.toString().toLowerCase().includes(normalizedFilter) ||
+        data.bandaFrequencia.nome.toString().toLowerCase().includes(normalizedFilter) ||
+        data.protocoloSeguranca.nome.toString().toLowerCase().includes(normalizedFilter) ||
+        data.quantidadeAntena.quantidade.toString().toLowerCase().includes(normalizedFilter) ||
+        data.sinalWireless.toString().toLowerCase().includes(normalizedFilter) ||
+        data.preco.toString().toLowerCase().includes(normalizedFilter)
+    );
+
+    this.roteadoresFiltrados = filtered.slice(
+      this.page * this.pageSize,
+      (this.page + 1) * this.pageSize
+    );
+
+    this.totalRecords = filtered.length;
+  }
+    
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value
+      .trim()
+      .toLowerCase();
+    this.page = 0;
+    this.applyCurrentFilter();
+  }
+
+  toggleSearch(): void {
+    this.showSearch = !this.showSearch;
+  }
+    
+  paginar(event: PageEvent): void {
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    if (this.filterValue) {
+      this.applyCurrentFilter();
+    } else {
+      this.carregarRoteadores();
+    }
   }
   
   excluir(roteador: Roteador): void {

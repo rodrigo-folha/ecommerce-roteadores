@@ -78,7 +78,6 @@ export class FuncionarioFormComponent {
     const funcionario: Funcionario = this.activatedRoute.snapshot.data['funcionario'];
     
     const usuario = funcionario?.id ? funcionario.usuario : null;
-    console.log('Dados da API', usuario);
 
     this.formGroup = this.formBuilder.group({
       id: [(funcionario && funcionario.id) ? funcionario.id : null],
@@ -118,7 +117,6 @@ export class FuncionarioFormComponent {
   }
 
   adicionarEndereco(endereco?: Endereco): void {
-    console.log('Endereco', endereco);
     const enderecoForm = this.formBuilder.group({
       logradouro: [endereco ? endereco.logradouro : '',[Validators.required]],
       bairro: [endereco ? endereco.bairro : '',[Validators.required]],

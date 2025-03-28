@@ -6,6 +6,7 @@ import br.unitins.tp1.roteadores.dto.roteador.SistemaOperacionalRequestDTO;
 import br.unitins.tp1.roteadores.model.roteador.SistemaOperacional;
 import br.unitins.tp1.roteadores.repository.SistemaOperacionalRepository;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -25,14 +26,31 @@ public class SistemaOperacionalServiceImpl implements SistemaOperacionalService 
     }
 
     @Override
-    public List<SistemaOperacional> findByNome(String nome) {
-        return sistemaOperacionalRepository.findByNome(nome);
+    public List<SistemaOperacional> findByNome(String nome, Integer page, Integer pageSize) {
+        return sistemaOperacionalRepository.findByNome(nome).page(page, pageSize).list();
     }
 
     @Override
-    public List<SistemaOperacional> findAll() {
-        return sistemaOperacionalRepository.findAll().list();
+    public List<SistemaOperacional> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<SistemaOperacional> query = null;
+        if (page == null || pageSize == null)
+            query = sistemaOperacionalRepository.findAll();
+        else
+            query = sistemaOperacionalRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
+
+    @Override
+    public long count() {
+        return sistemaOperacionalRepository.count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return sistemaOperacionalRepository.findByNome(nome).count();
+    }
+
 
     @Override
     @Transactional

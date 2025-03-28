@@ -3,6 +3,15 @@
       <button mat-icon-button color="accent" routerLink="/admin">
         <mat-icon>home</mat-icon>
       </button>
+      <div class="busca">
+        <button mat-icon-button (click)="toggleSearch()">
+          <mat-icon>search</mat-icon>
+        </button>
+        <mat-form-field appearance="outline" *ngIf="showSearch">
+          <mat-label>Pesquisar</mat-label>
+          <input matInput type="text" (input)="applyFilter($event)" placeholder="Digite para pesquisar">
+        </mat-form-field>
+      </div>
       <span class="toolbar-title">Controle de Sistemas Operacionais</span>
       <button mat-fab color="accent" routerLink="/admin/sistemasoperacionais/new">
         <mat-icon>add</mat-icon>
@@ -10,7 +19,7 @@
     </div>
   </mat-toolbar>
   
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <table mat-table [dataSource]="sistemasOperacionaisFiltrados" class="mat-elevation-z8">
     <!-- Id Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef>Id.</th>
@@ -47,7 +56,9 @@
   </table>
   <mat-paginator
     [pageSizeOptions]="[5, 10, 20]"
-    aria-label="Select page of sistemasoperacionais"
+    [pageSize]="pageSize"
+    [length]="totalRecords"
+    (page)="paginar($event)"
   >
   </mat-paginator>
   

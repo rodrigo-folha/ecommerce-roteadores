@@ -8,6 +8,10 @@
     align-items: center;
     width: 100%;
   }
+
+  .busca {
+    width: 0px;
+  }
   
   .mat-column-id {
     width: 5em;

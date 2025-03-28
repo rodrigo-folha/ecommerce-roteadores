@@ -10,13 +10,13 @@ import br.unitins.tp1.roteadores.model.Fornecedor;
 public interface FornecedorService {
     Fornecedor findById(Long id);
     
-    List<Fornecedor> findByNome(String nome);
+    List<Fornecedor> findByNome(String nome, Integer page, Integer pageSize);
 
     List<Fornecedor> findByCnpj(String cnpj);
 
     List<Fornecedor> findByEmail(String email);
 
-    List<Fornecedor> findAll();
+    List<Fornecedor> findAll(Integer page, Integer pageSize);
 
     Fornecedor create(FornecedorRequestDTO dto);
 
@@ -31,5 +31,8 @@ public interface FornecedorService {
     void updateTelefone(Long id, List<TelefoneRequestDTO> dto);
 
     void delete(Long id);
+
+    long count();
+    long count(String nome);
     
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
@@ -47,7 +48,7 @@ public class Roteador extends DefaultEntity {
     @JoinColumn(name = "id_fornecedor")
     private Fornecedor fornecedor;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "imagem_roteador", joinColumns = @JoinColumn(name = "id_roteador"))
     private List<String> listaImagem;
 

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Roteador } from '../models/roteador.model';
+import { IPaginator } from '../interfaces/ipaginator';
 
 @Injectable({
   providedIn: 'root'
@@ -44,8 +45,16 @@ export class RoteadorService {
     return this.httpClient.get<Roteador[]>(`${this.baseUrl}/search/preco/min/max`);
   }
 
-  findAll(): Observable<Roteador[]> {
-    return this.httpClient.get<Roteador[]>(`${this.baseUrl}`);
+  findAll(page?: number, pageSize?: number): Observable<IPaginator<Roteador>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<Roteador>>(this.baseUrl, {params});
   }
 
   insert(roteador: Roteador): Observable<Roteador> {

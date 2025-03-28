@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
-import { ProtocoloSegurancaService } from '../../../services/protocolo-seguranca.service';
 import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
+import { ProtocoloSegurancaService } from '../../../services/protocolo-seguranca.service';
 
 @Component({
   selector: 'app-protocoloseguranca-list',
@@ -17,6 +19,8 @@ import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     CommonModule,
     MatPaginatorModule,
@@ -27,59 +31,99 @@ import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
 })
 export class ProtocolosegurancaListComponent {
   protocolosSeguranca: ProtocoloSeguranca[] = [];
+  displayedColumns: string[] = ['id', 'nome', 'acao'];
+  totalRecords = 0;
+  pageSize = 5;
+  page = 0;
+  showSearch = false;
+  filterValue = '';
+  protocolosSegurancaFiltrados: ProtocoloSeguranca[] = [];
 
-  constructor(private protocoloSegurancaService: ProtocoloSegurancaService, private router: Router) {}
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
+  constructor(
+    private protocoloSegurancaService: ProtocoloSegurancaService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.carregarProtocolosSeguranca();
+    this.carregarSistemasoperacionais();
   }
 
-  carregarProtocolosSeguranca(): void {
-    this.protocoloSegurancaService.findAll().subscribe((protocolosSeguranca) => {
-      this.protocolosSeguranca = protocolosSeguranca;
-      this.dataSource.data = this.protocolosSeguranca;
+  carregarSistemasoperacionais(): void {
+    this.protocoloSegurancaService.findAll().subscribe((data) => {
+      this.protocolosSeguranca = data.resultado;
+      this.applyCurrentFilter();
+      this.totalRecords = data.total;
     });
   }
 
-  displayedColumns: string[] = ['id', 'nome', 'acao'];
-  dataSource = new MatTableDataSource<any>();
+  applyCurrentFilter(): void {
+    const normalizedFilter = this.filterValue.trim().toLowerCase();
 
-  excluir(protocolosSeguranca: ProtocoloSeguranca): void {
+    const filtered = this.protocolosSeguranca.filter((data) =>
+      data.nome.toString().toLowerCase().includes(normalizedFilter)
+    );
+
+    this.protocolosSegurancaFiltrados = filtered.slice(
+      this.page * this.pageSize,
+      (this.page + 1) * this.pageSize
+    );
+
+    this.totalRecords = filtered.length;
+  }
+
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value
+      .trim()
+      .toLowerCase();
+    this.page = 0;
+    this.applyCurrentFilter();
+  }
+
+  toggleSearch(): void {
+    this.showSearch = !this.showSearch;
+  }
+
+  paginar(event: PageEvent): void {
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    if (this.filterValue) {
+      this.applyCurrentFilter();
+    } else {
+      this.carregarSistemasoperacionais();
+    }
+  }
+
+  excluir(protocoloSeguranca: ProtocoloSeguranca): void {
     Swal.fire({
-      title: "Você tem certeza?",
-      text: "Vou não vai poder reverter isso!",
-      icon: "warning",
+      title: 'Você tem certeza?',
+      text: 'Vou não vai poder reverter isso!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sim, deletar!"
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, deletar!',
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-          title: "Deletado!",
-          text: "Protocolo de Segurança deletado com sucesso!",
-          icon: "success"
+          title: 'Deletado!',
+          text: 'Protocolo de Segurança deletado com sucesso!',
+          icon: 'success',
         });
 
-        this.protocoloSegurancaService.delete(protocolosSeguranca).subscribe({
+        this.protocoloSegurancaService.delete(protocoloSeguranca).subscribe({
           next: () => {
-            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/admin/protocolosseguranca']);
-            });
+            this.router
+              .navigateByUrl('/', { skipLocationChange: true })
+              .then(() => {
+                this.router.navigate(['/admin/sistemasoperacionais']);
+              });
           },
           error: (e) => {
             console.log('Erro ao excluir', JSON.stringify(e));
-          }
+          },
         });
       }
     });
-
-
   }
 }

@@ -13,6 +13,7 @@ import br.unitins.tp1.roteadores.repository.FornecedorRepository;
 import br.unitins.tp1.roteadores.service.endereco.CidadeService;
 import br.unitins.tp1.roteadores.service.usuario.UsuarioService;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -35,8 +36,8 @@ public class FornecedorServiceImpl implements FornecedorService {
     }
 
     @Override
-    public List<Fornecedor> findByNome(String nome) {
-        return fornecedorRepository.findByNome(nome);
+    public List<Fornecedor> findByNome(String nome, Integer page, Integer pageSize) {
+        return fornecedorRepository.findByNome(nome).page(page, pageSize).list();
     }
 
     @Override
@@ -50,9 +51,25 @@ public class FornecedorServiceImpl implements FornecedorService {
     }
 
     @Override
-    public List<Fornecedor> findAll() {
-        return fornecedorRepository.findAll().list();
+    public List<Fornecedor> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<Fornecedor> query = null;
+        if (page == null || pageSize == null)
+            query = fornecedorRepository.findAll();
+        else
+            query = fornecedorRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
+
+    @Override
+    public long count() {
+        return fornecedorRepository.count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return fornecedorRepository.findByNome(nome).count();
+    }   
 
     @Override
     @Transactional

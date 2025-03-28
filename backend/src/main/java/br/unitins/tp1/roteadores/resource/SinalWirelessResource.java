@@ -2,6 +2,7 @@ package br.unitins.tp1.roteadores.resource;
 
 import org.jboss.logging.Logger;
 
+import br.unitins.tp1.roteadores.dto.PaginacaoResponseDTO;
 import br.unitins.tp1.roteadores.dto.roteador.SinalWirelessRequestDTO;
 import br.unitins.tp1.roteadores.dto.roteador.SinalWirelessResponseDTO;
 import br.unitins.tp1.roteadores.service.roteador.SinalWirelessService;
@@ -9,12 +10,14 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -40,22 +43,28 @@ public class SinalWirelessResource {
     @GET
     // @RolesAllowed({"Adm", "User"})
     @Path("/search/{nome}")
-    public Response findByNome(@PathParam("nome") String nome) {
+    public Response findByNome(@PathParam("nome") String nome,
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = sinalWirelessService.count(nome);
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
-        return Response.ok(sinalWirelessService.findByNome(nome)
-            .stream()
-            .map(SinalWirelessResponseDTO::valueOf).toList())
-            .build();
+        PaginacaoResponseDTO<SinalWirelessResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, sinalWirelessService.findByNome(nome, page, pageSize).stream().map(SinalWirelessResponseDTO::valueOf).toList());
+        return Response.ok(paginacao).build();
     }
 
     @GET
     // @RolesAllowed({"Adm", "User"})
-    public Response findAll() {
+    public Response findAll(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = sinalWirelessService.count();
         LOG.info("Execucao do metodo findAll");
-        return Response.ok(sinalWirelessService.findAll()
-            .stream()
-            .map(SinalWirelessResponseDTO::valueOf))
-            .build();
+        PaginacaoResponseDTO<SinalWirelessResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, sinalWirelessService.findAll(page, pageSize).stream().map(SinalWirelessResponseDTO::valueOf).toList());
+        return Response.ok(paginacao).build();
     }
 
     @POST
@@ -83,6 +92,20 @@ public class SinalWirelessResource {
         LOG.info("Execucao do metodo delete. Id do Sinal Wireless: " + id);
         sinalWirelessService.delete(id);
         return Response.noContent().build();
+    }
+
+    @GET
+    @Path("nome/{nome}/count")
+    public Response countNome(@PathParam("nome") String nome) {
+        LOG.info("Execucao do metodo countNome. Nome:  " + nome);
+        return Response.ok(sinalWirelessService.count(nome)).build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response count() {
+        LOG.info("Execucao do metodo count");
+        return Response.ok(sinalWirelessService.count()).build();
     }
 
 }

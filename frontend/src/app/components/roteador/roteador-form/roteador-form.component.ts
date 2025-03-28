@@ -88,12 +88,12 @@ export class RoteadorFormComponent {
       sinaisWireless: this.sinalWirelessService.findAll(),
       fornecedores: this.fornecedorService.findAll(),
     }).subscribe((response) => {
-      this.sistemasOperacionais = response.sistemasOperacionais;
-      this.bandaFrequencias = response.bandasFrequencia;
-      this.protocolosSeguranca = response.protocolosSeguranca;
-      this.quantidadeAntenas = response.quantidadeAntenas;
-      this.sinalWireless = response.sinaisWireless;
-      this.fornecedores = response.fornecedores;
+      this.sistemasOperacionais = response.sistemasOperacionais.resultado;
+      this.bandaFrequencias = response.bandasFrequencia.resultado;
+      this.protocolosSeguranca = response.protocolosSeguranca.resultado;
+      this.quantidadeAntenas = response.quantidadeAntenas.resultado;
+      this.sinalWireless = response.sinaisWireless.resultado;
+      this.fornecedores = response.fornecedores.resultado;
       this.initializeForm();
     });
 

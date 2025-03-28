@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -17,6 +19,8 @@ import { QuantidadeAntenaService } from '../../../services/quantidade-antena.ser
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     CommonModule,
     MatPaginatorModule,
@@ -27,28 +31,66 @@ import { QuantidadeAntenaService } from '../../../services/quantidade-antena.ser
 })
 export class QuantidadeantenaListComponent {
   quantidadeAntenas: QuantidadeAntena[] = [];
+  displayedColumns: string[] = ['id', 'quantidade', 'acao'];
+  totalRecords = 0;
+  pageSize = 5;
+  page = 0;
+  showSearch = false;
+  filterValue = '';
+  quantidadeAntenasFiltrados: QuantidadeAntena[] = [];
 
   constructor(private quantidadeAntenaService: QuantidadeAntenaService, private router: Router) {}
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
 
   ngOnInit(): void {
     this.carregarQuantidadeAntenas();
   }
 
   carregarQuantidadeAntenas(): void {
-    this.quantidadeAntenaService.findAll().subscribe((quantidadeantenas) => {
-      this.quantidadeAntenas = quantidadeantenas;
-      this.dataSource.data = this.quantidadeAntenas;
+    this.quantidadeAntenaService.findAll().subscribe((data) => {
+      this.quantidadeAntenas = data.resultado;
+      this.applyCurrentFilter();
+      this.totalRecords = data.total
     });
   }
 
-  displayedColumns: string[] = ['id', 'nome', 'acao'];
-  dataSource = new MatTableDataSource<any>();
+  applyCurrentFilter(): void {
+      const normalizedFilter = this.filterValue.trim().toLowerCase();
+  
+      const filtered = this.quantidadeAntenas.filter((data) =>
+        data.quantidade.toString().toLowerCase().includes(normalizedFilter)
+      );
+  
+      this.quantidadeAntenasFiltrados = filtered.slice(
+        this.page * this.pageSize,
+        (this.page + 1) * this.pageSize
+      );
+  
+      this.totalRecords = filtered.length;
+    }
+  
+    applyFilter(event: Event): void {
+      this.filterValue = (event.target as HTMLInputElement).value
+        .trim()
+        .toLowerCase();
+      this.page = 0;
+      this.applyCurrentFilter();
+    }
+  
+    toggleSearch(): void {
+      this.showSearch = !this.showSearch;
+    }
+  
+    paginar(event: PageEvent): void {
+      this.page = event.pageIndex;
+      this.pageSize = event.pageSize;
+  
+      if (this.filterValue) {
+        this.applyCurrentFilter();
+      } else {
+        this.carregarQuantidadeAntenas();
+      }
+    }
+
 
   excluir(quantidadeAntena: QuantidadeAntena): void {
     Swal.fire({

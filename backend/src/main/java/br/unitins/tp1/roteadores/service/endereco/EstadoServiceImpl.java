@@ -24,16 +24,6 @@ public class EstadoServiceImpl implements EstadoService {
         return estadoRepository.findById(id);
     }
 
-    // @Override
-    // public List<Estado> findByNome(String nome) {
-    //     return estadoRepository.findByNome(nome);
-    // }
-
-    // @Override
-    // public List<Estado> findAll() {
-    //     return estadoRepository.findAll().list();
-    // }
-
     @Override
     @Transactional
     public Estado create(EstadoRequestDTO dto) {

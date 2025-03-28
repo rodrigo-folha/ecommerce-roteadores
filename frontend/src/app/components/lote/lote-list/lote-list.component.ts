@@ -57,7 +57,7 @@ export class LoteListComponent {
 
   carregarRoteadores(): void {
     this.roteadorService.findAll().subscribe((roteadores) => {
-      this.roteadores = roteadores;
+      this.roteadores = roteadores.resultado;
     });
   }
 

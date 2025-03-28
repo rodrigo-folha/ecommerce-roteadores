@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { QuantidadeAntena } from '../models/quantidade-antena.model';
+import { IPaginator } from '../interfaces/ipaginator';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,16 @@ export class QuantidadeAntenaService {
 
   constructor(private httpClient: HttpClient) { }
 
-  findAll(): Observable<QuantidadeAntena[]> {
-    return this.httpClient.get<QuantidadeAntena[]>(this.baseUrl);
+  findAll(page?: number, pageSize?: number): Observable<IPaginator<QuantidadeAntena>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<QuantidadeAntena>>(this.baseUrl, {params});
   }
 
   findById(id: String): Observable<QuantidadeAntena> {

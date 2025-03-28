@@ -56,15 +56,17 @@ public class EstadoResource {
     }
 
     @GET
-    @Path("/count")
-    public long total() {
-        return estadoService.count();
+    @Path("nome/{nome}/count")
+    public Response countNome(@PathParam("nome") String nome) {
+        LOG.info("Execucao do metodo countNome. Nome:  " + nome);
+        return Response.ok(estadoService.count(nome)).build();
     }
 
     @GET
-    @Path("nome/{nome}/count")
-    public long totalPorNome(@PathParam("nome") String nome) {
-        return estadoService.count(nome);
+    @Path("/count")
+    public Response count() {
+        LOG.info("Execucao do metodo count");
+        return Response.ok(estadoService.count()).build();
     }
 
     @GET

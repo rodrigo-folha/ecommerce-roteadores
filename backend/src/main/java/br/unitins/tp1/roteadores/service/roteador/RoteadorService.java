@@ -8,7 +8,7 @@ import br.unitins.tp1.roteadores.model.roteador.Roteador;
 public interface RoteadorService {
     Roteador findById(Long id);
 
-    List<Roteador> findByNome(String nome);
+    List<Roteador> findByNome(String nome, Integer page, Integer pageSize);
 
     List<Roteador> findBySinalWireless(Long id);
 
@@ -22,7 +22,7 @@ public interface RoteadorService {
 
     List<Roteador> findByPreco(Double min, Double max);
 
-    List<Roteador> findAll();
+    List<Roteador> findAll(Integer page, Integer pageSize);
 
     Roteador create(RoteadorRequestDTO dto);
 
@@ -31,4 +31,7 @@ public interface RoteadorService {
     Roteador updateNomeImagem(Long id, String nomeImagem);
 
     void delete(Long id);
+
+    long count();
+    long count(String nome);
 }

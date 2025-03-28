@@ -6,6 +6,7 @@ import br.unitins.tp1.roteadores.dto.roteador.QuantidadeAntenaRequestDTO;
 import br.unitins.tp1.roteadores.model.roteador.QuantidadeAntena;
 import br.unitins.tp1.roteadores.repository.QuantidadeAntenaRepository;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -22,13 +23,19 @@ public class QuantidadeAntenaServiceImpl implements QuantidadeAntenaService {
     }
 
     @Override
-    public List<QuantidadeAntena> findByQuantidade(Integer quantidade) {
-        return quantidadeAntenaRepository.findByQuantidade(quantidade);
+    public List<QuantidadeAntena> findByQuantidade(Integer quantidade, Integer page, Integer pageSize) {
+        return quantidadeAntenaRepository.findByQuantidade(quantidade).page(page, pageSize).list();
     }
 
     @Override
-    public List<QuantidadeAntena> findAll() {
-        return quantidadeAntenaRepository.findAll().list();
+    public List<QuantidadeAntena> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<QuantidadeAntena> query = null;
+        if (page == null || pageSize == null)
+            query = quantidadeAntenaRepository.findAll();
+        else
+            query = quantidadeAntenaRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -65,5 +72,15 @@ public class QuantidadeAntenaServiceImpl implements QuantidadeAntenaService {
     public void delete(Long id) {
         quantidadeAntenaRepository.deleteById(id);
     }
+    
+    @Override
+    public long count() {
+        return quantidadeAntenaRepository.count();
+    }
+
+    @Override
+    public long count(Integer quantidade) {
+        return quantidadeAntenaRepository.findByQuantidade(quantidade).count();
+    }   
 
 }

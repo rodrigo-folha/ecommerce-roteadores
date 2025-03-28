@@ -9,13 +9,16 @@ public interface BandaFrequenciaService {
     
     BandaFrequencia findById(Long id);
 
-    List<BandaFrequencia> findByNome(String nome);
+    List<BandaFrequencia> findByNome(String nome, Integer page, Integer pageSize);
 
-    List<BandaFrequencia> findAll();
+    List<BandaFrequencia> findAll(Integer page, Integer pageSize);
 
     BandaFrequencia create(BandaFrequenciaRequestDTO dto);
 
     BandaFrequencia update(Long id, BandaFrequenciaRequestDTO dto);
 
     void delete(Long id);
+
+    long count();
+    long count(String nome);
 }

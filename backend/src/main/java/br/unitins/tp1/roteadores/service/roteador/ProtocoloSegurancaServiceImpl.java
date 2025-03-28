@@ -6,6 +6,7 @@ import br.unitins.tp1.roteadores.dto.roteador.ProtocoloSegurancaRequestDTO;
 import br.unitins.tp1.roteadores.model.roteador.ProtocoloSeguranca;
 import br.unitins.tp1.roteadores.repository.ProtocoloSegurancaRepository;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -22,13 +23,19 @@ public class ProtocoloSegurancaServiceImpl implements ProtocoloSegurancaService{
     }
 
     @Override
-    public List<ProtocoloSeguranca> findByNome(String nome) {
-        return protocoloSegurancaRepository.findByNome(nome);
+    public List<ProtocoloSeguranca> findByNome(String nome, Integer page, Integer pageSize) {
+        return protocoloSegurancaRepository.findByNome(nome).page(page, pageSize).list();
     }
 
     @Override
-    public List<ProtocoloSeguranca> findAll() {
-        return protocoloSegurancaRepository.findAll().list();
+    public List<ProtocoloSeguranca> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<ProtocoloSeguranca> query = null;
+        if (page == null || pageSize == null)
+            query = protocoloSegurancaRepository.findAll();
+        else
+            query = protocoloSegurancaRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -65,5 +72,15 @@ public class ProtocoloSegurancaServiceImpl implements ProtocoloSegurancaService{
     public void delete(Long id) {
         protocoloSegurancaRepository.deleteById(id);
     }
+
+    @Override
+    public long count() {
+        return protocoloSegurancaRepository.count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return protocoloSegurancaRepository.findByNome(nome).count();
+    }   
     
 }

@@ -8,13 +8,16 @@ import br.unitins.tp1.roteadores.model.roteador.QuantidadeAntena;
 public interface QuantidadeAntenaService {
     QuantidadeAntena findById(Long id);
 
-    List<QuantidadeAntena> findByQuantidade(Integer quantidade);
+    List<QuantidadeAntena> findByQuantidade(Integer quantidade, Integer page, Integer pageSize);
 
-    List<QuantidadeAntena> findAll();
+    List<QuantidadeAntena> findAll(Integer page, Integer pageSize);
 
     QuantidadeAntena create(QuantidadeAntenaRequestDTO dto);
 
     QuantidadeAntena update(Long id, QuantidadeAntenaRequestDTO dto);
 
     void delete(Long id);
+
+    long count();
+    long count(Integer quantidade);
 }

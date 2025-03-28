@@ -2,6 +2,7 @@ package br.unitins.tp1.roteadores.resource;
 
 import org.jboss.logging.Logger;
 
+import br.unitins.tp1.roteadores.dto.PaginacaoResponseDTO;
 import br.unitins.tp1.roteadores.dto.roteador.QuantidadeAntenaRequestDTO;
 import br.unitins.tp1.roteadores.dto.roteador.QuantidadeAntenaResponseDTO;
 import br.unitins.tp1.roteadores.service.roteador.QuantidadeAntenaService;
@@ -9,12 +10,14 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -40,22 +43,28 @@ public class QuantidadeAntenaResource {
     @GET
     // @RolesAllowed({"Adm", "User"})
     @Path("/search/{quantidade}")
-    public Response findByQuantidade(@PathParam("quantidade") Integer quantidade) {
+    public Response findByQuantidade(@PathParam("quantidade") Integer quantidade,
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = quantidadeAntenaService.count(quantidade);
         LOG.info("Execucao do metodo findByQuantidade. Quantidade de antenas: " + quantidade);
-        return Response.ok(quantidadeAntenaService.findByQuantidade(quantidade)
-            .stream()
-            .map(QuantidadeAntenaResponseDTO::valueOf)
-            .toList()).build();
+        PaginacaoResponseDTO<QuantidadeAntenaResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, quantidadeAntenaService.findByQuantidade(quantidade, page, pageSize).stream().map(QuantidadeAntenaResponseDTO::valueOf).toList());
+        return Response.ok(paginacao).build();
     }
 
     @GET
     // @RolesAllowed({"Adm", "User"})
-    public Response findAll() {
+    public Response findAll(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = quantidadeAntenaService.count();
         LOG.info("Execucao do metodo findAll");
-        return Response.ok(quantidadeAntenaService.findAll()
-            .stream()
-            .map(QuantidadeAntenaResponseDTO::valueOf)
-            .toList()).build();
+        PaginacaoResponseDTO<QuantidadeAntenaResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, quantidadeAntenaService.findAll(page, pageSize).stream().map(QuantidadeAntenaResponseDTO::valueOf).toList());
+        return Response.ok(paginacao).build();
     }
 
     @POST
@@ -83,5 +92,19 @@ public class QuantidadeAntenaResource {
         LOG.info("Execucao do metodo delete. Id da quantidade de antenas: " + id);
         quantidadeAntenaService.delete(id);
         return Response.noContent().build();
+    }
+
+    @GET
+    @Path("quantidade/{quantidade}/count")
+    public Response countQuantidade(@PathParam("quantidade") Integer quantidade) {
+        LOG.info("Execucao do metodo countQuantidade. Quantidade:  " + quantidade);
+        return Response.ok(quantidadeAntenaService.count(quantidade)).build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response count() {
+        LOG.info("Execucao do metodo count");
+        return Response.ok(quantidadeAntenaService.count()).build();
     }
 }

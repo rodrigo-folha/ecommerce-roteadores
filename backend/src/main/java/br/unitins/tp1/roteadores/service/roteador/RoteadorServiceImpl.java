@@ -9,6 +9,7 @@ import br.unitins.tp1.roteadores.repository.LoteRepository;
 import br.unitins.tp1.roteadores.repository.RoteadorRepository;
 import br.unitins.tp1.roteadores.service.FornecedorService;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -49,8 +50,8 @@ public class RoteadorServiceImpl implements RoteadorService {
     }
 
     @Override
-    public List<Roteador> findByNome(String nome) {
-        return roteadorRepository.findByNome(nome);
+    public List<Roteador> findByNome(String nome, Integer page, Integer pageSize) {
+        return roteadorRepository.findByNome(nome).page(page, pageSize).list();
     }
 
     @Override
@@ -84,8 +85,14 @@ public class RoteadorServiceImpl implements RoteadorService {
     }
 
     @Override
-    public List<Roteador> findAll() {
-        return roteadorRepository.findAll().list();
+    public List<Roteador> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<Roteador> query = null;
+        if (page == null || pageSize == null)
+            query = roteadorRepository.findAll();
+        else
+            query = roteadorRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -152,5 +159,15 @@ public class RoteadorServiceImpl implements RoteadorService {
         roteador.getListaImagem().add(nomeImagem);
         return roteador;
     }
+
+    @Override
+    public long count() {
+        return roteadorRepository.count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return roteadorRepository.findByNome(nome).count();
+    }   
 
 }

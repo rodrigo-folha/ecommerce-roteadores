@@ -68,7 +68,7 @@ export class LoteFormComponent {
     forkJoin({
       roteadores: this.roteadorService.findAll(),
     }).subscribe((response) => {
-      this.roteadores = response.roteadores;
+      this.roteadores = response.roteadores.resultado;
       this.initializeForm();
     });
   }

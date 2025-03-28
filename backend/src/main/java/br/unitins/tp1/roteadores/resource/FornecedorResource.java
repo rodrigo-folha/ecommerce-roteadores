@@ -6,6 +6,7 @@ import org.jboss.logging.Logger;
 
 import br.unitins.tp1.roteadores.dto.FornecedorRequestDTO;
 import br.unitins.tp1.roteadores.dto.FornecedorResponseDTO;
+import br.unitins.tp1.roteadores.dto.PaginacaoResponseDTO;
 import br.unitins.tp1.roteadores.dto.TelefoneRequestDTO;
 import br.unitins.tp1.roteadores.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.roteadores.service.FornecedorService;
@@ -13,6 +14,7 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -20,6 +22,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -45,12 +48,15 @@ public class FornecedorResource {
     @GET
     // @RolesAllowed({"Adm"})
     @Path("/search/{nome}")
-    public Response findByNome(@PathParam("nome") String nome) {
+    public Response findByNome(@PathParam("nome") String nome,
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = fornecedorService.count(nome);
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
-        return Response.ok(fornecedorService.findByNome(nome)
-            .stream()
-            .map(FornecedorResponseDTO::valueOf)
-            .toList()).build();
+        PaginacaoResponseDTO<FornecedorResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, fornecedorService.findByNome(nome, page, pageSize).stream().map(FornecedorResponseDTO::valueOf).toList());
+        return Response.ok(paginacao).build();
     }
 
     @GET
@@ -77,12 +83,15 @@ public class FornecedorResource {
 
     @GET
     // @RolesAllowed({"Adm"})
-    public Response findAll() {
+    public Response findAll(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
         LOG.info("Execucao do metodo findAll");
-        return Response.ok(fornecedorService.findAll()
-            .stream()
-            .map(FornecedorResponseDTO::valueOf)
-            .toList()).build();
+        Long count = fornecedorService.count();
+        PaginacaoResponseDTO<FornecedorResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, fornecedorService.findAll(page, pageSize).stream().map(FornecedorResponseDTO::valueOf).toList());
+        return Response.ok(paginacao).build();
     }
 
     @POST

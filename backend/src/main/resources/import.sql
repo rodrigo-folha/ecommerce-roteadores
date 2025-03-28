@@ -128,7 +128,7 @@ insert into endereco_fornecedor(id_fornecedor, enderecos_id) values (2, 2);
 
 -- inserindo cupom de desconto
 insert into cupomdesconto(codigo, percentualDesconto, validade) values ('10OFF', 0.10, '2025-12-31');
-insert into cupomdesconto(codigo, percentualDesconto, validade) values ('15OFF', 0.15, '2025-01-01');
+insert into cupomdesconto(codigo, percentualDesconto, validade) values ('15OFF', 0.15, '2025-11-01');
 
 -- inserindo usuario com permissao de user e de adm
 insert into usuario(nome, cpf, dataNascimento, email, senha) values ('admin','12345678900','1995-03-18', 'admin@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
@@ -149,7 +149,51 @@ insert into usuario(nome, cpf, dataNascimento, email, senha) values ('cliente','
 insert into perfil_usuario(perfis, id_usuario) values (2, 2);
 insert into cliente(id_usuario, datacadastro) values (2, '2024-10-19');
 
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('carlos','87654321900','2003-02-11', 'carlos@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (2, 3);
+insert into cliente(id_usuario, datacadastro) values (3, '2024-10-19');
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('cristiano','76543219800','1999-04-12', 'cristiano@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (2, 4);
+insert into cliente(id_usuario, datacadastro) values (4, '2024-10-19');
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('cesar','65432198700','1996-02-21', 'cesar@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (2, 5);
+insert into cliente(id_usuario, datacadastro) values (5, '2024-10-20');
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('carolina','54321987600','2003-09-11', 'carolina@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (2, 6);
+insert into cliente(id_usuario, datacadastro) values (6, '2024-10-20');
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('cassia','43219876500','1992-12-26', 'cassia@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (2, 7);
+insert into cliente(id_usuario, datacadastro) values (7, '2024-10-21');
+
 -- inserindo usuario com permissao apenas de adm
 insert into usuario(nome, cpf, dataNascimento, email, senha) values ('gerente','11223344556','1985-02-25', 'gerente@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
-insert into perfil_usuario(perfis, id_usuario) values (1, 3);
-insert into funcionario(id_usuario, altura) values (3, 1.75);
+insert into perfil_usuario(perfis, id_usuario) values (1, 8);
+insert into funcionario(id_usuario, altura) values (8, 1.75);
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('adriano','22334455116','1989-01-14', 'adriano@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (1, 9);
+insert into funcionario(id_usuario, altura) values (9, 1.75);
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('andre','33445511226','1991-04-25', 'andre@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (1, 10);
+insert into funcionario(id_usuario, altura) values (10, 1.75);
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('arthur','44551122336','1981-04-25', 'arthur@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (1, 11);
+insert into funcionario(id_usuario, altura) values (11, 1.75);
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('alexandre','55112233446','1987-12-15', 'alexandre@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (1, 12);
+insert into funcionario(id_usuario, altura) values (12, 1.75);
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('antonio','51122334456','1973-08-23', 'antonio@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (1, 13);
+insert into funcionario(id_usuario, altura) values (13, 1.75);
+
+insert into usuario(nome, cpf, dataNascimento, email, senha) values ('ana','41122334446','1966-09-13', 'ana@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
+insert into perfil_usuario(perfis, id_usuario) values (1, 14);
+insert into funcionario(id_usuario, altura) values (14, 1.55);

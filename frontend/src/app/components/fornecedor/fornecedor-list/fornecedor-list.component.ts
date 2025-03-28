@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
@@ -21,6 +23,8 @@ import { FornecedorService } from '../../../services/fornecedor.service';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     CommonModule,
     MatPaginatorModule,
@@ -30,40 +34,66 @@ import { FornecedorService } from '../../../services/fornecedor.service';
   styleUrl: './fornecedor-list.component.css',
 })
 export class FornecedorListComponent {
-  // controle de paginacao
-  totalRegistros = 0;
+  fornecedores: Fornecedor[] = [];
+  displayedColumns: string[] = ['id', 'nome', 'cnpj', 'email', 'acao'];
+  totalRecords = 0;
   pageSize = 5;
   page = 0;
-  fornecedores: Fornecedor[] = [];
+  showSearch = false;
+  filterValue = '';
+  fornecedoresFiltrados: Fornecedor[] = [];
 
   constructor(private fornecedorService: FornecedorService, private router: Router) {}
-
-  displayedColumns: string[] = [
-    'id',
-    'nome',
-    'cnpj',
-    'email',
-    'acao'
-  ];
-
-  dataSource = new MatTableDataSource<any>();
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
 
   ngOnInit(): void {
     this.carregarFornecedores();
   }
 
   carregarFornecedores(): void {
-    this.fornecedorService.findAll().subscribe((fornecedores) => {
-      this.fornecedores = fornecedores;
-      this.dataSource.data = this.fornecedores;
+    this.fornecedorService.findAll().subscribe((data) => {
+      this.fornecedores = data.resultado;
+      this.applyCurrentFilter();
+      this.totalRecords = data.total;
     });
   }
+
+  applyCurrentFilter(): void {
+      const normalizedFilter = this.filterValue.trim().toLowerCase();
+  
+      const filtered = this.fornecedores.filter((data) =>
+        data.nome.toString().toLowerCase().includes(normalizedFilter)
+      );
+  
+      this.fornecedoresFiltrados = filtered.slice(
+        this.page * this.pageSize,
+        (this.page + 1) * this.pageSize
+      );
+  
+      this.totalRecords = filtered.length;
+    }
+  
+    applyFilter(event: Event): void {
+      this.filterValue = (event.target as HTMLInputElement).value
+        .trim()
+        .toLowerCase();
+      this.page = 0;
+      this.applyCurrentFilter();
+    }
+  
+    toggleSearch(): void {
+      this.showSearch = !this.showSearch;
+    }
+  
+    paginar(event: PageEvent): void {
+      this.page = event.pageIndex;
+      this.pageSize = event.pageSize;
+  
+      if (this.filterValue) {
+        this.applyCurrentFilter();
+      } else {
+        this.carregarFornecedores();
+      }
+    }
   
   excluir(fornecedor: Fornecedor): void {
     Swal.fire({

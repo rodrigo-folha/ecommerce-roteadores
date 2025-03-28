@@ -6,6 +6,7 @@ import br.unitins.tp1.roteadores.dto.roteador.SinalWirelessRequestDTO;
 import br.unitins.tp1.roteadores.model.roteador.SinalWireless;
 import br.unitins.tp1.roteadores.repository.SinalWirelessRepository;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -22,13 +23,19 @@ public class SinalWirelessServiceImpl implements SinalWirelessService {
     }
 
     @Override
-    public List<SinalWireless> findByNome(String nome) {
-        return sinalwirelessRepository.findByNome(nome);
+    public List<SinalWireless> findByNome(String nome, Integer page, Integer pageSize) {
+        return sinalwirelessRepository.findByNome(nome).page(page, pageSize).list();
     }
 
     @Override
-    public List<SinalWireless> findAll() {
-        return sinalwirelessRepository.findAll().list();
+    public List<SinalWireless> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<SinalWireless> query = null;
+        if (page == null || pageSize == null)
+            query = sinalwirelessRepository.findAll();
+        else
+            query = sinalwirelessRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -64,6 +71,16 @@ public class SinalWirelessServiceImpl implements SinalWirelessService {
     public void delete(Long id) {
         sinalwirelessRepository.deleteById(id);
     }
+
+    @Override
+    public long count() {
+        return sinalwirelessRepository.count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return sinalwirelessRepository.findByNome(nome).count();
+    }   
 
  
     

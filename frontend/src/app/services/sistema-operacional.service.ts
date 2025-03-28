@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SistemaOperacional } from '../models/sistema-operacional.model';
+import { IPaginator } from '../interfaces/ipaginator';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,16 @@ export class SistemaOperacionalService {
 
   constructor(private httpClient: HttpClient) { }
 
-  findAll(): Observable<SistemaOperacional[]> {
-    return this.httpClient.get<SistemaOperacional[]>(this.baseUrl);
+  findAll(page?: number, pageSize?: number): Observable<IPaginator<SistemaOperacional>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<SistemaOperacional>>(this.baseUrl, {params});
   }
 
   findById(id: String): Observable<SistemaOperacional> {

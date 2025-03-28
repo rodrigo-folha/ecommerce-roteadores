@@ -6,6 +6,7 @@ import br.unitins.tp1.roteadores.model.endereco.Endereco;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
@@ -21,11 +22,11 @@ public class Fornecedor extends DefaultEntity {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinTable(name = "telefone_fornecedor", joinColumns = @JoinColumn(name = "id_fornecedor"))
     private List<Telefone> telefones;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinTable(name = "endereco_fornecedor", joinColumns = @JoinColumn(name = "id_fornecedor"))
     private List<Endereco> enderecos;
 

@@ -6,6 +6,7 @@ import br.unitins.tp1.roteadores.dto.roteador.BandaFrequenciaRequestDTO;
 import br.unitins.tp1.roteadores.model.roteador.BandaFrequencia;
 import br.unitins.tp1.roteadores.repository.BandaFrequenciaRepository;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -22,13 +23,19 @@ public class BandaFrequenciaServiceImpl implements BandaFrequenciaService{
     }
 
     @Override
-    public List<BandaFrequencia> findByNome(String nome) {
-        return bandaFrequenciaRepository.findByNome(nome);
+    public List<BandaFrequencia> findByNome(String nome, Integer page, Integer pageSize) {
+        return bandaFrequenciaRepository.findByNome(nome).page(page, pageSize).list();
     }
 
     @Override
-    public List<BandaFrequencia> findAll() {
-        return bandaFrequenciaRepository.findAll().list();
+    public List<BandaFrequencia> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<BandaFrequencia> query = null;
+        if (page == null || pageSize == null)
+            query = bandaFrequenciaRepository.findAll();
+        else
+            query = bandaFrequenciaRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -64,5 +71,15 @@ public class BandaFrequenciaServiceImpl implements BandaFrequenciaService{
     public void delete(Long id) {
         bandaFrequenciaRepository.deleteById(id);
     }
+
+    @Override
+    public long count() {
+        return bandaFrequenciaRepository.count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return bandaFrequenciaRepository.findByNome(nome).count();
+    }    
     
 }

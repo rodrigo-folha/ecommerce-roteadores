@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Fornecedor } from '../models/fornecedor.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { IPaginator } from '../interfaces/ipaginator';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,16 @@ export class FornecedorService {
 
   constructor(private httpClient: HttpClient) {}
 
-  findAll(): Observable<Fornecedor[]> {
-    return this.httpClient.get<Fornecedor[]>(this.baseUrl);
+  findAll(page?: number, pageSize?: number): Observable<IPaginator<Fornecedor>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<Fornecedor>>(this.baseUrl, {params});
   }
 
   findById(id: string): Observable<Fornecedor> {

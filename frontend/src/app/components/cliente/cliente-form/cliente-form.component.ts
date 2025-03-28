@@ -20,6 +20,7 @@ import { Telefone } from '../../../models/telefone.model';
 import { Cidade } from '../../../models/cidade.model';
 import { CidadeService } from '../../../services/cidade.service';
 import { Endereco } from '../../../models/endereco.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cliente-form',
@@ -78,7 +79,6 @@ export class ClienteFormComponent {
     const cliente: Cliente = this.activatedRoute.snapshot.data['cliente'];
     
     const usuario = cliente?.id ? cliente.usuario : null;
-    console.log('Dados da API', usuario);
 
     this.formGroup = this.formBuilder.group({
       id: [(cliente && cliente.id) ? cliente.id : null],
@@ -118,7 +118,6 @@ export class ClienteFormComponent {
   }
 
   adicionarEndereco(endereco?: Endereco): void {
-    console.log('Endereco', endereco);
     const enderecoForm = this.formBuilder.group({
       logradouro: [endereco ? endereco.logradouro : '',[Validators.required]],
       bairro: [endereco ? endereco.bairro : '',[Validators.required]],
@@ -173,13 +172,33 @@ export class ClienteFormComponent {
 
   excluir() {
     const cliente = this.formGroup.value;
-    this.clienteService.delete(cliente).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/clientes');
-      },
-      error: (e) => {
-        console.log('Erro ao excluir', JSON.stringify(e));
-      },
+    Swal.fire({
+      title: "Você tem certeza?",
+      text: "Vou não vai poder reverter isso!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, deletar!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deletado!",
+          text: "Cliente deletado com sucesso!",
+          icon: "success"
+        });
+
+        this.clienteService.delete(cliente).subscribe({
+          next: () => {
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/admin/clientes']);
+            });
+          },
+          error: (e) => {
+            console.log('Erro ao excluir', JSON.stringify(e));
+          }
+        });
+      }
     });
   }
 
