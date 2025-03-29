@@ -7,6 +7,7 @@ import br.unitins.tp1.roteadores.model.pedido.Lote;
 import br.unitins.tp1.roteadores.repository.LoteRepository;
 import br.unitins.tp1.roteadores.service.roteador.RoteadorService;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -50,8 +51,14 @@ public class LoteServiceImpl implements LoteService {
     } 
 
     @Override
-    public List<Lote> findAll() {
-        return loteRepository.findAll().list();
+    public List<Lote> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<Lote> query = null;
+        if (page == null || pageSize == null)
+            query = loteRepository.findAll();
+        else
+            query = loteRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -102,6 +109,11 @@ public class LoteServiceImpl implements LoteService {
             throw new ValidationException("id", "id nao encontrado");
             
         loteRepository.deleteById(id);
+    }
+
+    @Override
+    public long count() {
+        return loteRepository.count();
     }
     
 }

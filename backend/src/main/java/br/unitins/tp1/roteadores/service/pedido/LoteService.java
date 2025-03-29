@@ -15,11 +15,13 @@ public interface LoteService {
 
     List<Lote> findByIdRoteadorQtdeTotal(Long idRoteador);
     
-    List<Lote> findAll();
+    List<Lote> findAll(Integer page, Integer pageSize);
 
     Lote create(LoteRequestDTO dto);
 
     Lote update(Long id, LoteRequestDTO dto);
 
     void delete(Long id); 
+
+    long count();
 }

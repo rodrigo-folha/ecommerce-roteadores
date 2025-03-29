@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Lote } from '../models/lote.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { IPaginator } from '../interfaces/ipaginator';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,17 @@ export class LoteService {
   
     constructor(private httpClient: HttpClient) { }
   
-    findAll(): Observable<Lote[]> {
-      return this.httpClient.get<Lote[]>(this.baseUrl);
-    }
+    findAll(page?: number, pageSize?: number): Observable<IPaginator<Lote>> {
+        let params = {};
+    
+        if (page !== undefined && pageSize !== undefined) {
+          params = {
+            page: page.toString(),
+            pageSize: pageSize.toString()
+          }
+        }
+        return this.httpClient.get<IPaginator<Lote>>(this.baseUrl, {params});
+      }
   
     findById(id: String): Observable<Lote> {
       return this.httpClient.get<Lote>(`${this.baseUrl}/${id}`);

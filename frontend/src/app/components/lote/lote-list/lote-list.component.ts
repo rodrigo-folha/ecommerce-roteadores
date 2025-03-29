@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Lote } from '../../../models/lote.model';
-import { LoteService } from '../../../services/lote.service';
 import { Roteador } from '../../../models/roteador.model';
+import { LoteService } from '../../../services/lote.service';
 import { RoteadorService } from '../../../services/roteador.service';
 
 @Component({
@@ -19,6 +21,8 @@ import { RoteadorService } from '../../../services/roteador.service';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     CommonModule,
     MatPaginatorModule,
@@ -30,6 +34,13 @@ import { RoteadorService } from '../../../services/roteador.service';
 export class LoteListComponent {
   lotes: Lote[] = [];
   roteadores: Roteador[] = [];
+  displayedColumns: string[] = ['id', 'codigo', 'estoque', 'data', 'roteador', 'acao'];
+  totalRecords = 0;
+  pageSize = 5;
+  page = 0;
+  showSearch = false;
+  filterValue = '';
+  lotesFiltrados: Lote[] = [];
 
   constructor(
     private loteService: LoteService, 
@@ -37,23 +48,58 @@ export class LoteListComponent {
     private roteadorService: RoteadorService
   ) {}
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
-
   ngOnInit(): void {
-    this.carregarlotes();
+    this.carregarLotes();
     this.carregarRoteadores();
   }
 
-  carregarlotes(): void {
-    this.loteService.findAll().subscribe((lotes) => {
-      this.lotes = lotes;
-      this.dataSource.data = this.lotes;
+  carregarLotes(): void {
+    this.loteService.findAll().subscribe((data) => {
+      this.lotes = data.resultado;
+      this.applyCurrentFilter();
+      this.totalRecords = data.total;
     });
   }
+
+  applyCurrentFilter(): void {
+      const normalizedFilter = this.filterValue.trim().toLowerCase();
+      
+      const filtered = this.lotes.filter(
+        (data) => 
+          data.codigo.toString().toLowerCase().includes(normalizedFilter) ||
+          data.idRoteador.toString().toLowerCase().includes(normalizedFilter) ||
+          data.data.toString().toLowerCase().includes(normalizedFilter) ||
+          data.estoque.toString().toLowerCase().includes(normalizedFilter)
+      );
+    
+      this.lotesFiltrados = filtered.slice(
+        this.page * this.pageSize,
+        (this.page + 1) * this.pageSize
+      );
+    
+      this.totalRecords = filtered.length;  
+    }
+  
+    applyFilter(event: Event): void {
+      this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.page = 0;
+    this.applyCurrentFilter();
+    }
+  
+    toggleSearch():void {
+      this.showSearch = !this.showSearch;
+    }
+  
+    paginar(event: PageEvent): void {
+      this.page = event.pageIndex;
+      this.pageSize = event.pageSize;
+  
+      if (this.filterValue) {
+        this.applyCurrentFilter();
+      } else {
+        this.carregarLotes();
+      }
+    }
 
   carregarRoteadores(): void {
     this.roteadorService.findAll().subscribe((roteadores) => {
@@ -66,8 +112,6 @@ export class LoteListComponent {
     return roteador?.nome || '';
   }
 
-  displayedColumns: string[] = ['id', 'codigo', 'estoque', 'data', 'roteador', 'acao'];
-  dataSource = new MatTableDataSource<any>();
 
   excluir(lote: Lote): void {
     Swal.fire({
