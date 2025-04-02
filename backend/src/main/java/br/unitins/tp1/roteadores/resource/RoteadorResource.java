@@ -193,7 +193,13 @@ public class RoteadorResource {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadImage(@PathParam("nomeImagem") String nomeImagem) {
         LOG.info("Execucao do metodo downloadImage.");
-        ResponseBuilder response = Response.ok(roteadorFileService.find(nomeImagem));
+        ResponseBuilder response;
+        try {
+            response = Response.ok(roteadorFileService.find(nomeImagem));
+        } catch (IOException e) {
+            LOG.errorf("Erro ao baixar a imagem: %s. Detalhes: %s", nomeImagem, e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).encoding("Não foi possível baixar a imagem").build();
+        }
         response.header("Content-Disposition", "attachment; filename=" + nomeImagem);
         return response.build();
     }

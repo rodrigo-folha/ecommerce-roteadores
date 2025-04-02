@@ -23,6 +23,7 @@ import br.unitins.tp1.roteadores.form.ImageForm;
 import br.unitins.tp1.roteadores.service.file.ClienteFileServiceImpl;
 import br.unitins.tp1.roteadores.service.usuario.ClienteService;
 import br.unitins.tp1.roteadores.service.usuario.UsuarioService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -67,7 +68,7 @@ public class ClienteBasicoResource {
     }
 
     @GET
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     public Response getMinhasInformacoes() {
         LOG.info("Execucao do metodo getMinhasInformacoes");
         String email = jsonWebToken.getSubject();
@@ -213,7 +214,7 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/imagem/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadImage(@MultipartForm ImageForm form) {
@@ -230,12 +231,18 @@ public class ClienteBasicoResource {
     }
 
     @GET
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/imagem/download/{nomeImagem}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadImage(@PathParam("nomeImagem") String nomeImagem) {
-        LOG.info("Execucao do metodo DownloadImage.");
-        ResponseBuilder response = Response.ok(clienteFileService.find(nomeImagem));
+        LOG.info("Execucao do metodo downloadImage.");
+        ResponseBuilder response;
+        try {
+            response = Response.ok(clienteFileService.find(nomeImagem));
+        } catch (IOException e) {
+            LOG.errorf("Erro ao baixar a imagem: %s. Detalhes: %s", nomeImagem, e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).encoding("Não foi possível baixar a imagem").build();
+        }
         response.header("Content-Disposition", "attachment; filename=" + nomeImagem);
         return response.build();
     }
