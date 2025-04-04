@@ -11,11 +11,13 @@ public interface CupomDescontoService {
 
     CupomDesconto findByCodigo(String codigo);
     
-    List<CupomDesconto> findAll();
+    List<CupomDesconto> findAll(Integer page, Integer pageSize);
 
     CupomDesconto create(CupomDescontoRequestDTO dto);
 
     CupomDesconto update(Long id, CupomDescontoRequestDTO dto);
 
     void delete(Long id); 
+
+    long count();
 }

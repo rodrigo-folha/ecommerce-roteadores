@@ -19,11 +19,13 @@ public interface ClienteService {
 
     Cliente findById(Long id);
     
+    List<Cliente> findByNome(String nome, Integer page, Integer pageSize);
+
     List<Cliente> findByNome(String nome);
     
     Cliente findByUsuario (String email);
     
-    List<Cliente> findAll();
+    List<Cliente> findAll(Integer page, Integer pageSize);
     
     Cliente create(ClienteRequestDTO dto);
     
@@ -53,4 +55,7 @@ public interface ClienteService {
     Cliente gerarClienteFromFuncionario(String email);
     void updateCpf(String email, CpfPatchRequestDTO dto);
     void updateDataNascimento(String email, DataNascimentoPatchRequestDTO dto);
+
+    long count();
+    long count(String nome);
 }

@@ -2,6 +2,7 @@ package br.unitins.tp1.roteadores.resource;
 
 import org.jboss.logging.Logger;
 
+import br.unitins.tp1.roteadores.dto.PaginacaoResponseDTO;
 import br.unitins.tp1.roteadores.dto.endereco.CidadeRequestDTO;
 import br.unitins.tp1.roteadores.dto.endereco.CidadeResponseDTO;
 import br.unitins.tp1.roteadores.service.endereco.CidadeService;
@@ -9,12 +10,14 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -40,23 +43,38 @@ public class CidadeResource {
     @GET
     // @RolesAllowed({"Adm", "User"})
     @Path("/search/{nome}")
-    public Response findByNome(@PathParam("nome") String nome) {
+    public Response findByNome(@PathParam("nome") String nome,
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = cidadeService.count(nome);
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
-        return Response.ok(cidadeService.findByNome(nome)
-                .stream()
-                .map(o -> CidadeResponseDTO.valueOf(o))
-                .toList()).build();
+        PaginacaoResponseDTO<CidadeResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, cidadeService.findByNome(nome, page, pageSize).stream().map(CidadeResponseDTO::valueOf).toList());
+        
+        return Response.ok(paginacao).build();
     }
 
     @GET
     // @RolesAllowed({"Adm", "User"})
-    public Response findAll() {
+    public Response findAll(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+
+        Long count = cidadeService.count();
         LOG.info("Execucao do metodo findAll");
-        return Response.ok(cidadeService
-                .findAll()
-                .stream()
-                .map(o -> CidadeResponseDTO.valueOf(o))
-                .toList()).build();
+        PaginacaoResponseDTO<CidadeResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, cidadeService.findAll(page, pageSize).stream().map(CidadeResponseDTO::valueOf).toList());
+        
+        return Response.ok(paginacao).build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response count() {
+        LOG.info("Execucao do metodo count");
+        return Response.ok(cidadeService.count()).build();
     }
 
     @POST

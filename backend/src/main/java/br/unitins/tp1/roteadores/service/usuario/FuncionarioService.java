@@ -17,11 +17,11 @@ public interface FuncionarioService {
 
     Funcionario findById(Long id);
 
-    List<Funcionario> findByNome(String nome);
+    List<Funcionario> findByNome(String nome, Integer page, Integer pageSize);
 
     Funcionario findByUsuario (String email);
 
-    List<Funcionario> findAll();
+    List<Funcionario> findAll(Integer page, Integer pageSize);
 
     Funcionario create(FuncionarioRequestDTO dto);
 
@@ -52,5 +52,8 @@ public interface FuncionarioService {
     void updateDataNascimento(String email, DataNascimentoPatchRequestDTO dto);
 
     List<Funcionario> findByEmail(String email);
+
+    long count();
+    long count(String nome);
     
 }

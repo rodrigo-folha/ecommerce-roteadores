@@ -7,6 +7,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import br.unitins.tp1.roteadores.dto.PaginacaoResponseDTO;
 import br.unitins.tp1.roteadores.dto.TelefoneRequestDTO;
 import br.unitins.tp1.roteadores.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.roteadores.dto.usuario.FuncionarioRequestDTO;
@@ -25,6 +26,7 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -32,6 +34,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
@@ -67,17 +70,20 @@ public class FuncionarioResource {
     @GET
     // @RolesAllowed({ "Adm" })
     @Path("/search/{nome}")
-    public Response findByNome(@PathParam("nome") String nome) {
+    public Response findByNome(@PathParam("nome") String nome,
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = funcionarioService.count(nome);
         LOG.info("Execucao do metodo findByNome. Nome: " + nome);
-        return Response.ok(funcionarioService.findByNome(nome)
-                .stream()
-                .map(FuncionarioResponseDTO::valueOf)
-                .toList()).build();
+        PaginacaoResponseDTO<FuncionarioResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, funcionarioService.findByNome(nome, page, pageSize).stream().map(FuncionarioResponseDTO::valueOf).toList());
+        return Response.ok(paginacao).build();
     }
 
     @GET
     // @RolesAllowed({ "Adm" })
-    // @Path("/search/email/{email}")
+    @Path("/search/email/{email}")
     public Response findByEmail(@PathParam("email") String email) {
         LOG.info("Execucao do metodo findByEmail. Email: " + email);
         return Response.ok(funcionarioService.findByEmail(email)
@@ -88,12 +94,22 @@ public class FuncionarioResource {
 
     @GET
     // @RolesAllowed({ "Adm" })
-    public Response findAll() {
+    public Response findAll(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = funcionarioService.count();
         LOG.info("Execucao do metodo findAll");
-        return Response.ok(funcionarioService.findAll()
-                .stream()
-                .map(o -> FuncionarioResponseDTO.valueOf(o))
-                .toList()).build();
+        PaginacaoResponseDTO<FuncionarioResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, funcionarioService.findAll(page, pageSize).stream().map(FuncionarioResponseDTO::valueOf).toList());
+        return Response.ok(paginacao).build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response count() {
+        LOG.info("Execucao do metodo count");
+        return Response.ok(funcionarioService.count()).build();
     }
 
     @POST

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Cupom } from '../models/cupom.model';
 import { Observable } from 'rxjs';
+import { IPaginator } from '../interfaces/ipaginator';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,17 @@ private baseUrl = 'http://localhost:8080/cuponsdesconto';
 
   constructor(private httpClient: HttpClient) { }
 
-  findAll(): Observable<Cupom[]> {
-    return this.httpClient.get<Cupom[]>(this.baseUrl);
+  findAll(page?: number, pageSize?: number): Observable<IPaginator<Cupom>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+
+    return this.httpClient.get<IPaginator<Cupom>>(this.baseUrl, {params});
   }
 
   findById(id: String): Observable<Cupom> {

@@ -66,7 +66,7 @@ export class FornecedorFormComponent {
 
   ngOnInit(): void {
     this.cidadeService.findAll().subscribe((data) => {
-      this.cidades = data;
+      this.cidades = data.resultado;
     });
     this.initializeForm();
   }

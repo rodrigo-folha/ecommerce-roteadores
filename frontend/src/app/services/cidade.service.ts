@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Cidade } from '../models/cidade.model';
+import { IPaginator } from '../interfaces/ipaginator';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,17 @@ export class CidadeService {
 
   constructor(private httpClient: HttpClient) { }
 
-  findAll(): Observable<Cidade[]> {
-    return this.httpClient.get<Cidade[]>(this.baseUrl);
+  findAll(page?: number, pageSize?: number): Observable<IPaginator<Cidade>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+
+    return this.httpClient.get<IPaginator<Cidade>>(this.baseUrl, {params});
   }
 
   findById(id: String): Observable<Cidade> {

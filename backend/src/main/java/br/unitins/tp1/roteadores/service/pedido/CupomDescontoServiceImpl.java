@@ -6,6 +6,7 @@ import br.unitins.tp1.roteadores.dto.pedido.CupomDescontoRequestDTO;
 import br.unitins.tp1.roteadores.model.pedido.CupomDesconto;
 import br.unitins.tp1.roteadores.repository.CupomDescontoRepository;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -27,8 +28,14 @@ public class CupomDescontoServiceImpl implements CupomDescontoService {
     } 
 
     @Override
-    public List<CupomDesconto> findAll() {
-        return cupomdescontoRepository.findAll().list();
+    public List<CupomDesconto> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<CupomDesconto> query = null;
+        if (page == null || pageSize == null)
+            query = cupomdescontoRepository.findAll();
+        else
+            query = cupomdescontoRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -85,6 +92,11 @@ public class CupomDescontoServiceImpl implements CupomDescontoService {
             throw new ValidationException("id", "id nao encontrado");
             
         cupomdescontoRepository.deleteById(id);
+    }
+
+    @Override
+    public long count() {
+        return cupomdescontoRepository.findAll().count();
     }
     
 }

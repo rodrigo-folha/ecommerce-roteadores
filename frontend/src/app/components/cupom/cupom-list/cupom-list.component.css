@@ -19,6 +19,10 @@
   .mat-column-nome {
     width: 100%;
   }
+
+  .busca {
+    width: 0px;
+  }
   
   .mat-column-sigla {
     text-align: center;

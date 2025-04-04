@@ -31,6 +31,8 @@ public interface PedidoService {
 
     // administrativo
     Pedido findById(Long id);
-    List<Pedido> findAll();
+    List<Pedido> findAll(Integer page, Integer pageSize);
+
+    long count();
 
 }

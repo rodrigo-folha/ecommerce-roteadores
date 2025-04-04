@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
 import { Cliente } from '../../../models/cliente.model';
 import { ClienteService } from '../../../services/cliente.service';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-cliente-list',
@@ -22,6 +24,8 @@ import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/cor
     MatButtonModule,
     MatIconModule,
     MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
     CommonModule,
     MatPaginatorModule,
     RouterLink,
@@ -30,40 +34,67 @@ import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/cor
   styleUrl: './cliente-list.component.css',
 })
 export class ClienteListComponent {
-  // controle de paginacao
-  totalRegistros = 0;
+  clientes: Cliente[] = [];
+  displayedColumns: string[] = ['id', 'nome', 'cpf', 'dataNascimento', 'email', 'acao'];
+  totalRecords = 0;
   pageSize = 5;
   page = 0;
-  clientes: Cliente[] = [];
+  showSearch = false;
+  filterValue = '';
+  clientesFiltrados: Cliente[] = [];
 
   constructor(private clienteService: ClienteService, private router: Router) {}
-
-  displayedColumns: string[] = [
-    'id',
-    'nome',
-    'cpf',
-    'dataNascimento',
-    'email',
-    'acao'
-  ];
-
-  dataSource = new MatTableDataSource<any>();
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
 
   ngOnInit(): void {
     this.carregarClientes();
   }
 
   carregarClientes(): void {
-    this.clienteService.findAll().subscribe((clientes) => {
-      this.clientes = clientes;
-      this.dataSource.data = this.clientes;
+    this.clienteService.findAll().subscribe((data) => {
+      this.clientes = data.resultado;
+      this.applyCurrentFilter();
+      this.totalRecords = data.total;
     });
+  }
+
+  applyCurrentFilter(): void {
+    const normalizedFilter = this.filterValue.trim().toLowerCase();
+    
+    const filtered = this.clientes.filter(
+      (data) => 
+        data.usuario.nome.toString().toLowerCase().includes(normalizedFilter) ||
+        data.usuario.cpf.toString().toLowerCase().includes(normalizedFilter) ||
+        data.usuario.email.toString().toLowerCase().includes(normalizedFilter) ||
+        data.usuario.dataNascimento.toString().toLowerCase().includes(normalizedFilter)
+    );
+  
+    this.clientesFiltrados = filtered.slice(
+      this.page * this.pageSize,
+      (this.page + 1) * this.pageSize
+    );
+  
+    this.totalRecords = filtered.length;  
+  }
+
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  this.page = 0;
+  this.applyCurrentFilter();
+  }
+
+  toggleSearch():void {
+    this.showSearch = !this.showSearch;
+  }
+
+  paginar(event: PageEvent): void {
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    if (this.filterValue) {
+      this.applyCurrentFilter();
+    } else {
+      this.carregarClientes();
+    }
   }
   
   excluir(cliente: Cliente): void {

@@ -6,6 +6,7 @@ import br.unitins.tp1.roteadores.dto.endereco.CidadeRequestDTO;
 import br.unitins.tp1.roteadores.model.endereco.Cidade;
 import br.unitins.tp1.roteadores.repository.CidadeRepository;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -27,13 +28,19 @@ public class CidadeServiceImpl implements CidadeService {
     }
 
     @Override
-    public List<Cidade> findByNome(String nome) {
-        return cidadeRepository.findByNome(nome);
+    public List<Cidade> findByNome(String nome, Integer page, Integer pageSize) {
+        return cidadeRepository.findByNome(nome).page(page, pageSize).list();
     }
 
     @Override
-    public List<Cidade> findAll() {
-        return cidadeRepository.findAll().list();
+    public List<Cidade> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<Cidade> query = null;
+        if (page == null || pageSize == null)
+            query = cidadeRepository.findAll();
+        else
+            query = cidadeRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -69,6 +76,16 @@ public class CidadeServiceImpl implements CidadeService {
     @Transactional
     public void delete(Long id) {
         cidadeRepository.deleteById(id);
+    }
+
+    @Override
+    public long count() {
+        return cidadeRepository.findAll().count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return cidadeRepository.findByNome(nome).count();
     }
     
 }

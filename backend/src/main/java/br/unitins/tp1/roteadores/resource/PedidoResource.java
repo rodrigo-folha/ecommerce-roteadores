@@ -3,6 +3,7 @@ package br.unitins.tp1.roteadores.resource;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
+import br.unitins.tp1.roteadores.dto.PaginacaoResponseDTO;
 import br.unitins.tp1.roteadores.dto.pedido.PedidoBasicoResponseDTO;
 import br.unitins.tp1.roteadores.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.roteadores.dto.pedido.PedidoResponseDTO;
@@ -11,12 +12,14 @@ import br.unitins.tp1.roteadores.service.pedido.PedidoService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -83,12 +86,15 @@ public class PedidoResource {
     @GET
     // @RolesAllowed({"Adm"})
     @Path("/search/all")
-    public Response findAll() {
+    public Response findAll(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        Long count = pedidoService.count();
         LOG.info("Execucao do metodo findAll");
-        return Response.ok(pedidoService.findAll()
-                    .stream()
-                    .map(PedidoResponseDTO::valueOf)
-                    .toList()).build();
+        PaginacaoResponseDTO<PedidoResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, pedidoService.findAll(page, pageSize).stream().map(PedidoResponseDTO::valueOf).toList());
+        return Response.ok(paginacao).build();
     }
 
     @POST

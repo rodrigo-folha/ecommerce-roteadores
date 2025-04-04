@@ -23,6 +23,7 @@ import br.unitins.tp1.roteadores.repository.FuncionarioRepository;
 import br.unitins.tp1.roteadores.repository.UsuarioRepository;
 import br.unitins.tp1.roteadores.service.endereco.CidadeService;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -53,8 +54,8 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     @Override
-    public List<Funcionario> findByNome(String nome) {
-        return funcionarioRepository.findByNome(nome);
+    public List<Funcionario> findByNome(String nome, Integer page, Integer pageSize) {
+        return funcionarioRepository.findByNome(nome).page(page, pageSize).list();
     }
 
     @Override
@@ -70,8 +71,14 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     @Override
-    public List<Funcionario> findAll() {
-        return funcionarioRepository.findAll().list();
+    public List<Funcionario> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<Funcionario> query = null;
+        if (page == null || pageSize == null)
+            query = funcionarioRepository.findAll();
+        else
+            query = funcionarioRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -419,5 +426,15 @@ public class FuncionarioServiceImpl implements FuncionarioService {
             }
         }
     }
+
+    @Override
+    public long count() {
+        return funcionarioRepository.count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return funcionarioRepository.findByNome(nome).count();
+    }   
 
 }

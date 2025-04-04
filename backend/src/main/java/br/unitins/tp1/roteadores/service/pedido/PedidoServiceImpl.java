@@ -32,6 +32,7 @@ import br.unitins.tp1.roteadores.service.CartaoService;
 import br.unitins.tp1.roteadores.service.endereco.CidadeService;
 import br.unitins.tp1.roteadores.service.usuario.ClienteService;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -85,8 +86,19 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public List<Pedido> findAll() {
-        return pedidoRepository.findAll().list();
+    public List<Pedido> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<Pedido> query = null;
+        if (page == null || pageSize == null)
+            query = pedidoRepository.findAll();
+        else
+            query = pedidoRepository.findAll().page(page, pageSize);
+
+        return query.list();
+    }
+
+    @Override
+    public long count() {
+        return pedidoRepository.findAll().count();
     }
 
     @Override

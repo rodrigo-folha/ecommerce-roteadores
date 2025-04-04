@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Funcionario } from '../models/funcionario.model';
 import { Usuario } from '../models/usuario.model';
+import { IPaginator } from '../interfaces/ipaginator';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,17 @@ export class FuncionarioService {
   
     constructor(private httpClient: HttpClient) { }
   
-    findAll(): Observable<Funcionario[]> {
-      return this.httpClient.get<Funcionario[]>(this.baseUrl);
+    findAll(page?: number, pageSize?: number): Observable<IPaginator<Funcionario>> {
+      let params = {};
+  
+      if (page !== undefined && pageSize !== undefined) {
+        params = {
+          page: page.toString(),
+          pageSize: pageSize.toString()
+        }
+      }
+  
+      return this.httpClient.get<IPaginator<Funcionario>>(this.baseUrl, {params});
     }
   
     findById(id: string): Observable<Funcionario> {

@@ -27,6 +27,7 @@ import br.unitins.tp1.roteadores.repository.UsuarioRepository;
 import br.unitins.tp1.roteadores.service.endereco.CidadeService;
 import br.unitins.tp1.roteadores.service.roteador.RoteadorService;
 import br.unitins.tp1.roteadores.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -60,8 +61,13 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    public List<Cliente> findByNome(String nome, Integer page, Integer pageSize) {
+        return clienteRepository.findByNome(nome).page(page, pageSize).list();
+    }
+
+    @Override
     public List<Cliente> findByNome(String nome) {
-        return clienteRepository.findByNome(nome);
+        return clienteRepository.findByNome(nome).list();
     }
 
     @Override
@@ -78,8 +84,14 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public List<Cliente> findAll() {
-        return clienteRepository.findAll().list();
+    public List<Cliente> findAll(Integer page, Integer pageSize) {
+        PanacheQuery<Cliente> query = null;
+        if (page == null || pageSize == null)
+            query = clienteRepository.findAll();
+        else
+            query = clienteRepository.findAll().page(page, pageSize);
+
+        return query.list();
     }
 
     @Override
@@ -514,5 +526,15 @@ public class ClienteServiceImpl implements ClienteService {
             }
         }
     }
+
+    @Override
+    public long count() {
+        return clienteRepository.count();
+    }
+
+    @Override
+    public long count(String nome) {
+        return clienteRepository.findByNome(nome).count();
+    }   
     
 }

@@ -3,13 +3,15 @@ import { Component, ViewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Cidade } from '../../../models/cidade.model';
 import { CidadeService } from '../../../services/cidade.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-cidade-list',
@@ -17,6 +19,8 @@ import { CidadeService } from '../../../services/cidade.service';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     CommonModule,
     MatPaginatorModule,
@@ -27,28 +31,65 @@ import { CidadeService } from '../../../services/cidade.service';
 })
 export class CidadeListComponent {
   cidades: Cidade[] = [];
+  displayedColumns: string[] = ['id', 'nome', 'sigla', 'acao'];
+  totalRecords = 0;
+  pageSize = 5;
+  page = 0;
+  showSearch = false;
+  filterValue = '';
+  cidadesFiltradas: Cidade[] = [];
 
   constructor(private cidadeService: CidadeService, private router: Router) {}
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
 
   ngOnInit(): void {
     this.carregarcidades();
   }
 
   carregarcidades(): void {
-    this.cidadeService.findAll().subscribe((cidades) => {
-      this.cidades = cidades;
-      this.dataSource.data = this.cidades;
+    this.cidadeService.findAll().subscribe((data) => {
+      this.cidades = data.resultado;
+      this.applyCurrentFilter();
+      this.totalRecords = data.total;
     });
   }
 
-  displayedColumns: string[] = ['id', 'nome', 'sigla', 'acao'];
-  dataSource = new MatTableDataSource<any>();
+  applyCurrentFilter(): void {
+    const normalizedFilter = this.filterValue.trim().toLowerCase();
+    
+    const filtered = this.cidades.filter(
+      (data) => 
+        data.nome.toString().toLowerCase().includes(normalizedFilter)
+    );
+  
+    this.cidadesFiltradas = filtered.slice(
+      this.page * this.pageSize,
+      (this.page + 1) * this.pageSize
+    );
+  
+    this.totalRecords = filtered.length;  
+  }
+
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  this.page = 0;
+  this.applyCurrentFilter();
+  }
+
+  toggleSearch():void {
+    this.showSearch = !this.showSearch;
+  }
+
+  paginar(event: PageEvent): void {
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    if (this.filterValue) {
+      this.applyCurrentFilter();
+    } else {
+      this.carregarcidades();
+    }
+  }
 
   excluir(cidade: Cidade): void {
     Swal.fire({

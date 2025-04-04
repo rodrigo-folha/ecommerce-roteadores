@@ -9,14 +9,17 @@ public interface CidadeService {
 
     Cidade findById(Long id);
 
-    List<Cidade> findByNome(String nome);
+    List<Cidade> findByNome(String nome, Integer page, Integer pageSize);
 
-    List<Cidade> findAll();
+    List<Cidade> findAll(Integer page, Integer pageSize);
 
     Cidade create(CidadeRequestDTO dto);
 
     Cidade update(Long id, CidadeRequestDTO dto);
 
     void delete(Long id);
+
+    long count();
+    long count(String nome);
     
 }

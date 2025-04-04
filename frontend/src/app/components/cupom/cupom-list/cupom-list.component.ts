@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Cupom } from '../../../models/cupom.model';
@@ -11,6 +11,8 @@ import { CupomService } from '../../../services/cupom.service';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-cupom-list',
@@ -21,6 +23,8 @@ import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/cor
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     CommonModule,
     MatPaginatorModule,
@@ -28,32 +32,70 @@ import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/cor
   ],
   templateUrl: './cupom-list.component.html',
   styleUrl: './cupom-list.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CupomListComponent {
   cupons: Cupom[] = [];
+  displayedColumns: string[] = ['id', 'codigo', 'percentualDesconto', 'validade', 'acao'];
+  totalRecords = 0;
+  pageSize = 5;
+  page = 0;
+  showSearch = false;
+  filterValue = '';
+  cuponsFiltrados: Cupom[] = [];
 
   constructor(private cupomService: CupomService, private router: Router) {}
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
 
   ngOnInit(): void {
     this.carregarCupons();
   }
 
   carregarCupons(): void {
-    this.cupomService.findAll().subscribe((cupons) => {
-      this.cupons = cupons;
-      this.dataSource.data = this.cupons;
+    this.cupomService.findAll().subscribe((data) => {
+      this.cupons = data.resultado;
+      this.applyCurrentFilter();
+      this.totalRecords = data.total;
     });
   }
 
-  displayedColumns: string[] = ['id', 'codigo', 'percentualDesconto', 'validade', 'acao'];
-  dataSource = new MatTableDataSource<any>();
+  applyCurrentFilter(): void {
+    const normalizedFilter = this.filterValue.trim().toLowerCase();
+    
+    const filtered = this.cupons.filter(
+      (data) => 
+        data.codigo.toString().toLowerCase().includes(normalizedFilter) ||
+        data.validade.toString().toLowerCase().includes(normalizedFilter) ||
+        data.percentualDesconto.toString().toLowerCase().includes(normalizedFilter)
+    );
+  
+    this.cuponsFiltrados = filtered.slice(
+      this.page * this.pageSize,
+      (this.page + 1) * this.pageSize
+    );
+  
+    this.totalRecords = filtered.length;  
+  }
+
+  applyFilter(event: Event): void {
+    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  this.page = 0;
+  this.applyCurrentFilter();
+  }
+
+  toggleSearch():void {
+    this.showSearch = !this.showSearch;
+  }
+
+  paginar(event: PageEvent): void {
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    if (this.filterValue) {
+      this.applyCurrentFilter();
+    } else {
+      this.carregarCupons();
+    }
+  }
+
 
   excluir(cupom: Cupom): void {
     Swal.fire({
