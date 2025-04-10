@@ -16,23 +16,23 @@ import { SidebarService } from '../../../../services/sidebar.service';
   styleUrl: './header-admin.component.css'
 })
 export class HeaderAdminComponent {
-  protected readonly isMobile = signal(true);
+  // protected readonly isMobile = signal(true);
 
-  private readonly _mobileQuery: MediaQueryList;
-  private readonly _mobileQueryListener: () => void;
+  // private readonly _mobileQuery: MediaQueryList;
+  // private readonly _mobileQueryListener: () => void;
 
   constructor(private sidebarService: SidebarService) {
-    const media = inject(MediaMatcher);
+    // const media = inject(MediaMatcher);
 
-    this._mobileQuery = media.matchMedia('(max-width: 600px)');
-    this.isMobile.set(this._mobileQuery.matches);
-    this._mobileQueryListener = () => this.isMobile.set(this._mobileQuery.matches);
-    this._mobileQuery.addEventListener('change', this._mobileQueryListener);
+    // this._mobileQuery = media.matchMedia('(max-width: 600px)');
+    // this.isMobile.set(this._mobileQuery.matches);
+    // this._mobileQueryListener = () => this.isMobile.set(this._mobileQuery.matches);
+    // this._mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
-  ngOnDestroy(): void {
-    this._mobileQuery.removeEventListener('change', this._mobileQueryListener);
-  }
+  // ngOnDestroy(): void {
+  //   this._mobileQuery.removeEventListener('change', this._mobileQueryListener);
+  // }
 
   toggleSidebar() {
     this.sidebarService.toggle();

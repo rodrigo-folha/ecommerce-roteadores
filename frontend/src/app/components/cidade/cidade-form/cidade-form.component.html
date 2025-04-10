@@ -18,10 +18,12 @@
             *ngIf="
               formGroup.get('nome') &&
               formGroup.get('nome')?.invalid &&
-              formGroup.get('nome')?.touched
-            "
-          >
-            O nome é obrigatório.
+              formGroup.get('nome')?.touched">
+            {{getErrorMessage('nome', formGroup.get('nome')?.errors)}}
+
+            @if (formGroup.get('nome')?.hasError('apiError')) {
+                <span> {{ formGroup.get('nome')?.getError('apiError') }}</span>
+            }
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
@@ -33,6 +35,17 @@
             </mat-option>
             }
           </mat-select>
+          <mat-error
+            *ngIf="
+              formGroup.get('estado') &&
+              formGroup.get('estado')?.invalid &&
+              formGroup.get('estado')?.touched">
+            {{getErrorMessage('estado', formGroup.get('estado')?.errors)}}
+
+            @if (formGroup.get('estado')?.hasError('apiError')) {
+                <span> {{ formGroup.get('estado')?.getError('apiError') }}</span>
+            }
+          </mat-error>
         </mat-form-field>
       </form>
     </mat-card-content>
@@ -52,7 +65,6 @@
         mat-raised-button
         color="primary"
         (click)="salvar()"
-        [disabled]="formGroup.invalid"
       >
         Salvar
       </button>

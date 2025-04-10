@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
@@ -13,15 +13,17 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit{
   @ViewChild('drawer') public drawer!: MatDrawer;
 
   constructor(private sidebarService: SidebarService) {}
 
-  ngAfterViewInit(): void {
-    this.sidebarService.sideNavToggleSubject.subscribe(() => {
-      this.drawer.toggle();
-    });
+  ngOnInit() {
+    this.sidebarService.sideNavToggleSubject.subscribe(
+      () => {
+        this.drawer?.toggle();
+      }
+    )
   }
   
 }

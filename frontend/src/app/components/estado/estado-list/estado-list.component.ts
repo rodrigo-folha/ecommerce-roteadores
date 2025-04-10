@@ -74,8 +74,8 @@ export class EstadoListComponent {
 
   applyFilter(event: Event): void {
     this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-  this.page = 0;
-  this.applyCurrentFilter();
+    this.page = 0;
+    this.applyCurrentFilter();
   }
 
   toggleSearch():void {
