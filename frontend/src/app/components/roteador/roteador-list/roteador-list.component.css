@@ -3,6 +3,14 @@
   text-align: center;
 }
 
+button[color="warn"] mat-icon {
+  color: #f44336;
+}
+
+button[color="primary"] mat-icon {
+  color: #005CBB;
+}
+
 .flex-container {
   display: flex;
   align-items: center;

@@ -19,6 +19,14 @@
   .busca {
     width: 0px;
   }
+
+  button[color="warn"] mat-icon {
+    color: #f44336;
+  }
+  
+  button[color="primary"] mat-icon {
+    color: #005CBB;
+  }
   
   /* .mat-column-nome {
     width: 100%;

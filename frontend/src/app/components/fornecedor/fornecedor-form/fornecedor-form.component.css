@@ -12,6 +12,16 @@ mat-toolbar {
     margin-bottom: 20px;
 }
 
+button[color="warn"] {
+    background: #F44336;
+    color: #fff;
+  }
+  
+  button[color="primary-salvar"] {
+    background: #005CBB;
+    color: #fff;
+  }
+
 mat-card {
     max-width: 800px;
     margin: 2rem auto;

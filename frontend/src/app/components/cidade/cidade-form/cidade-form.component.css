@@ -7,6 +7,16 @@ mat-toolbar {
     text-align: center;
 }
 
+button[color="warn"] {
+    background: #F44336;
+    color: #fff;
+  }
+  
+button[color="primary-salvar"] {
+    background: #005CBB;
+    color: #fff;
+}
+
 .full-width {
     display: flex;
     margin-bottom: 20px;

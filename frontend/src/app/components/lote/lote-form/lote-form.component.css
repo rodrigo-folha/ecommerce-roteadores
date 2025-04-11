@@ -18,6 +18,16 @@ mat-card {
     background: #fff;
 }
 
+button[color="warn"] {
+    background: #F44336;
+    color: #fff;
+  }
+  
+button[color="primary-salvar"] {
+    background: #005CBB;
+    color: #fff;
+}
+
 mat-card-actions {
     display: flex;
     justify-content: flex-end;

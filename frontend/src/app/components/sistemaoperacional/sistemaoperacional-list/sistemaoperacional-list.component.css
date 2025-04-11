@@ -9,6 +9,14 @@
     width: 100%;
   }
 
+  button[color="warn"] mat-icon {
+    color: #f44336;
+  }
+  
+  button[color="primary"] mat-icon {
+    color: #005CBB;
+  }
+
   .busca {
     width: 0px;
   }
