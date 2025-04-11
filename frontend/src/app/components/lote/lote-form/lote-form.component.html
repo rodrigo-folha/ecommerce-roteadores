@@ -21,7 +21,11 @@
               formGroup.get('codigo')?.touched
             "
           >
-            O código é obrigatório.
+          {{getErrorMessage('codigo', formGroup.get('codigo')?.errors)}}
+
+          @if (formGroup.get('codigo')?.hasError('apiError')) {
+              <span> {{ formGroup.get('codigo')?.getError('apiError') }}</span>
+          }
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
@@ -34,7 +38,11 @@
               formGroup.get('estoque')?.touched
             "
           >
-            A quantidade é obrigatória.
+          {{getErrorMessage('estoque', formGroup.get('estoque')?.errors)}}
+
+          @if (formGroup.get('estoque')?.hasError('apiError')) {
+              <span> {{ formGroup.get('estoque')?.getError('apiError') }}</span>
+          }
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
@@ -51,7 +59,11 @@
               formGroup.get('data')?.touched
             "
           >
-            A data é obrigatória.
+          {{getErrorMessage('data', formGroup.get('data')?.errors)}}
+
+          @if (formGroup.get('data')?.hasError('apiError')) {
+              <span> {{ formGroup.get('data')?.getError('apiError') }}</span>
+          }
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
@@ -63,6 +75,19 @@
             </mat-option>
             }
           </mat-select>
+          <mat-error
+            *ngIf="
+              formGroup.get('idRoteador') &&
+              formGroup.get('idRoteador')?.invalid &&
+              formGroup.get('idRoteador')?.touched
+            "
+            >
+            {{getErrorMessage('idRoteador', formGroup.get('idRoteador')?.errors)}}
+
+            @if (formGroup.get('idRoteador')?.hasError('apiError')) {
+                <span> {{ formGroup.get('idRoteador')?.getError('apiError') }}</span>
+            }
+            </mat-error>
         </mat-form-field>
       </form>
     </mat-card-content>
@@ -82,7 +107,6 @@
         mat-raised-button
         color="primary-salvar"
         (click)="salvar()"
-        [disabled]="formGroup.invalid"
       >
         Salvar
       </button>

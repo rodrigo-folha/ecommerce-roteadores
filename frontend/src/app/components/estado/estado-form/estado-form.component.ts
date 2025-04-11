@@ -124,7 +124,6 @@ export class EstadoFormComponent {
   }
 
   tratarErros(httpError: HttpErrorResponse): void {
-
     if (httpError.status === 400) {
       if(httpError.error?.errors){
         httpError.error.errors.forEach((validationError: any)  => {

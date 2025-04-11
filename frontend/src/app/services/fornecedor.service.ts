@@ -44,6 +44,7 @@ export class FornecedorService {
     const data = {
       nome: fornecedor.nome,
       email: fornecedor.email,
+      cnpj: fornecedor.cnpj,
       telefones: fornecedor.telefones.map((telefone) => ({
         codigoArea: telefone.codigoArea,
         numero: telefone.numero,
@@ -64,6 +65,7 @@ export class FornecedorService {
     const data = {
       nome: fornecedor.nome,
       email: fornecedor.email,
+      cnpj: fornecedor.cnpj,
       telefones: fornecedor.telefones.map((telefone) => ({
         codigoArea: telefone.codigoArea,
         numero: telefone.numero,

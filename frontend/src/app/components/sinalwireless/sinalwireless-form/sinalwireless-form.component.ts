@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SinalWirelessService } from '../../../services/sinal-wireless.service';
 import { SinalWireless } from '../../../models/sinal-wireless.model';
 import Swal from 'sweetalert2';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-sinalwireless-form',
@@ -37,7 +39,8 @@ export class SinalwirelessFormComponent {
     private formBuilder: FormBuilder,
     private sinalWirelessService: SinalWirelessService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) {
     this.formGroup = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -61,36 +64,27 @@ export class SinalwirelessFormComponent {
   }
 
   salvar() {
+    this.formGroup.markAllAsTouched();
+
     if (this.formGroup.valid) {
       const sinalWireless = this.formGroup.value;
-      if(sinalWireless.id == null) {
-        this.cadastrar(sinalWireless);
-      } else {
-        this.atualizar(sinalWireless);
-      }
+
+      const operacao = sinalWireless.id == null
+      ? this.sinalWirelessService.insert(sinalWireless)
+      : this.sinalWirelessService.update(sinalWireless)
+
+      operacao.subscribe({
+        next: () => {
+          this.router.navigateByUrl('admin/sinalwireless');
+          this.showNotification('Sinal Wireless salvo com sucesso!', 'success');
+
+        },
+        error: (errorResponse) => {
+          console.log('Erro ao gravar' + JSON.stringify(errorResponse));
+          this.tratarErros(errorResponse)
+        }
+      })
     }
-  }
-
-  cadastrar(sinalWireless: any) {
-    this.sinalWirelessService.insert(sinalWireless).subscribe({
-      next: (sinalWirelessCadastrado) => {
-        this.router.navigateByUrl('/admin/sinalwireless');
-      },
-      error: (e) => {
-        console.log('Erro ao salvar', JSON.stringify(e));
-      },
-    });
-  }
-
-  atualizar(sinalWireless: any) {
-    this.sinalWirelessService.update(sinalWireless).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/sinalwireless');
-      },
-      error: (e) => {
-        console.log('Erro ao atualizar', JSON.stringify(e));
-      },
-    });
   }
 
   excluir() {
@@ -121,6 +115,53 @@ export class SinalwirelessFormComponent {
           }
         });
       }
+    });
+  }
+
+  tratarErros(httpError: HttpErrorResponse): void {
+    if (httpError.status === 400) {
+      if(httpError.error?.errors){
+        httpError.error.errors.forEach((validationError: any)  => {
+          const formControl = this.formGroup.get(validationError.fieldName);
+          if (formControl) {
+            formControl.setErrors({apiError: validationError.message})
+          }
+        });
+      }
+    } else {
+      alert(httpError.error?.message || "Erro não mapeado do servidor.");
+    }
+
+  }
+
+  getErrorMessage(controlName: string, errors: ValidationErrors | null | undefined) : string {
+    if (!errors || !this.errorMessages[controlName]) {
+      return 'invalid field';
+    }
+
+    for(const errorName in errors) {
+      // console.log(errorName);
+      if (this.errorMessages[controlName][errorName]){
+        return this.errorMessages[controlName][errorName];
+      }
+    }
+    return 'invalid field';
+  }
+
+  // é proximno ao Map do java
+  errorMessages: {[controlName: string] : {[errorName: string] : string}} = {
+    nome: {
+      required: 'O nome deve ser informado.',
+      apiError: ' '
+    },
+  }
+
+  showNotification(message: string, type: 'success' | 'error') {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      verticalPosition: 'bottom',
+      horizontalPosition: 'center',
+      panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
   }
 

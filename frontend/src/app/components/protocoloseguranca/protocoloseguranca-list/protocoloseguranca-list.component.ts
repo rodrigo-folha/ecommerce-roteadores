@@ -45,10 +45,10 @@ export class ProtocolosegurancaListComponent {
   ) {}
 
   ngOnInit(): void {
-    this.carregarSistemasoperacionais();
+    this.carregarProtocolosSeguranca();
   }
 
-  carregarSistemasoperacionais(): void {
+  carregarProtocolosSeguranca(): void {
     this.protocoloSegurancaService.findAll().subscribe((data) => {
       this.protocolosSeguranca = data.resultado;
       this.applyCurrentFilter();
@@ -90,7 +90,7 @@ export class ProtocolosegurancaListComponent {
     if (this.filterValue) {
       this.applyCurrentFilter();
     } else {
-      this.carregarSistemasoperacionais();
+      this.carregarProtocolosSeguranca();
     }
   }
 
@@ -115,7 +115,7 @@ export class ProtocolosegurancaListComponent {
             this.router
               .navigateByUrl('/', { skipLocationChange: true })
               .then(() => {
-                this.router.navigate(['/admin/sistemasoperacionais']);
+                this.router.navigate(['/admin/protocolosseguranca']);
               });
           },
           error: (e) => {

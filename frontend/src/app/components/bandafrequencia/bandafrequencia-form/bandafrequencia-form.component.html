@@ -21,7 +21,11 @@
                   formGroup.get('nome')?.touched
                 "
               >
-                O nome é obrigatório.
+              {{getErrorMessage('nome', formGroup.get('nome')?.errors)}}
+
+              @if (formGroup.get('nome')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('nome')?.getError('apiError') }}</span>
+              }
               </mat-error>
             </mat-form-field>
           </form>
@@ -42,7 +46,7 @@
           >
             Excluir
           </button>
-          <button mat-raised-button color="primary-salvar" (click)="salvar()" [disabled]="formGroup.invalid">
+          <button mat-raised-button color="primary-salvar" (click)="salvar()">
             Salvar
           </button>
         </mat-card-actions>

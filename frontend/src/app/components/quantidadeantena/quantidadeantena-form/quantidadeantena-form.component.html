@@ -21,7 +21,11 @@
                   formGroup.get('quantidade')?.touched
                 "
               >
-                A quantidade é obrigatória.
+              {{getErrorMessage('quantidade', formGroup.get('quantidade')?.errors)}}
+
+              @if (formGroup.get('quantidade')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('quantidade')?.getError('apiError') }}</span>
+              }
               </mat-error>
             </mat-form-field>
           </form>
@@ -42,7 +46,7 @@
           >
             Excluir
           </button>
-          <button mat-raised-button color="primary-salvar" (click)="salvar()" [disabled]="formGroup.invalid">
+          <button mat-raised-button color="primary-salvar" (click)="salvar()">
             Salvar
           </button>
         </mat-card-actions>

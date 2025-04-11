@@ -21,7 +21,11 @@
                   formGroup.get('codigo')?.touched
                 "
               >
-                O codigo é obrigatório.
+              {{getErrorMessage('codigo', formGroup.get('codigo')?.errors)}}
+
+              @if (formGroup.get('codigo')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('codigo')?.getError('apiError') }}</span>
+              }
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline" class="full-width">
@@ -34,7 +38,11 @@
                   formGroup.get('percentualDesconto')?.touched
                 "
               >
-                O Percentual de Desconto é obrigatório.
+              {{getErrorMessage('percentualDesconto', formGroup.get('percentualDesconto')?.errors)}}
+
+              @if (formGroup.get('percentualDesconto')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('percentualDesconto')?.getError('apiError') }}</span>
+              }
               </mat-error>
             </mat-form-field>
 
@@ -47,12 +55,16 @@
                 <mat-datepicker #picker></mat-datepicker>
                 <mat-error
                   *ngIf="
-                    formGroup.get('data') &&
-                    formGroup.get('data')?.invalid &&
-                    formGroup.get('data')?.touched
+                    formGroup.get('validade') &&
+                    formGroup.get('validade')?.invalid &&
+                    formGroup.get('validade')?.touched
                   "
                 >
-                  A data de validade é obrigatória.
+                {{getErrorMessage('validade', formGroup.get('validade')?.errors)}}
+
+                @if (formGroup.get('validade')?.hasError('apiError')) {
+                    <span> {{ formGroup.get('validade')?.getError('apiError') }}</span>
+                }
                 </mat-error>
               </mat-form-field>
           </form>
@@ -73,7 +85,7 @@
           >
             Excluir
           </button>
-          <button mat-raised-button color="primary-salvar" (click)="salvar()" [disabled]="formGroup.invalid">
+          <button mat-raised-button color="primary-salvar" (click)="salvar()">
             Salvar
           </button>
         </mat-card-actions>

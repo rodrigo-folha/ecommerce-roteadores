@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RoteadorService } from '../../../services/roteador.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -26,6 +26,8 @@ import { BandaFrequencia } from '../../../models/banda-frequencia.model';
 import { Fornecedor } from '../../../models/fornecedor.model';
 import { FornecedorService } from '../../../services/fornecedor.service';
 import Swal from 'sweetalert2';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-roteador-form',
@@ -66,6 +68,7 @@ export class RoteadorFormComponent {
     private quantidadeAntenaService: QuantidadeAntenaService,
     private sinalWirelessService: SinalWirelessService,
     private fornecedorService: FornecedorService,
+    private snackBar: MatSnackBar
   ) {
     this.formGroup = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -132,36 +135,27 @@ export class RoteadorFormComponent {
   }
 
   salvar() {
+    this.formGroup.markAllAsTouched();
+
     if (this.formGroup.valid) {
       const roteador = this.formGroup.value;
-      if(roteador.id == null) {
-        this.cadastrar(roteador);
-      } else {
-        this.atualizar(roteador);
-      }
+
+      const operacao = roteador.id == null
+      ? this.roteadorService.insert(roteador)
+      : this.roteadorService.update(roteador)
+
+      operacao.subscribe({
+        next: () => {
+          this.router.navigateByUrl('admin/roteadores');
+          this.showNotification('Roteador salvo com sucesso!', 'success');
+
+        },
+        error: (errorResponse) => {
+          console.log('Erro ao gravar' + JSON.stringify(errorResponse));
+          this.tratarErros(errorResponse)
+        }
+      })
     }
-  }
-
-  cadastrar(roteador: any) {
-    this.roteadorService.insert(roteador).subscribe({
-      next: (roteadorCadastrado) => {
-        this.router.navigateByUrl('/admin/roteadores');
-      },
-      error: (e) => {
-        console.log('Erro ao salvar', JSON.stringify(e));
-      },
-    });
-  }
-
-  atualizar(roteador: any) {
-    this.roteadorService.update(roteador).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/roteadores');
-      },
-      error: (e) => {
-        console.log('Erro ao atualizar', JSON.stringify(e));
-      },
-    });
   }
 
   excluir() {
@@ -192,6 +186,93 @@ export class RoteadorFormComponent {
           }
         });
       }
+    });
+  }
+
+  tratarErros(httpError: HttpErrorResponse): void {
+    if (httpError.status === 400) {
+      if(httpError.error?.errors){
+        httpError.error.errors.forEach((validationError: any)  => {
+          const formControl = this.formGroup.get(validationError.fieldName);
+          if (formControl) {
+            formControl.setErrors({apiError: validationError.message})
+          }
+        });
+      }
+    } else {
+      alert(httpError.error?.message || "Erro não mapeado do servidor.");
+    }
+
+  }
+
+  getErrorMessage(controlName: string, errors: ValidationErrors | null | undefined) : string {
+    if (!errors || !this.errorMessages[controlName]) {
+      return 'invalid field';
+    }
+
+    for(const errorName in errors) {
+      // console.log(errorName);
+      if (this.errorMessages[controlName][errorName]){
+        return this.errorMessages[controlName][errorName];
+      }
+    }
+    return 'invalid field';
+  }
+
+  // é proximno ao Map do java
+  errorMessages: {[controlName: string] : {[errorName: string] : string}} = {
+    nome: {
+      required: 'O nome deve ser informado.',
+      apiError: ' '
+    },
+
+    descricao: {
+      required: 'A descrição deve ser informada.',
+      apiError: ' '
+    },
+
+    preco: {
+      required: 'O preco deve ser informado.',
+      apiError: ' '
+    },
+
+    sistemaOperacional: {
+      required: 'O sistema operacional deve ser informado.',
+      apiError: ' '
+    },
+
+    bandaFrequencia: {
+      required: 'A banda de frequência deve ser informada.',
+      apiError: ' '
+    },
+
+    protocoloSeguranca: {
+      required: 'O protocolo de segurança deve ser informado.',
+      apiError: ' '
+    },
+
+    quantidadeAntena: {
+      required: 'A quantidade de antenas deve ser informada.',
+      apiError: ' '
+    },
+
+    sinalWireless: {
+      required: 'O sinal wireless deve ser informado.',
+      apiError: ' '
+    },
+
+    fornecedor: {
+      required: 'O fornecedor deve ser informado.',
+      apiError: ' '
+    },
+  }
+
+  showNotification(message: string, type: 'success' | 'error') {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      verticalPosition: 'bottom',
+      horizontalPosition: 'center',
+      panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
   }
 }

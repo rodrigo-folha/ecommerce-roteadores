@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BandaFrequencia } from '../../../models/banda-frequencia.model';
 import { BandaFrequenciaService } from '../../../services/banda-frequencia.service';
 import Swal from 'sweetalert2';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-bandafrequencia-form',
@@ -37,7 +39,8 @@ export class BandafrequenciaFormComponent {
     private formBuilder: FormBuilder,
     private bandaFrequenciaService: BandaFrequenciaService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
     this.formGroup = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -61,33 +64,27 @@ export class BandafrequenciaFormComponent {
   }
 
   salvar() {
+    this.formGroup.markAllAsTouched();
+
     if (this.formGroup.valid) {
       const bandaFrequencia = this.formGroup.value;
-      if(bandaFrequencia.id == null) {
-        this.cadastrar(bandaFrequencia);
-      } else {
-        this.atualizar(bandaFrequencia);
-      }
+
+      const operacao = bandaFrequencia.id == null
+      ? this.bandaFrequenciaService.insert(bandaFrequencia)
+      : this.bandaFrequenciaService.update(bandaFrequencia)
+
+      operacao.subscribe({
+        next: () => {
+          this.router.navigateByUrl('admin/bandafrequencias');
+          this.showNotification('Banda de Frequência salva com sucesso!', 'success');
+
+        },
+        error: (errorResponse) => {
+          console.log('Erro ao gravar' + JSON.stringify(errorResponse));
+          this.tratarErros(errorResponse)
+        }
+      })
     }
-  }
-
-  cadastrar(bandaFrequencia: any) {
-    this.bandaFrequenciaService.insert(bandaFrequencia).subscribe({
-      next: (bandaFrequenciaCadastrado) => {
-        this.router.navigateByUrl('/admin/bandafrequencias');
-      },
-      error: (e) => {
-        console.log('Erro ao salvar', JSON.stringify(e));
-      },
-    });
-  }
-
-  atualizar(bandaFrequencia: any) {
-    this.bandaFrequenciaService.update(bandaFrequencia).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/bandafrequencias');
-      }
-    });
   }
 
   excluir() {
@@ -120,6 +117,58 @@ export class BandafrequenciaFormComponent {
           },
         });
       }
+    });
+  }
+
+  tratarErros(httpError: HttpErrorResponse): void {
+    if (httpError.status === 400) {
+      if(httpError.error?.errors){
+        httpError.error.errors.forEach((validationError: any)  => {
+          const formControl = this.formGroup.get(validationError.fieldName);
+          if (formControl) {
+            formControl.setErrors({apiError: validationError.message})
+          }
+        });
+      }
+    } else {
+      alert(httpError.error?.message || "Erro não mapeado do servidor.");
+    }
+
+  }
+
+  getErrorMessage(controlName: string, errors: ValidationErrors | null | undefined) : string {
+    if (!errors || !this.errorMessages[controlName]) {
+      return 'invalid field';
+    }
+
+    for(const errorName in errors) {
+      // console.log(errorName);
+      if (this.errorMessages[controlName][errorName]){
+        return this.errorMessages[controlName][errorName];
+      }
+    }
+    return 'invalid field';
+  }
+
+  // é proximno ao Map do java
+  errorMessages: {[controlName: string] : {[errorName: string] : string}} = {
+    nome: {
+      required: 'O nome deve ser informado.',
+      apiError: ' '
+    },
+
+    sigla: {
+      required: 'A sigla deve ser informada.',
+      apiError: ' '
+    },
+  }
+
+  showNotification(message: string, type: 'success' | 'error') {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      verticalPosition: 'bottom',
+      horizontalPosition: 'center',
+      panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
   }
 

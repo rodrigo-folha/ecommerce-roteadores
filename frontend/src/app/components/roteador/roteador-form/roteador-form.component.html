@@ -21,7 +21,11 @@
               formGroup.get('nome')?.touched
             "
           >
-            O nome é obrigatório.
+          {{getErrorMessage('nome', formGroup.get('nome')?.errors)}}
+
+          @if (formGroup.get('nome')?.hasError('apiError')) {
+              <span> {{ formGroup.get('nome')?.getError('apiError') }}</span>
+          }
           </mat-error>
         </mat-form-field>
         <div class="container">
@@ -37,7 +41,11 @@
                     formGroup.get('preco')?.touched
                   "
                 >
-                  O preço é obrigatório.
+                {{getErrorMessage('preco', formGroup.get('preco')?.errors)}}
+
+                @if (formGroup.get('preco')?.hasError('apiError')) {
+                    <span> {{ formGroup.get('preco')?.getError('apiError') }}</span>
+                }
                 </mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" class="full-width">
@@ -55,7 +63,11 @@
                     formGroup.get('descricao')?.touched
                   "
                 >
-                  A descrição é obrigatória.
+                {{getErrorMessage('descricao', formGroup.get('descricao')?.errors)}}
+
+                @if (formGroup.get('descricao')?.hasError('apiError')) {
+                    <span> {{ formGroup.get('descricao')?.getError('apiError') }}</span>
+                }
                 </mat-error>
               </mat-form-field>
             </div>
@@ -72,6 +84,19 @@
                     </mat-option>
                     }
                   </mat-select>
+                  <mat-error
+                  *ngIf="
+                    formGroup.get('sistemaOperacional') &&
+                    formGroup.get('sistemaOperacional')?.invalid &&
+                    formGroup.get('sistemaOperacional')?.touched
+                  "
+                  >
+                  {{getErrorMessage('sistemaOperacional', formGroup.get('sistemaOperacional')?.errors)}}
+
+                  @if (formGroup.get('sistemaOperacional')?.hasError('apiError')) {
+                      <span> {{ formGroup.get('sistemaOperacional')?.getError('apiError') }}</span>
+                  }
+                  </mat-error>
                 </mat-form-field>
                 <button
                   mat-fab
@@ -93,6 +118,19 @@
                     </mat-option>
                     }
                   </mat-select>
+                  <mat-error
+                  *ngIf="
+                    formGroup.get('bandaFrequencia') &&
+                    formGroup.get('bandaFrequencia')?.invalid &&
+                    formGroup.get('bandaFrequencia')?.touched
+                  "
+                  >
+                  {{getErrorMessage('bandaFrequencia', formGroup.get('bandaFrequencia')?.errors)}}
+
+                  @if (formGroup.get('bandaFrequencia')?.hasError('apiError')) {
+                      <span> {{ formGroup.get('bandaFrequencia')?.getError('apiError') }}</span>
+                  }
+                  </mat-error>
                 </mat-form-field>
                 <button
                   mat-fab
@@ -114,6 +152,19 @@
                     </mat-option>
                     }
                   </mat-select>
+                  <mat-error
+                  *ngIf="
+                    formGroup.get('protocoloSeguranca') &&
+                    formGroup.get('protocoloSeguranca')?.invalid &&
+                    formGroup.get('protocoloSeguranca')?.touched
+                  "
+                  >
+                  {{getErrorMessage('protocoloSeguranca', formGroup.get('protocoloSeguranca')?.errors)}}
+
+                  @if (formGroup.get('protocoloSeguranca')?.hasError('apiError')) {
+                      <span> {{ formGroup.get('protocoloSeguranca')?.getError('apiError') }}</span>
+                  }
+                  </mat-error>
                 </mat-form-field>
                 <button
                   mat-fab
@@ -135,6 +186,19 @@
                     </mat-option>
                     }
                   </mat-select>
+                  <mat-error
+                  *ngIf="
+                    formGroup.get('quantidadeAntena') &&
+                    formGroup.get('quantidadeAntena')?.invalid &&
+                    formGroup.get('quantidadeAntena')?.touched
+                  "
+                  >
+                  {{getErrorMessage('quantidadeAntena', formGroup.get('quantidadeAntena')?.errors)}}
+
+                  @if (formGroup.get('quantidadeAntena')?.hasError('apiError')) {
+                      <span> {{ formGroup.get('quantidadeAntena')?.getError('apiError') }}</span>
+                  }
+                  </mat-error>
                 </mat-form-field>
                 <button
                   mat-fab
@@ -157,6 +221,19 @@
                     }
                   </mat-select>
                 </mat-form-field>
+                <mat-error
+                  *ngIf="
+                    formGroup.get('sinalWireless') &&
+                    formGroup.get('sinalWireless')?.invalid &&
+                    formGroup.get('sinalWireless')?.touched
+                  "
+                  >
+                  {{getErrorMessage('sinalWireless', formGroup.get('sinalWireless')?.errors)}}
+
+                  @if (formGroup.get('sinalWireless')?.hasError('apiError')) {
+                      <span> {{ formGroup.get('sinalWireless')?.getError('apiError') }}</span>
+                  }
+                  </mat-error>
                 <button mat-fab color="primary" routerLink="/admin/sinalwireless/new">
                   <mat-icon>add</mat-icon>
                 </button>
@@ -173,6 +250,19 @@
                     </mat-option>
                     }
                   </mat-select>
+                  <mat-error
+                  *ngIf="
+                    formGroup.get('fornecedor') &&
+                    formGroup.get('fornecedor')?.invalid &&
+                    formGroup.get('fornecedor')?.touched
+                  "
+                  >
+                  {{getErrorMessage('fornecedor', formGroup.get('fornecedor')?.errors)}}
+
+                  @if (formGroup.get('fornecedor')?.hasError('apiError')) {
+                      <span> {{ formGroup.get('fornecedor')?.getError('apiError') }}</span>
+                  }
+                  </mat-error>
                 </mat-form-field>
                 <button mat-fab color="primary" routerLink="/admin/fornecedores/new">
                   <mat-icon>add</mat-icon>
@@ -199,7 +289,6 @@
         mat-raised-button
         color="primary-salvar"
         (click)="salvar()"
-        [disabled]="formGroup.invalid"
       >
         Salvar
       </button>

@@ -4,6 +4,7 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +23,8 @@ import { LoteService } from '../../../services/lote.service';
 import { RoteadorService } from '../../../services/roteador.service';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import Swal from 'sweetalert2';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lote-form',
@@ -55,7 +58,8 @@ export class LoteFormComponent {
     private loteService: LoteService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private roteadorService: RoteadorService
+    private roteadorService: RoteadorService,
+    private snackBar: MatSnackBar,
   ) {
     this.formGroup = this.formBuilder.group({
       codigo: ['', Validators.required],
@@ -93,36 +97,27 @@ export class LoteFormComponent {
   }
 
   salvar() {
+    this.formGroup.markAllAsTouched();
+
     if (this.formGroup.valid) {
       const lote = this.formGroup.value;
-      if (lote.id == null) {
-        this.cadastrar(lote);
-      } else {
-        this.atualizar(lote);
-      }
+
+      const operacao = lote.id == null
+      ? this.loteService.insert(lote)
+      : this.loteService.update(lote)
+
+      operacao.subscribe({
+        next: () => {
+          this.router.navigateByUrl('admin/lotes');
+          this.showNotification('Lote salvo com sucesso!', 'success');
+
+        },
+        error: (errorResponse) => {
+          console.log('Erro ao gravar' + JSON.stringify(errorResponse));
+          this.tratarErros(errorResponse)
+        }
+      })
     }
-  }
-
-  cadastrar(lote: any) {
-    this.loteService.insert(lote).subscribe({
-      next: (loteCadastrado) => {
-        this.router.navigateByUrl('/admin/lotes');
-      },
-      error: (e) => {
-        console.log('Erro ao salvar', JSON.stringify(e));
-      },
-    });
-  }
-
-  atualizar(lote: any) {
-    this.loteService.update(lote).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/admin/lotes');
-      },
-      error: (e) => {
-        console.log('Erro ao salvar', JSON.stringify(e));
-      },
-    });
   }
 
   excluir() {
@@ -153,6 +148,68 @@ export class LoteFormComponent {
           }
         });
       }
+    });
+  }
+
+  tratarErros(httpError: HttpErrorResponse): void {
+    if (httpError.status === 400) {
+      if(httpError.error?.errors){
+        httpError.error.errors.forEach((validationError: any)  => {
+          const formControl = this.formGroup.get(validationError.fieldName);
+          if (formControl) {
+            formControl.setErrors({apiError: validationError.message})
+          }
+        });
+      }
+    } else {
+      alert(httpError.error?.message || "Erro não mapeado do servidor.");
+    }
+
+  }
+
+  getErrorMessage(controlName: string, errors: ValidationErrors | null | undefined) : string {
+    if (!errors || !this.errorMessages[controlName]) {
+      return 'invalid field';
+    }
+
+    for(const errorName in errors) {
+      // console.log(errorName);
+      if (this.errorMessages[controlName][errorName]){
+        return this.errorMessages[controlName][errorName];
+      }
+    }
+    return 'invalid field';
+  }
+
+  // é proximno ao Map do java
+  errorMessages: {[controlName: string] : {[errorName: string] : string}} = {
+    codigo: {
+      required: 'O codigo deve ser informado.',
+      apiError: ' '
+    },
+
+    estoque: {
+      required: 'A quantidade do estoque deve ser informada.',
+      apiError: ' '
+    },
+
+    data: {
+      required: 'A data deve ser informada.',
+      apiError: ' '
+    },
+
+    idRoteador: {
+      required: 'O roteador deve ser informado.',
+      apiError: ' '
+    },
+  }
+
+  showNotification(message: string, type: 'success' | 'error') {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      verticalPosition: 'bottom',
+      horizontalPosition: 'center',
+      panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
   }
 }
