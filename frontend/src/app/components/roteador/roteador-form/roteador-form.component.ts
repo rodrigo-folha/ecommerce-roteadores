@@ -275,4 +275,15 @@ export class RoteadorFormComponent {
       panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
   }
+
+  formatarPreco(event: any): void {
+    let valor = event.target.value;
+  
+    valor = valor.replace(/[^0-9,\.]/g, '') 
+                 .replace(',', '.') 
+                 .replace(/\.(?=.*\.)/g, ''); 
+                 
+    event.target.value = valor;
+  }
+  
 }

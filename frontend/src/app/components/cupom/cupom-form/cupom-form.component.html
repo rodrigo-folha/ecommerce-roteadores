@@ -30,7 +30,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Percentual de Desconto</mat-label>
-              <input matInput type="text" formControlName="percentualDesconto" onkeypress="return /^[0-9]+$/.test(event.key)"/>
+              <input matInput type="text" formControlName="percentualDesconto" (input)="formatarPercentual($event)"/>
               <mat-error
                 *ngIf="
                   formGroup.get('percentualDesconto') &&
@@ -49,7 +49,7 @@
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Data de Validade</mat-label>
       
-                <input matInput [matDatepicker]="picker" formControlName="validade" />
+                <input matInput [matDatepicker]="picker" formControlName="validade" [min]="minDate" />
                 <mat-hint>Clique no calendário para escolher a data de validade</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>

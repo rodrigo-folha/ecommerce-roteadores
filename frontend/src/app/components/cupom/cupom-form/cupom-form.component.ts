@@ -40,6 +40,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class CupomFormComponent {
   formGroup: FormGroup;
+  minDate: Date;
 
   cupons: Cupom[] = [];
 
@@ -55,6 +56,7 @@ export class CupomFormComponent {
       percentualDesconto: ['', Validators.required],
       validade: ['', Validators.required],
     });
+    this.minDate = new Date();
   }
 
   ngOnInit(): void {
@@ -182,5 +184,15 @@ export class CupomFormComponent {
       horizontalPosition: 'center',
       panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
+  }
+
+  formatarPercentual(event: any): void {
+    let valor = event.target.value;
+  
+    valor = valor.replace(/[^0-9,\.]/g, '') 
+                 .replace(',', '.') 
+                 .replace(/\.(?=.*\.)/g, ''); 
+                 
+    event.target.value = valor;
   }
 }
