@@ -16,6 +16,8 @@ import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Roteador } from '../../../models/roteador.model';
 import { RoteadorService } from '../../../services/roteador.service';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 registerLocaleData(localePt);
 
 
@@ -29,12 +31,14 @@ registerLocaleData(localePt);
     MatToolbarModule,
     MatButtonModule,
     MatFormFieldModule,
+    FormsModule,
     MatInputModule,
     MatIconModule,
     MatTableModule,
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
   ],
   templateUrl: './roteador-list.component.html',
   styleUrl: './roteador-list.component.css',
@@ -59,6 +63,8 @@ export class RoteadorListComponent {
   showSearch = false;
   filterValue = '';
   roteadoresFiltrados: Roteador[] = [];
+  tipoFiltro: string = '';
+  filtro: string = '';
 
   constructor(private roteadorService: RoteadorService, private router: Router) {}
 
@@ -98,12 +104,28 @@ export class RoteadorListComponent {
     this.totalRecords = filtered.length;
   }
     
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value
-      .trim()
-      .toLowerCase();
+  applyFilter(event?: Event): void {
+    this.filterValue = this.filtro?.trim().toLowerCase() || '';
     this.page = 0;
-    this.applyCurrentFilter();
+    if (this.filterValue !== '' && this.tipoFiltro === 'nome') {
+      this.roteadorService.findByNome(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (roteadores) => {
+          this.roteadoresFiltrados = roteadores.resultado;
+          this.totalRecords = roteadores.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por nome' + JSON.stringify(error));
+
+        }
+      }
+    ); 
+    } else {
+      this.roteadorService.findAll().subscribe((roteadores) => {
+        this.roteadores = roteadores.resultado;
+        this.totalRecords = roteadores.total;
+        this.applyCurrentFilter();
+      });
+    }
   }
 
   toggleSearch(): void {

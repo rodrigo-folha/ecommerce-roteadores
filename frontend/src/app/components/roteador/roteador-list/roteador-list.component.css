@@ -11,6 +11,29 @@ button[color="primary"] mat-icon {
   color: #005CBB;
 }
 
+.container {
+  padding: 0.8rem;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  width: 80%;
+}
+
+#meuBotaoPesquisar { 
+  margin-left: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transform: scale(1.4);
+}
+
+.input-field {
+  width: 100%;
+}
+
 .flex-container {
   display: flex;
   align-items: center;

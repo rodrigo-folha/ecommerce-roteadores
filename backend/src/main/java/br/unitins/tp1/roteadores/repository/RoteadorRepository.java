@@ -11,7 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class RoteadorRepository implements PanacheRepository<Roteador> {
 
     public PanacheQuery<Roteador> findByNome(String nome) {
-        return find("SELECT r FROM Roteador r WHERE r.nome LIKE ?1", "%" + nome + "%");
+        return find("SELECT r FROM Roteador r WHERE r.nome ILIKE ?1", "%" + nome + "%");
     }
 
     public List<Roteador> findBySinalWireless(Long id) {

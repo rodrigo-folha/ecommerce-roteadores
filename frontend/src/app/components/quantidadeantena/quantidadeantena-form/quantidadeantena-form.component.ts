@@ -112,6 +112,11 @@ export class QuantidadeantenaFormComponent {
           },
           error: (e) => {
             console.log('Erro ao excluir', JSON.stringify(e));
+            Swal.fire({
+              title: "Erro!",
+              text: "Não foi possível deletar, pois a propriedade está sendo utilizada por um roteador!",
+              icon: "error"
+            });
           }
         });
       }

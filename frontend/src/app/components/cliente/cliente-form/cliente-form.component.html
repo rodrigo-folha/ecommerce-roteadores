@@ -1,9 +1,9 @@
 <mat-toolbar color="primary">
     <div class="toolbar-title" *ngIf="formGroup.get('id')?.value">
-      Atualização de Funcionário
+      Visualização de Cliente
     </div>
     <div class="toolbar-title" *ngIf="!formGroup.get('id')?.value">
-      Cadastro de Funcionário
+      Cadastro de Cliente
     </div>
   </mat-toolbar>
   
@@ -169,7 +169,7 @@
       </mat-card-content>
   
       <mat-card-actions>
-        <button mat-raised-button routerLink="/admin/funcionarios">Cancelar</button>
+        <button mat-raised-button routerLink="/admin/clientes">Cancelar</button>
         <button
           mat-raised-button
           *ngIf="formGroup?.get('id')?.value"
@@ -181,6 +181,7 @@
         </button>
         <button
           mat-raised-button
+          *ngIf="formGroup?.get('id')?.value == null"
           color="primary-salvar"
           (click)="salvar()"
         >

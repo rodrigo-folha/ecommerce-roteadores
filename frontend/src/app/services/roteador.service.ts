@@ -17,10 +17,6 @@ export class RoteadorService {
     return this.httpClient.get<Roteador>(`${this.baseUrl}/${id}`);
   }
 
-  findByNome(nome: string): Observable<Roteador[]> {
-    return this.httpClient.get<Roteador[]>(`${this.baseUrl}/search/${nome}`);
-  }
-
   findBySinalWireless(idSinalWireless: number): Observable<Roteador[]> {
     return this.httpClient.get<Roteador[]>(`${this.baseUrl}/search/sinalwireless/${idSinalWireless}`);
   }
@@ -56,6 +52,19 @@ export class RoteadorService {
     }
     return this.httpClient.get<IPaginator<Roteador>>(this.baseUrl, {params});
   }
+
+  findByNome(nome?:string, page?: number, pageSize?: number): Observable<IPaginator<Roteador>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<Roteador>>(`${this.baseUrl}/search/nome/${nome}`, {params});
+  }
+  
 
   insert(roteador: Roteador): Observable<Roteador> {
     const data = {
