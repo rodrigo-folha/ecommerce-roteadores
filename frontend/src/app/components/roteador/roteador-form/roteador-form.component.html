@@ -220,20 +220,20 @@
                     </mat-option>
                     }
                   </mat-select>
+                  <mat-error
+                    *ngIf="
+                      formGroup.get('sinalWireless') &&
+                      formGroup.get('sinalWireless')?.invalid &&
+                      formGroup.get('sinalWireless')?.touched
+                    "
+                    >
+                    {{getErrorMessage('sinalWireless', formGroup.get('sinalWireless')?.errors)}}
+  
+                    @if (formGroup.get('sinalWireless')?.hasError('apiError')) {
+                        <span> {{ formGroup.get('sinalWireless')?.getError('apiError') }}</span>
+                    }
+                    </mat-error>
                 </mat-form-field>
-                <mat-error
-                  *ngIf="
-                    formGroup.get('sinalWireless') &&
-                    formGroup.get('sinalWireless')?.invalid &&
-                    formGroup.get('sinalWireless')?.touched
-                  "
-                  >
-                  {{getErrorMessage('sinalWireless', formGroup.get('sinalWireless')?.errors)}}
-
-                  @if (formGroup.get('sinalWireless')?.hasError('apiError')) {
-                      <span> {{ formGroup.get('sinalWireless')?.getError('apiError') }}</span>
-                  }
-                  </mat-error>
                 <button mat-fab color="primary" routerLink="/admin/sinalwireless/new">
                   <mat-icon>add</mat-icon>
                 </button>
