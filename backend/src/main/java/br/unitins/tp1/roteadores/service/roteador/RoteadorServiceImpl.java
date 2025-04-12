@@ -168,6 +168,12 @@ public class RoteadorServiceImpl implements RoteadorService {
     @Override
     public long count(String nome) {
         return roteadorRepository.findByNome(nome).count();
-    }   
+    }
 
+    @Override
+    public long countQuantidadeTotalById(Long id) {
+        return loteRepository.findByIdRoteadorQtdeTotal(id)
+                .stream()
+                .reduce(0, (subtotal, b) -> subtotal + b.getEstoque(), Integer::sum);
+    }
 }

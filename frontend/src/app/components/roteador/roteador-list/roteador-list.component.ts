@@ -55,6 +55,7 @@ export class RoteadorListComponent {
     'quantidadeAntena',
     'sinalWireless',
     'fornecedor',
+    'estoque',
     'acao'
   ];
   totalRecords = 0;
@@ -75,6 +76,13 @@ export class RoteadorListComponent {
   carregarRoteadores(): void {
     this.roteadorService.findAll().subscribe((roteadores) => {
       this.roteadores = roteadores.resultado;
+
+      this.roteadores.forEach((roteador) => {
+        this.roteadorService.countQuantidadeTotalById(roteador.id).subscribe((estoque) => {
+          roteador.quantidadeEstoque = estoque;
+        });
+      });
+
       this.applyCurrentFilter();
       this.totalRecords = roteadores.total;
     });
@@ -86,7 +94,6 @@ export class RoteadorListComponent {
     const filtered = this.roteadores.filter(
       (data) => 
         data.nome.toString().toLowerCase().includes(normalizedFilter) ||
-        data.descricao.toString().toLowerCase().includes(normalizedFilter) ||
         data.fornecedor.nome.toString().toLowerCase().includes(normalizedFilter) ||
         data.sistemaOperacional.nome.toString().toLowerCase().includes(normalizedFilter) ||
         data.bandaFrequencia.nome.toString().toLowerCase().includes(normalizedFilter) ||
@@ -112,6 +119,11 @@ export class RoteadorListComponent {
         next: (roteadores) => {
           this.roteadoresFiltrados = roteadores.resultado;
           this.totalRecords = roteadores.total;
+          this.roteadoresFiltrados.forEach((roteador) => {
+            this.roteadorService.countQuantidadeTotalById(roteador.id).subscribe((estoque) => {
+              roteador.quantidadeEstoque = estoque;
+            });
+          });
         },
         error: (error) => {
           console.error('Erro ao buscar por nome' + JSON.stringify(error));
@@ -123,6 +135,11 @@ export class RoteadorListComponent {
       this.roteadorService.findAll().subscribe((roteadores) => {
         this.roteadores = roteadores.resultado;
         this.totalRecords = roteadores.total;
+        this.roteadores.forEach((roteador) => {
+          this.roteadorService.countQuantidadeTotalById(roteador.id).subscribe((estoque) => {
+            roteador.quantidadeEstoque = estoque;
+          });
+        });
         this.applyCurrentFilter();
       });
     }

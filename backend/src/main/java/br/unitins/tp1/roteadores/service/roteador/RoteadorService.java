@@ -34,4 +34,6 @@ public interface RoteadorService {
 
     long count();
     long count(String nome);
+
+    long countQuantidadeTotalById(Long id);
 }

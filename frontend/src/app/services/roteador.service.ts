@@ -41,6 +41,10 @@ export class RoteadorService {
     return this.httpClient.get<Roteador[]>(`${this.baseUrl}/search/preco/min/max`);
   }
 
+  countQuantidadeTotalById(id: number): Observable<number> {
+    return this.httpClient.get<number>(`${this.baseUrl}/roteador/${id}/count`);
+  }
+
   findAll(page?: number, pageSize?: number): Observable<IPaginator<Roteador>> {
     let params = {};
 

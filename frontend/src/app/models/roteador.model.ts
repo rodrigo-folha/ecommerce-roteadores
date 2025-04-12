@@ -10,6 +10,7 @@ export class Roteador {
     nome!: string;
     descricao!: string;
     preco!: number;
+    quantidadeEstoque!: number;
     sistemaOperacional!: SistemaOperacional;
     bandaFrequencia!: BandaFrequencia;
     protocoloSeguranca!: ProtocoloSeguranca;

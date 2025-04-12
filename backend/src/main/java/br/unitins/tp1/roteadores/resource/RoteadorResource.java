@@ -217,4 +217,11 @@ public class RoteadorResource {
         LOG.info("Execucao do metodo count");
         return Response.ok(roteadorService.count()).build();
     }
+
+    @GET
+    @Path("/roteador/{id}/count")
+    public Response countQuantidadeTotalById(@PathParam("id") Long id) {
+        LOG.info("Execucao do metodo countQuantidadeTotalById");
+        return Response.ok(roteadorService.countQuantidadeTotalById(id)).build();
+    }
 }
