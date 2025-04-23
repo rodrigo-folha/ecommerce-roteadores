@@ -33,7 +33,7 @@ export class QuantidadeantenaListComponent {
   quantidadeAntenas: QuantidadeAntena[] = [];
   displayedColumns: string[] = ['id', 'quantidade', 'acao'];
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   page = 0;
   showSearch = false;
   filterValue = '';

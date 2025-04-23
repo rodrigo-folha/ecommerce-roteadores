@@ -1,33 +1,36 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RoteadorService } from '../../../services/roteador.service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
-import { Roteador } from '../../../models/roteador.model';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { SistemaOperacionalService } from '../../../services/sistema-operacional.service';
-import { BandaFrequenciaService } from '../../../services/banda-frequencia.service';
-import { ProtocoloSegurancaService } from '../../../services/protocolo-seguranca.service';
-import { QuantidadeAntenaService } from '../../../services/quantidade-antena.service';
-import { SinalWirelessService } from '../../../services/sinal-wireless.service';
-import { SistemaOperacional } from '../../../models/sistema-operacional.model';
-import { SinalWireless } from '../../../models/sinal-wireless.model';
-import { QuantidadeAntena } from '../../../models/quantidade-antena.model';
-import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
+import Swal from 'sweetalert2';
 import { BandaFrequencia } from '../../../models/banda-frequencia.model';
 import { Fornecedor } from '../../../models/fornecedor.model';
+import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
+import { QuantidadeAntena } from '../../../models/quantidade-antena.model';
+import { Roteador } from '../../../models/roteador.model';
+import { SinalWireless } from '../../../models/sinal-wireless.model';
+import { SistemaOperacional } from '../../../models/sistema-operacional.model';
+import { BandaFrequenciaService } from '../../../services/banda-frequencia.service';
 import { FornecedorService } from '../../../services/fornecedor.service';
-import Swal from 'sweetalert2';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProtocoloSegurancaService } from '../../../services/protocolo-seguranca.service';
+import { QuantidadeAntenaService } from '../../../services/quantidade-antena.service';
+import { RoteadorService } from '../../../services/roteador.service';
+import { SinalWirelessService } from '../../../services/sinal-wireless.service';
+import { SistemaOperacionalService } from '../../../services/sistema-operacional.service';
+import { SistemaoperacionalFormComponent } from '../../sistemaoperacional/sistemaoperacional-form/sistemaoperacional-form.component';
+import { QuantidadeantenaFormComponent } from '../../quantidadeantena/quantidadeantena-form/quantidadeantena-form.component';
+import { BandafrequenciaFormComponent } from '../../bandafrequencia/bandafrequencia-form/bandafrequencia-form.component';
 
 @Component({
   selector: 'app-roteador-form',
@@ -68,7 +71,8 @@ export class RoteadorFormComponent {
     private quantidadeAntenaService: QuantidadeAntenaService,
     private sinalWirelessService: SinalWirelessService,
     private fornecedorService: FornecedorService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) {
     this.formGroup = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -284,6 +288,64 @@ export class RoteadorFormComponent {
                  .replace(/\.(?=.*\.)/g, ''); 
                  
     event.target.value = valor;
+  }
+
+  abrirDialogSistemaOperacional() {
+    const dialogRef = this.dialog.open(SistemaoperacionalFormComponent, {
+      width: '600px',
+      disableClose: true
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.sistemaOperacionalService.findAll().subscribe((sistemasOperacionais) => {
+          this.sistemasOperacionais = sistemasOperacionais.resultado;
+  
+          const novoSO = this.sistemasOperacionais.find(so => so.id === result.id);
+          this.formGroup.get('sistemaOperacional')?.setValue(novoSO);
+        });
+      }
+    });
+  }
+
+  abrirDialogQuantidadeAntena() {
+    const dialogRef = this.dialog.open(QuantidadeantenaFormComponent, {
+      width: '600px',
+      disableClose: true
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.quantidadeAntenaService.findAll().subscribe((data) => {
+          this.quantidadeAntenas = data.resultado;
+  
+          const novoAtributo = this.quantidadeAntenas.find(atributo => atributo.id === result.id);
+          this.formGroup.get('quantidadeAntena')?.setValue(novoAtributo);
+        });
+      }
+    });
+  }
+
+  abrirDialogBandaFrequencia() {
+    const dialogRef = this.dialog.open(BandafrequenciaFormComponent, {
+      width: '600px',
+      disableClose: true
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.bandaFrequenciaService.findAll().subscribe((data) => {
+          this.bandaFrequencias = data.resultado;
+  
+          const novoAtributo = this.bandaFrequencias.find(atributo => atributo.id === result.id);
+          this.formGroup.get('bandaFrequencia')?.setValue(novoAtributo);
+        });
+      }
+    });
+  }
+
+  compareById(o1: any, o2: any): boolean {
+    return o1 && o2 && o1.id === o2.id;
   }
   
 }

@@ -37,7 +37,7 @@ export class FornecedorListComponent {
   fornecedores: Fornecedor[] = [];
   displayedColumns: string[] = ['id', 'nome', 'cnpj', 'email', 'acao'];
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   page = 0;
   showSearch = false;
   filterValue = '';

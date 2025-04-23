@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Inject, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,7 @@ import { BandaFrequenciaService } from '../../../services/banda-frequencia.servi
 import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bandafrequencia-form',
@@ -25,7 +26,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatButtonModule,
     MatToolbarModule,
     MatCardModule,
-    RouterLink,
   ],
   templateUrl: './bandafrequencia-form.component.html',
   styleUrl: './bandafrequencia-form.component.css'
@@ -40,7 +40,9 @@ export class BandafrequenciaFormComponent {
     private bandaFrequenciaService: BandaFrequenciaService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    @Optional() public dialogRef?: MatDialogRef<BandafrequenciaFormComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data?: BandaFrequencia
   ) {
     this.formGroup = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -52,7 +54,15 @@ export class BandafrequenciaFormComponent {
   }
 
   initializeForm(): void {
-    const bandaFrequencia: BandaFrequencia = this.activatedRoute.snapshot.data['bandafrequencia'];
+
+    let bandaFrequencia: BandaFrequencia | null = null;
+    if (this.data) {
+      bandaFrequencia = this.data;
+    } else {
+      bandaFrequencia = this.activatedRoute.snapshot.data['bandafrequencia'];
+    }
+
+    // const bandaFrequencia: BandaFrequencia = this.activatedRoute.snapshot.data['bandafrequencia'];
 
     this.formGroup = this.formBuilder.group({
       id: [ 
@@ -74,10 +84,13 @@ export class BandafrequenciaFormComponent {
       : this.bandaFrequenciaService.update(bandaFrequencia)
 
       operacao.subscribe({
-        next: () => {
-          this.router.navigateByUrl('admin/bandafrequencias');
-          this.showNotification('Banda de Frequência salva com sucesso!', 'success');
-
+        next: (res) => {
+          if (this.dialogRef) {
+            this.dialogRef.close(res);
+          } else {
+            this.router.navigateByUrl('admin/bandafrequencias');
+            this.showNotification('Banda de Frequência salva com sucesso!', 'success');
+          }
         },
         error: (errorResponse) => {
           console.log('Erro ao gravar' + JSON.stringify(errorResponse));
@@ -175,6 +188,14 @@ export class BandafrequenciaFormComponent {
       horizontalPosition: 'center',
       panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
+  }
+
+  cancelar() {
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    } else {
+      this.router.navigate(['/admin/quantidadeantenas']);
+    }
   }
 
 }

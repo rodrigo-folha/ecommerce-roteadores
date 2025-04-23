@@ -37,7 +37,7 @@ export class ClienteListComponent {
   clientes: Cliente[] = [];
   displayedColumns: string[] = ['id', 'nome', 'cpf', 'dataNascimento', 'email', 'acao'];
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   page = 0;
   showSearch = false;
   filterValue = '';

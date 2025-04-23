@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Inject, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,7 @@ import { QuantidadeAntena } from '../../../models/quantidade-antena.model';
 import Swal from 'sweetalert2';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-quantidadeantena-form',
@@ -25,7 +26,6 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatButtonModule,
     MatToolbarModule,
     MatCardModule,
-    RouterLink,
   ],
   templateUrl: './quantidadeantena-form.component.html',
   styleUrl: './quantidadeantena-form.component.css'
@@ -41,6 +41,8 @@ export class QuantidadeantenaFormComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
+    @Optional() public dialogRef?: MatDialogRef<QuantidadeantenaFormComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data?: QuantidadeAntena
   ) {
     this.formGroup = this.formBuilder.group({
       quantidade: ['', Validators.required],
@@ -52,7 +54,15 @@ export class QuantidadeantenaFormComponent {
   }
 
   initializeForm(): void {
-    const quantidadeAntena: QuantidadeAntena = this.activatedRoute.snapshot.data['quantidadeantena'];
+
+    let quantidadeAntena: QuantidadeAntena | null = null;
+    if (this.data) {
+      quantidadeAntena = this.data;
+    } else {
+      quantidadeAntena = this.activatedRoute.snapshot.data['quantidadeantena'];
+    }
+
+    // const quantidadeAntena: QuantidadeAntena = this.activatedRoute.snapshot.data['quantidadeantena'];
 
     this.formGroup = this.formBuilder.group({
       id: [ 
@@ -74,9 +84,13 @@ export class QuantidadeantenaFormComponent {
       : this.quantidadeAntenaService.update(quantidadeAntena)
 
       operacao.subscribe({
-        next: () => {
-          this.router.navigateByUrl('admin/quantidadeantenas');
-          this.showNotification('Quantidade de Antena salvo com sucesso!', 'success');
+        next: (res) => {
+          if (this.dialogRef) {
+            this.dialogRef.close(res);
+          } else {
+            this.router.navigateByUrl('admin/quantidadeantenas');
+            this.showNotification('Quantidade de Antena salvo com sucesso!', 'success');
+          }
 
         },
         error: (errorResponse) => {
@@ -169,6 +183,14 @@ export class QuantidadeantenaFormComponent {
       horizontalPosition: 'center',
       panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
+  }
+
+  cancelar() {
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    } else {
+      this.router.navigate(['/admin/quantidadeantenas']);
+    }
   }
 
 }

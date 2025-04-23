@@ -36,7 +36,7 @@ export class LoteListComponent {
   roteadores: Roteador[] = [];
   displayedColumns: string[] = ['id', 'codigo', 'estoque', 'data', 'roteador', 'acao'];
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   page = 0;
   showSearch = false;
   filterValue = '';

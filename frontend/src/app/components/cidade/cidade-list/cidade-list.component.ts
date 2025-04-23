@@ -33,7 +33,7 @@ export class CidadeListComponent {
   cidades: Cidade[] = [];
   displayedColumns: string[] = ['id', 'nome', 'sigla', 'acao'];
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   page = 0;
   showSearch = false;
   filterValue = '';

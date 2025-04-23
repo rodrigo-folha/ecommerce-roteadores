@@ -37,7 +37,7 @@ export class CupomListComponent {
   cupons: Cupom[] = [];
   displayedColumns: string[] = ['id', 'codigo', 'percentualDesconto', 'validade', 'acao'];
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   page = 0;
   showSearch = false;
   filterValue = '';
