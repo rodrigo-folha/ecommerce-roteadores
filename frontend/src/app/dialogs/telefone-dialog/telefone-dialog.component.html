@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>{{ data ? 'Editar Telefone' : 'Novo Telefone' }}</h2>
+
+<mat-dialog-content [formGroup]="telefoneForm">
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Código de Área</mat-label>
+    <input matInput formControlName="codigoArea">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Número</mat-label>
+    <input matInput formControlName="numero">
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="salvar()">Salvar</button>
+</mat-dialog-actions>

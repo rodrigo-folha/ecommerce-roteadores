@@ -152,13 +152,17 @@
               <div class="form-row">
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Protocolo de Segurança</mat-label>
-                  <mat-select formControlName="protocoloSeguranca">
+                  <mat-select formControlName="protocoloSeguranca" [compareWith]="compareById">
                     <mat-option>None</mat-option>
                     @for (item of protocolosSeguranca; track item) {
                     <mat-option [value]="item">
                       {{ item.nome }}
                     </mat-option>
                     }
+                    <mat-option (click)="abrirDialogProtocoloSeguranca()">
+                      <mat-icon>add</mat-icon>
+                      Adicionar Novo Item
+                    </mat-option>
                   </mat-select>
                   <mat-error
                   *ngIf="
@@ -177,7 +181,7 @@
                 <button
                   mat-fab
                   color="primary"
-                  routerLink="/admin/protocolosseguranca/new"
+                  (click)="abrirDialogProtocoloSeguranca()"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -224,13 +228,17 @@
               <div class="form-row">
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Sinal de Wireless</mat-label>
-                  <mat-select formControlName="sinalWireless">
+                  <mat-select formControlName="sinalWireless" [compareWith]="compareById">
                     <mat-option>None</mat-option>
                     @for (item of sinalWireless; track item) {
                     <mat-option [value]="item">
                       {{ item.nome }}
                     </mat-option>
                     }
+                    <mat-option (click)="abrirDialogSinalWireless()">
+                      <mat-icon>add</mat-icon>
+                      Adicionar Novo Item
+                    </mat-option>
                   </mat-select>
                   <mat-error
                     *ngIf="
@@ -246,7 +254,7 @@
                     }
                     </mat-error>
                 </mat-form-field>
-                <button mat-fab color="primary" routerLink="/admin/sinalwireless/new">
+                <button mat-fab color="primary" (click)="abrirDialogSinalWireless()">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>

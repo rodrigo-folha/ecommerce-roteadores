@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>Adicionar Endereço</h1>
+<div mat-dialog-content>
+  <form [formGroup]="enderecoForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Logradouro</mat-label>
+      <input matInput formControlName="logradouro" required />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Bairro</mat-label>
+      <input matInput formControlName="bairro" required />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Número</mat-label>
+      <input matInput formControlName="numero" required />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Complemento</mat-label>
+      <input matInput formControlName="complemento" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>CEP</mat-label>
+      <input matInput formControlName="cep" required />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Cidade</mat-label>
+      <mat-select formControlName="cidade" required>
+        <mat-option *ngFor="let cidade of cidades" [value]="cidade">{{ cidade.nome }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="salvar()">Salvar</button>
+  </mat-dialog-actions>
+  

@@ -21,6 +21,9 @@ import { Endereco } from '../../../models/endereco.model';
 import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { TelefoneDialogComponent } from '../../../dialogs/telefone-dialog/telefone-dialog.component';
+import { EnderecoDialogComponent } from '../../../dialogs/endereco-dialog/endereco-dialog.component';
 
 @Component({
   selector: 'app-fornecedor-form',
@@ -56,6 +59,7 @@ export class FornecedorFormComponent {
     private activatedRoute: ActivatedRoute,
     private cidadeService: CidadeService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) {
     this.formGroup = this.formBuilder.group({
       id: [null],
@@ -246,6 +250,32 @@ export class FornecedorFormComponent {
       verticalPosition: 'bottom',
       horizontalPosition: 'center',
       panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
+    });
+  }
+
+  adicionarTelefoneDialog(): void {
+    const dialogRef = this.dialog.open(TelefoneDialogComponent, {
+      width: '600px',
+      data: null
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.telefones.push(this.formBuilder.group(result));
+      }
+    });
+  }
+
+  adicionarEnderecoDialog(): void {
+    const dialogRef = this.dialog.open(EnderecoDialogComponent, {
+      width: '600px',
+      data: { cidades: this.cidades }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.enderecos.push(this.formBuilder.group(result));
+      }
     });
   }
 }

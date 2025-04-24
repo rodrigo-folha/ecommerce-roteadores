@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Inject, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,7 @@ import { SinalWireless } from '../../../models/sinal-wireless.model';
 import Swal from 'sweetalert2';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sinalwireless-form',
@@ -25,7 +26,6 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatButtonModule,
     MatToolbarModule,
     MatCardModule,
-    RouterLink,
   ],
   templateUrl: './sinalwireless-form.component.html',
   styleUrl: './sinalwireless-form.component.css'
@@ -41,6 +41,8 @@ export class SinalwirelessFormComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
+    @Optional() public dialogRef?: MatDialogRef<SinalwirelessFormComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data?: SinalWireless
   ) {
     this.formGroup = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -52,7 +54,15 @@ export class SinalwirelessFormComponent {
   }
 
   initializeForm(): void {
-    const sinalWireless: SinalWireless = this.activatedRoute.snapshot.data['sinalwireless'];
+
+    let sinalWireless: SinalWireless | null = null;
+    if (this.data) {
+      sinalWireless = this.data;
+    } else {
+      sinalWireless = this.activatedRoute.snapshot.data['sinalwireless'];
+    }
+
+    // const sinalWireless: SinalWireless = this.activatedRoute.snapshot.data['sinalwireless'];
 
     this.formGroup = this.formBuilder.group({
       id: [ 
@@ -74,9 +84,13 @@ export class SinalwirelessFormComponent {
       : this.sinalWirelessService.update(sinalWireless)
 
       operacao.subscribe({
-        next: () => {
-          this.router.navigateByUrl('admin/sinalwireless');
-          this.showNotification('Sinal Wireless salvo com sucesso!', 'success');
+        next: (res) => {
+          if (this.dialogRef) {
+            this.dialogRef.close(res);
+          } else {
+            this.router.navigateByUrl('admin/sinalwireless');
+            this.showNotification('Sinal Wireless salvo com sucesso!', 'success');
+          }
 
         },
         error: (errorResponse) => {
@@ -168,6 +182,14 @@ export class SinalwirelessFormComponent {
       horizontalPosition: 'center',
       panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
+  }
+
+  cancelar() {
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    } else {
+      this.router.navigate(['/admin/sinalwireless']);
+    }
   }
 
 }

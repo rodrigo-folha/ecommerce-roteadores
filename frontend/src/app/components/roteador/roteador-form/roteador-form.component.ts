@@ -31,6 +31,8 @@ import { SistemaOperacionalService } from '../../../services/sistema-operacional
 import { SistemaoperacionalFormComponent } from '../../sistemaoperacional/sistemaoperacional-form/sistemaoperacional-form.component';
 import { QuantidadeantenaFormComponent } from '../../quantidadeantena/quantidadeantena-form/quantidadeantena-form.component';
 import { BandafrequenciaFormComponent } from '../../bandafrequencia/bandafrequencia-form/bandafrequencia-form.component';
+import { ProtocolosegurancaFormComponent } from '../../protocoloseguranca/protocoloseguranca-form/protocoloseguranca-form.component';
+import { SinalwirelessFormComponent } from '../../sinalwireless/sinalwireless-form/sinalwireless-form.component';
 
 @Component({
   selector: 'app-roteador-form',
@@ -339,6 +341,42 @@ export class RoteadorFormComponent {
   
           const novoAtributo = this.bandaFrequencias.find(atributo => atributo.id === result.id);
           this.formGroup.get('bandaFrequencia')?.setValue(novoAtributo);
+        });
+      }
+    });
+  }
+
+  abrirDialogProtocoloSeguranca() {
+    const dialogRef = this.dialog.open(ProtocolosegurancaFormComponent, {
+      width: '600px',
+      disableClose: true
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.protocoloSegurancaService.findAll().subscribe((data) => {
+          this.protocolosSeguranca = data.resultado;
+  
+          const novoAtributo = this.protocolosSeguranca.find(atributo => atributo.id === result.id);
+          this.formGroup.get('protocoloSeguranca')?.setValue(novoAtributo);
+        });
+      }
+    });
+  }
+
+  abrirDialogSinalWireless() {
+    const dialogRef = this.dialog.open(SinalwirelessFormComponent, {
+      width: '600px',
+      disableClose: true
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.sinalWirelessService.findAll().subscribe((data) => {
+          this.sinalWireless = data.resultado;
+  
+          const novoAtributo = this.sinalWireless.find(atributo => atributo.id === result.id);
+          this.formGroup.get('sinalWireless')?.setValue(novoAtributo);
         });
       }
     });

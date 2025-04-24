@@ -89,7 +89,12 @@
                 </button>
               </div>
               <button
-                mat-raised-button color="primary" (click)="adicionarTelefone()" type="button">+ Telefone
+                mat-raised-button 
+                color="primary" 
+                (click)="adicionarTelefoneDialog()" 
+                type="button"
+              >
+                Adicionar Telefone
               </button>
             </div>
           </div>
@@ -140,10 +145,10 @@
               <button
                 mat-raised-button
                 color="primary"
-                (click)="adicionarEndereco()"
+                (click)="adicionarEnderecoDialog()"
                 type="button"
               >
-                + Endereço
+                Adicionar Endereço
               </button>
             </div>
           </div>

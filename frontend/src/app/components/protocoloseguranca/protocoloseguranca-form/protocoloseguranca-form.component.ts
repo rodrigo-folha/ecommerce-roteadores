@@ -1,5 +1,6 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Inject, Optional } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,16 +10,16 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ProtocoloSegurancaService } from '../../../services/protocolo-seguranca.service';
-import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
 import Swal from 'sweetalert2';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpErrorResponse } from '@angular/common/http';
+import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
+import { ProtocoloSegurancaService } from '../../../services/protocolo-seguranca.service';
 
 @Component({
   selector: 'app-protocoloseguranca-form',
@@ -31,7 +32,6 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatButtonModule,
     MatToolbarModule,
     MatCardModule,
-    RouterLink,
   ],
   templateUrl: './protocoloseguranca-form.component.html',
   styleUrl: './protocoloseguranca-form.component.css',
@@ -46,7 +46,9 @@ export class ProtocolosegurancaFormComponent {
     private protocoloSegurancaService: ProtocoloSegurancaService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    @Optional() public dialogRef?: MatDialogRef<ProtocolosegurancaFormComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data?: ProtocoloSeguranca
   ) {
     this.formGroup = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -58,8 +60,15 @@ export class ProtocolosegurancaFormComponent {
   }
 
   initializeForm(): void {
-    const protocoloSeguranca: ProtocoloSeguranca =
-      this.activatedRoute.snapshot.data['protocoloseguranca'];
+
+    let protocoloSeguranca: ProtocoloSeguranca | null = null;
+
+    if (this.data) {
+      protocoloSeguranca = this.data;
+    } else {
+      protocoloSeguranca = this.activatedRoute.snapshot.data['protocoloseguranca'];
+    }
+    // const protocoloSeguranca: ProtocoloSeguranca = this.activatedRoute.snapshot.data['protocoloseguranca'];
 
     this.formGroup = this.formBuilder.group({
       id: [
@@ -87,10 +96,13 @@ export class ProtocolosegurancaFormComponent {
       : this.protocoloSegurancaService.update(protocoloSeguranca)
 
       operacao.subscribe({
-        next: () => {
-          this.router.navigateByUrl('admin/protocolosseguranca');
-          this.showNotification('Protocolo de Segurança salvo com sucesso!', 'success');
-
+        next: (res) => {
+          if (this.dialogRef) {
+            this.dialogRef.close(res);
+          } else {
+            this.router.navigateByUrl('admin/protocolosseguranca');
+            this.showNotification('Protocolo de Segurança salvo com sucesso!', 'success');
+          }
         },
         error: (errorResponse) => {
           console.log('Erro ao gravar' + JSON.stringify(errorResponse));
@@ -183,5 +195,13 @@ export class ProtocolosegurancaFormComponent {
         horizontalPosition: 'center',
         panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
       });
+    }
+
+    cancelar() {
+      if (this.dialogRef) {
+        this.dialogRef.close();
+      } else {
+        this.router.navigate(['/admin/protocolosseguranca']);
+      }
     }
 }
