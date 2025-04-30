@@ -37,8 +37,6 @@ img {
     display: flex;
     flex-direction: row;
     align-items: center;
-    /* justify-items: space-between; */
-    /* width: 100%; */
 }
 
 mat-card {
@@ -74,5 +72,5 @@ button[color="ver-produto"] {
   
   .card-hover:hover {
     transform: scale(1.03);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* opcional: destaque no hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }

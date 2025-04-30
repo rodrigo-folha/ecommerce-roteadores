@@ -1,16 +1,16 @@
 <div class="container responsive-grid">
-    <mat-card *ngFor="let roteador of roteadores" appearance="outlined" class="card-hover">
-        <img mat-card-image src="https://m.media-amazon.com/images/I/51+Bdh+MbXL._AC_SY300_SX300_.jpg" alt="Foto de Roteador de exemplo">
+    <mat-card *ngFor="let card of cards()" appearance="outlined" class="card-hover">
+        <img mat-card-image [src]="card.imageUrl" />
             <div class="container-titulo">
                 <mat-card-content>
-                    <mat-card-title class="nome-roteador">{{roteador.nome}}</mat-card-title>
+                    <mat-card-title class="nome-roteador">{{card.title}}</mat-card-title>
                 </mat-card-content>
                 <button mat-icon-button class="favorite-icon">
                     <mat-icon>favorite</mat-icon>
                 </button>
             </div>
         <mat-card-content>
-            <mat-card-title class="preco-roteador">{{roteador.preco | currency:'BRL':'symbol':'1.2-2'}}</mat-card-title>
+            <mat-card-title class="preco-roteador">{{card.preco | currency:'BRL':'symbol':'1.2-2'}}</mat-card-title>
         </mat-card-content>
         <mat-card-actions>
             <button mat-raised-button color="ver-produto">Ver Produto</button>

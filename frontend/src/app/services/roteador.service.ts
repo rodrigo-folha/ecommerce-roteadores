@@ -105,4 +105,8 @@ export class RoteadorService {
   delete(roteador: Roteador): Observable<Roteador> {
     return this.httpClient.delete<Roteador>(`${this.baseUrl}/${roteador.id}`);
   }
+
+  getUrlImage(nomeImagem: string): string {
+    return `${this.baseUrl}/download/imagem/${nomeImagem}`;
+  }
 }

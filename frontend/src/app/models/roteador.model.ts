@@ -17,4 +17,5 @@ export class Roteador {
     quantidadeAntena!: QuantidadeAntena;
     sinalWireless!: SinalWireless;
     fornecedor!: Fornecedor
+    listaImagem!: String[];
 }
