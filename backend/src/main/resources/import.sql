@@ -100,6 +100,15 @@ insert into roteador (nome, descricao, preco, id_sinalWireless, id_sistemaOperac
 insert into roteador (nome, descricao, preco, id_sinalWireless, id_sistemaOperacional, id_bandaFrequencia, id_protocoloSeguranca, id_quantidadeAntena, id_fornecedor) values ('TP-Link AC 1350 Archer C60 Roteador Wireless Dual Band, Branco', 'Roteador Tplink Archer C60 D.Band AC1350 4P Lan 1WAN 5Antena - PN # Archer C60.Um produto de verdadeiro desempenho. Fácilidade no manuseio e conforto ao uso.Fabricante líder de produtos e acessórios de alta qualidade.', 467.58, 1, 3, 3, 7, 5, 3);
 insert into roteador (nome, descricao, preco, id_sinalWireless, id_sistemaOperacional, id_bandaFrequencia, id_protocoloSeguranca, id_quantidadeAntena, id_fornecedor) values ('Roteador Wireless N TL-WR949N', 'O Roteador Wireless N TL-WR949N oferece velocidade de até 450Mbps, ideal para streaming, jogos online e conexões simultâneas. Possui 3 antenas de alto ganho, proporcionando cobertura Wi-Fi estável.M&E', 289.98, 1, 3, 4, 7, 3, 1);
 
+insert into imagem_roteador (id_roteador, listaImagem) values (1, '4nt-ac8.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (2, 'ciscox300.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (3, 'archerc6.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (4, 'sonicwall-nsa-4700.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (5, 'Deco_X60.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (6, 'ax5400.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (7, 'archer_c60.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (8, 'tl-wr940.jpg');
+
 insert into lote (codigo, estoque, data, id_roteador) values ('1111', 10, '2024-01-11', 1);
 insert into lote (codigo, estoque, data, id_roteador) values ('1112', 5, '2023-06-09', 1);
 insert into lote (codigo, estoque, data, id_roteador) values ('2111', 10, '2023-01-07', 2);
