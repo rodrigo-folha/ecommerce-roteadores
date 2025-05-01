@@ -45,18 +45,34 @@ import { ClienteListComponent } from './components/cliente/cliente-list/cliente-
 import { ClienteFormComponent } from './components/cliente/cliente-form/cliente-form.component';
 import { clienteResolver } from './components/cliente/cliente.resolver';
 import { PaginaInicialComponent } from './components/inicio/pagina-inicial/pagina-inicial.component';
+import { UserTemplateComponent } from './components/template/user-template/user-template.component';
+import { PageNotFoundComponent } from './components/template/page-not-found/page-not-found.component';
+import { HomeUserComponent } from './components/template/user-template/home-user/home-user.component';
+import { PaginaProdutoComponent } from './components/template/user-template/pagina-produto/pagina-produto.component';
 
 export const routes: Routes = [
-//   {path: 'estados', component: EstadoListComponent, title: 'Lista de Estados',},
-//   {path: 'cidades', component: CidadeListComponent, title: 'Lista de Cidades',},
-  // {path: 'header-admin', component: HeaderAdminComponent},
-  {path: '', pathMatch: 'full', redirectTo: 'admin'},
+  {
+    path: '',
+    component: UserTemplateComponent,
+    title: 'e-commerce',
+    children: [
+      {path: '', pathMatch: 'full', redirectTo: ''},
+      {path: '', component: HomeUserComponent},
+      {path: 'pagina-produto', component: PaginaProdutoComponent},
+
+      {path: 'login', component: LoginComponent},
+      
+      {path: 'cadastrar', component: CadastroComponent},
+    ]
+  },
+
   {
     path: 'admin',
     component: AdminTemplateComponent,
     title: 'Administrativo',
     children: [
-        // {path: 'sidebar', component: SidebarComponent},
+      // {path: 'sidebar', component: SidebarComponent},
+        {path: '', pathMatch: 'full', redirectTo: 'admin'},
         {path: '', component: HomeComponent, title: 'Home'},
 
         {path: 'estados', component: EstadoListComponent},
@@ -113,10 +129,10 @@ export const routes: Routes = [
 
 
         
-        {path: 'login', component: LoginComponent},
-        {path: 'cadastrar', component: CadastroComponent},
+      ]
+    },
 
-        {path: 'inicio', component: PaginaInicialComponent},
-    ]
-  }
+    { path: "**", component: PageNotFoundComponent },
+    
+    
 ];

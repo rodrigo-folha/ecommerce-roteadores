@@ -1,0 +1,111 @@
+.footer {
+    border-top: 1px solid var(--border-color);
+    background-color: var(--rodape-color);
+    /* background-color: rgba(var(--muted-rgb), 0.4); */
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .footer-grid {
+    display: grid;
+    /* gap: 2rem; */
+    padding: 2rem 0 0.5rem 0;
+  }
+  
+  /* @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 3rem 0;
+    }
+  } */
+  
+  @media (min-width: 1024px) {
+    .footer-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  .footer-heading {
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #f7f7f7
+  }
+  
+  .footer-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer-link {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .footer-link:hover {
+    color: var(--foreground-color);
+  }
+  
+  .footer-address {
+    font-style: normal;
+  }
+  
+  .address-line {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+  
+  .address-email {
+    margin-top: 0.5rem;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .social-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    border-radius: 0.375rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .social-button:hover {
+    background-color: var(--accent-color);
+    color: var(--accent-foreground);
+  }
+  
+  .social-icon {
+    height: 20px;
+    width: 20px;
+  }
+  
+  .footer-bottom {
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem 0;
+    text-align: center;
+  }
+  
+  .copyright {
+    font-size: 0.875rem;
+    color: #f7f7f7;
+  }
+  

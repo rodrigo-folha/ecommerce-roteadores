@@ -1,0 +1,26 @@
+<section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-card">
+        <div class="newsletter-content">
+          <div class="newsletter-text">
+            <h2 class="newsletter-title">Subscribe to Our Newsletter</h2>
+            <p class="newsletter-description">
+              Stay updated with our latest products, offers, and style tips.
+            </p>
+          </div>
+          <form (ngSubmit)="subscribe()" class="newsletter-form">
+            <input [(ngModel)]="email" name="email" placeholder="Enter your email" type="email" class="newsletter-input">
+            <button type="submit" class="newsletter-button">
+              Subscribe
+            </button>
+          </form>
+          <p class="newsletter-disclaimer">
+            By subscribing, you agree to our Terms of Service and Privacy Policy.
+          </p>
+        </div>
+        <div class="newsletter-image-container">
+          <img src="" alt="Newsletter" class="newsletter-image">
+        </div>
+      </div>
+    </div>
+  </section>

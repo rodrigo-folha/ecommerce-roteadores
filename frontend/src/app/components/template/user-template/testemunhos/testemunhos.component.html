@@ -1,0 +1,27 @@
+<section class="testimonials-section">
+    <div class="container">
+      <div class="testimonials-header">
+        <h2 class="section-title">O que os nossos clientes dizem</h2>
+        <p class="section-description">Não acredite apenas na nossa palavra, leia os depoimentos dos nossos clientes</p>
+      </div>
+      <div class="testimonials-grid">
+        <div *ngFor="let testimonial of testimonials" class="testimonial-card">
+          <div class="testimonial-header">
+            <img [src]="testimonial.avatar" [alt]="testimonial.name" class="testimonial-avatar">
+            <div>
+              <h3 class="testimonial-name">{{ testimonial.name }}</h3>
+              <div class="rating-stars">
+                <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" [attr.fill]="star <= testimonial.rating ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" [ngClass]="star <= testimonial.rating ? 'star-filled' : 'star-empty'" class="star-icon">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <p class="testimonial-content">{{ testimonial.content }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
