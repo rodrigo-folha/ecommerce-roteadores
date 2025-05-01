@@ -17,6 +17,14 @@
     max-width: 1200px;
     margin: 0 auto;
   }
+
+  .header-profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
   
   /* 1. Menu Button */
   .menu-button {
@@ -148,13 +156,13 @@
     gap: 0.75rem;
   }
   
-  /* 4. Profile */
+/* 4. Profile */
   .profile-container {
     height: 36px;
     width: 36px;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid var(--primary-color);
+    border: 1px solid #acacac;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -427,6 +435,24 @@
   .sidebar-link:hover {
     background-color: var(--accent-color);
   }
+
+  .header-link {
+    margin: 0;
+    padding: 0;
+    line-height: 1.25rem;
+  }
+
+  .header-link-primary {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .header-link-primary:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+    font-weight: 500;
+  }
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
@@ -450,6 +476,11 @@
   
     .header-actions {
       margin-left: auto;
+    }
+
+    .logo-text {
+      font-size: 0.8rem;
+      font-weight: 700;
     }
   }
   

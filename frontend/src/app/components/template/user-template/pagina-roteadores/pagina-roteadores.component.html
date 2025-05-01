@@ -1,0 +1,271 @@
+<div class="products-page">
+    <!-- Botão para mostrar/ocultar filtros em dispositivos móveis -->
+    <div class="mobile-filter-toggle">
+      <button class="filter-toggle-button" (click)="toggleFilter()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="filter-icon">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+        {{ isFilterOpen ? 'Ocultar Filtros' : 'Mostrar Filtros' }}
+      </button>
+    </div>
+  
+    <div class="products-container">
+      <!-- Filtros laterais -->
+      <aside class="filters-sidebar" [class.open]="isFilterOpen">
+        <div class="filters-header">
+          <h2 class="filters-title">Filtros</h2>
+          <button class="clear-filters-button" (click)="clearFilters()" [class.active]="hasActiveFilters()">
+            Limpar Filtros
+          </button>
+        </div>
+  
+        <!-- Filtro de preço -->
+        <div class="filter-section">
+          <h3 class="filter-section-title">Preço</h3>
+          <div class="price-slider-container">
+            <div class="price-range-display">
+              <span>R$ {{ minPrice }}</span>
+              <span>R$ {{ maxPrice }}</span>
+            </div>
+            <div class="price-sliders">
+              <input 
+                type="range" 
+                class="price-slider min-price" 
+                [min]="priceRange.min" 
+                [max]="priceRange.max" 
+                [value]="minPrice" 
+                (input)="onMinPriceSliderChange($event)"
+              >
+              <input 
+                type="range" 
+                class="price-slider max-price" 
+                [min]="priceRange.min" 
+                [max]="priceRange.max" 
+                [value]="maxPrice" 
+                (input)="onMaxPriceSliderChange($event)"
+              >
+            </div>
+            <div class="price-inputs">
+              <div class="price-input-group">
+                <label for="min-price">Min</label>
+                <div class="price-input-wrapper">
+                  <span class="price-currency">R$</span>
+                  <input 
+                    type="number" 
+                    id="min-price" 
+                    class="price-input" 
+                    [(ngModel)]="minPrice" 
+                    [min]="priceRange.min" 
+                    [max]="priceRange.max" 
+                    (change)="onMinPriceInputChange()"
+                  >
+                </div>
+              </div>
+              <div class="price-input-group">
+                <label for="max-price">Max</label>
+                <div class="price-input-wrapper">
+                  <span class="price-currency">R$</span>
+                  <input 
+                    type="number" 
+                    id="max-price" 
+                    class="price-input" 
+                    [(ngModel)]="maxPrice" 
+                    [min]="priceRange.min" 
+                    [max]="priceRange.max" 
+                    (change)="onMaxPriceInputChange()"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Filtro de protocolo de segurança -->
+        <div class="filter-section">
+          <h3 class="filter-section-title">Protocolo de Segurança</h3>
+          <div class="filter-options">
+            <div *ngFor="let protocol of securityProtocols" class="filter-option">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="protocol.checked" 
+                  (change)="applyFilters()" 
+                  class="checkbox-input"
+                >
+                <span class="checkbox-custom"></span>
+                <span class="option-text">{{ protocol.name }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Filtro de sistema operacional -->
+        <div class="filter-section">
+          <h3 class="filter-section-title">Sistema Operacional</h3>
+          <div class="filter-options">
+            <div *ngFor="let os of operatingSystems" class="filter-option">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="os.checked" 
+                  (change)="applyFilters()" 
+                  class="checkbox-input"
+                >
+                <span class="checkbox-custom"></span>
+                <span class="option-text">{{ os.name }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Filtro de banda de frequência -->
+        <div class="filter-section">
+          <h3 class="filter-section-title">Banda de Frequência</h3>
+          <div class="filter-options">
+            <div *ngFor="let band of frequencyBands" class="filter-option">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="band.checked" 
+                  (change)="applyFilters()" 
+                  class="checkbox-input"
+                >
+                <span class="checkbox-custom"></span>
+                <span class="option-text">{{ band.name }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Filtro de quantidade de antenas -->
+        <div class="filter-section">
+          <h3 class="filter-section-title">Quantidade de Antenas</h3>
+          <div class="filter-options">
+            <div *ngFor="let antenna of antennaCounts" class="filter-option">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="antenna.checked" 
+                  (change)="applyFilters()" 
+                  class="checkbox-input"
+                >
+                <span class="checkbox-custom"></span>
+                <span class="option-text">{{ antenna.name }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Filtro de sinal wireless -->
+        <div class="filter-section">
+          <h3 class="filter-section-title">Sinal de Wireless</h3>
+          <div class="filter-options">
+            <div *ngFor="let signal of wirelessSignals" class="filter-option">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="signal.checked" 
+                  (change)="applyFilters()" 
+                  class="checkbox-input"
+                >
+                <span class="checkbox-custom"></span>
+                <span class="option-text">{{ signal.name }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </aside>
+  
+      <!-- Lista de produtos -->
+      <div class="products-content">
+        <div class="products-header">
+          <h1 class="products-title">Roteadores</h1>
+          <div class="products-count">{{ filteredProducts.length }} produtos encontrados</div>
+        </div>
+  
+        <!-- Grid de produtos -->
+        <div class="products-grid">
+          <div *ngFor="let product of filteredProducts" class="product-card">
+            <!-- Imagem do produto -->
+            <a [routerLink]="['/product', product.id]" class="product-image-link">
+              <img [src]="product.image" [alt]="product.name" class="product-image">
+              <!-- <div *ngIf="product.badge" class="product-badge">
+                {{ product.badge }}
+              </div> -->
+            </a>
+            
+            <!-- Informações do produto -->
+            <div class="product-details">
+              <!-- Nome e ícone de coração -->
+              <div class="product-header">
+                <h3 class="product-name">{{ product.name }}</h3>
+                <button (click)="toggleWishlist(product)" class="wishlist-toggle">
+                  <svg *ngIf="!isInWishlist(product)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="wishlist-icon">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                  </svg>
+                  <svg *ngIf="isInWishlist(product)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="wishlist-icon wishlist-icon-filled">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                  </svg>
+                </button>
+              </div>
+              
+              <div class="product-content">
+                <!-- Preço -->
+                <div class="product-price-container">
+                  <ng-container *ngIf="product.salePrice; else regularPrice">
+                    <div class="product-price-sale">
+                      <span class="sale-price">R$ {{ product.salePrice }}</span>
+                      <span class="original-price">R$ {{ product.price }}</span>
+                    </div>
+                  </ng-container>
+                  <ng-template #regularPrice>
+                    <span class="product-price">R$ {{ product.price }}</span>
+                  </ng-template>
+                </div>
+                
+                <!-- Avaliações -->
+                <div class="product-rating">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <span class="rating-value">{{ product.rating }}</span>
+                  <span class="review-count">({{ product.reviews }} reviews)</span>
+                </div>
+                
+                <!-- Especificações resumidas -->
+                <div class="product-specs">
+                  <div class="spec-item">
+                    <span class="spec-label">Segurança:</span>
+                    <span class="spec-value">{{ product.securityProtocol }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Frequência:</span>
+                    <span class="spec-value">{{ product.frequencyBand }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Antenas:</span>
+                    <span class="spec-value">{{ product.antennaCount }}</span>
+                  </div>
+                </div>
+                
+                <button (click)="addToCart(product)" class="add-to-cart-button">
+                  Adicionar ao Carrinho
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mensagem quando não há produtos -->
+          <div *ngIf="filteredProducts.length === 0" class="no-products-message">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="no-products-icon">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            <p>Nenhum produto encontrado com os filtros selecionados.</p>
+            <button (click)="clearFilters()" class="reset-filters-button">Limpar Filtros</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

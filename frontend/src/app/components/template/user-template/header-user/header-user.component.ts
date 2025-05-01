@@ -33,4 +33,13 @@ export class HeaderUserComponent {
     this.isLoggedIn = true
   }
 
+  logout() {
+    // Implementação futura de login
+    this.isLoggedIn = false
+  }
+
+  irParaLogin() {
+    
+  }
+
 }

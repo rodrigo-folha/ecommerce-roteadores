@@ -49,6 +49,9 @@ import { UserTemplateComponent } from './components/template/user-template/user-
 import { PageNotFoundComponent } from './components/template/page-not-found/page-not-found.component';
 import { HomeUserComponent } from './components/template/user-template/home-user/home-user.component';
 import { PaginaProdutoComponent } from './components/template/user-template/pagina-produto/pagina-produto.component';
+import { LoginUserComponent } from './components/template/user-template/login-user/login-user.component';
+import { RegistrarUserComponent } from './components/template/user-template/registrar-user/registrar-user.component';
+import { PaginaRoteadoresComponent } from './components/template/user-template/pagina-roteadores/pagina-roteadores.component';
 
 export const routes: Routes = [
   {
@@ -61,6 +64,9 @@ export const routes: Routes = [
       {path: 'pagina-produto', component: PaginaProdutoComponent},
 
       {path: 'login', component: LoginComponent},
+      {path: 'login-user', component: LoginUserComponent},
+      {path: 'registrar-user', component: RegistrarUserComponent},
+      {path: 'roteadores', component: PaginaRoteadoresComponent},
       
       {path: 'cadastrar', component: CadastroComponent},
     ]

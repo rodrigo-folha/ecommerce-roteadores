@@ -28,16 +28,6 @@
     
     <div class="header-actions">
       <!-- 4. User profile picture -->
-      <div class="profile-container" *ngIf="isLoggedIn; else loginButton">
-        <img src="/assets/placeholder.svg" alt="Perfil do usuário" class="profile-image">
-      </div>
-      
-      <!-- 5. Login button -->
-      <ng-template #loginButton>
-        <button (click)="login()" class="login-button">
-          Entrar
-        </button>
-      </ng-template>
       
       <!-- 6. Theme toggle -->
       <button (click)="toggleTheme()" class="theme-button" [attr.aria-label]="isDarkMode ? 'Modo claro' : 'Modo escuro'">
@@ -74,6 +64,29 @@
         <span class="cart-badge">0</span>
       </button>
     </div>
+
+    <!-- 5. Login button -->
+    <ng-template #loginButton>
+      <span class="header-link">Olá, 
+        <a routerLink="/login-user" class="header-link-primary">Entre</a>
+        <span> ou</span>
+        <br/>
+        <a routerLink="/registrar-user" class="header-link-primary">Cadastre-se</a>
+      </span>
+      <button (click)="login()" class="login-button">
+        Entrar Temporario
+      </button>
+    </ng-template>
+
+    <div class="header-profile" *ngIf="isLoggedIn; else loginButton">  
+      <div class="profile-container" >
+        <img src="../login/person.svg" alt="Perfil do usuário" class="profile-image" />
+      </div>
+      <span class="header-link">Olá, Fulano</span>
+      <button (click)="logout()" class="login-button">
+       Sair Temporario
+     </button>
+    </div>
   </div>
   
   <!-- Sidebar Menu -->
@@ -90,7 +103,7 @@
       </div>
       <nav class="sidebar-nav">
         <a routerLink="/" class="sidebar-link">Home</a>
-        <a routerLink="/shop" class="sidebar-link">Produtos</a>
+        <a routerLink="/roteadores" class="sidebar-link">Roteadores</a>
         <a routerLink="/categories" class="sidebar-link">Categorias</a>
         <a routerLink="/about" class="sidebar-link">Sobre</a>
         <a routerLink="/contact" class="sidebar-link">Contato</a>
