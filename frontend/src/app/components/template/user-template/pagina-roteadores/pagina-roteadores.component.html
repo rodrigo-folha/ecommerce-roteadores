@@ -180,15 +180,15 @@
       <div class="products-content">
         <div class="products-header">
           <h1 class="products-title">Roteadores</h1>
-          <div class="products-count">{{ filteredProducts.length }} produtos encontrados</div>
+          <div class="products-count">{{ roteadores.length }} produtos encontrados</div>
         </div>
   
         <!-- Grid de produtos -->
         <div class="products-grid">
-          <div *ngFor="let product of filteredProducts" class="product-card">
+          <div *ngFor="let card of cards()" class="product-card">
             <!-- Imagem do produto -->
-            <a [routerLink]="['/product', product.id]" class="product-image-link">
-              <img [src]="product.image" [alt]="product.name" class="product-image">
+            <a [routerLink]="['/product', card.title]" class="product-image-link">
+              <img [src]="card.imageUrl" [alt]="card.title" class="product-image">
               <!-- <div *ngIf="product.badge" class="product-badge">
                 {{ product.badge }}
               </div> -->
@@ -198,12 +198,12 @@
             <div class="product-details">
               <!-- Nome e ícone de coração -->
               <div class="product-header">
-                <h3 class="product-name">{{ product.name }}</h3>
-                <button (click)="toggleWishlist(product)" class="wishlist-toggle">
-                  <svg *ngIf="!isInWishlist(product)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="wishlist-icon">
+                <h3 class="product-name">{{ card.title }}</h3>
+                <button (click)="toggleWishlist(card)" class="wishlist-toggle">
+                  <svg *ngIf="!isInWishlist(card)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="wishlist-icon">
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
                   </svg>
-                  <svg *ngIf="isInWishlist(product)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="wishlist-icon wishlist-icon-filled">
+                  <svg *ngIf="isInWishlist(card)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="wishlist-icon wishlist-icon-filled">
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
                   </svg>
                 </button>
@@ -212,14 +212,14 @@
               <div class="product-content">
                 <!-- Preço -->
                 <div class="product-price-container">
-                  <ng-container *ngIf="product.salePrice; else regularPrice">
+                  <ng-container *ngIf="card.preco; else regularPrice">
                     <div class="product-price-sale">
-                      <span class="sale-price">R$ {{ product.salePrice }}</span>
-                      <span class="original-price">R$ {{ product.price }}</span>
+                      <span class="sale-price">R$ {{ card.preco }}</span>
+                      <span class="original-price">R$ {{ card.preco }}</span>
                     </div>
                   </ng-container>
                   <ng-template #regularPrice>
-                    <span class="product-price">R$ {{ product.price }}</span>
+                    <span class="product-price">R$ {{ card.preco }}</span>
                   </ng-template>
                 </div>
                 
@@ -228,27 +228,27 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                   </svg>
-                  <span class="rating-value">{{ product.rating }}</span>
-                  <span class="review-count">({{ product.reviews }} reviews)</span>
+                  <span class="rating-value">{{ card.rating }}</span>
+                  <span class="review-count">({{ card.reviews }} reviews)</span>
                 </div>
                 
                 <!-- Especificações resumidas -->
                 <div class="product-specs">
                   <div class="spec-item">
                     <span class="spec-label">Segurança:</span>
-                    <span class="spec-value">{{ product.securityProtocol }}</span>
+                    <span class="spec-value">{{ card.protocoloSeguranca }}</span>
                   </div>
                   <div class="spec-item">
                     <span class="spec-label">Frequência:</span>
-                    <span class="spec-value">{{ product.frequencyBand }}</span>
+                    <span class="spec-value">{{ card.bandaFrequencia }}</span>
                   </div>
                   <div class="spec-item">
                     <span class="spec-label">Antenas:</span>
-                    <span class="spec-value">{{ product.antennaCount }}</span>
+                    <span class="spec-value">{{ card.quantidadeAntena }}</span>
                   </div>
                 </div>
                 
-                <button (click)="addToCart(product)" class="add-to-cart-button">
+                <button (click)="addToCart(card)" class="add-to-cart-button">
                   Adicionar ao Carrinho
                 </button>
               </div>

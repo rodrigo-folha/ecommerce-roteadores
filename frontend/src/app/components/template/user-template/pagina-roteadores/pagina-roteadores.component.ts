@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Roteador } from '../../../../models/roteador.model';
+import { RoteadorService } from '../../../../services/roteador.service';
 
 interface Product {
   id: string
@@ -21,39 +23,92 @@ interface Product {
   wirelessSignal: string
 }
 
+type Card = {
+  title: string;
+  preco: number;
+  protocoloSeguranca: string;
+  bandaFrequencia: string;
+  quantidadeAntena: number;
+  rating: number;
+  reviews: number;
+  imageUrl: string;
+};
+
 @Component({
   selector: 'app-pagina-roteadores',
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './pagina-roteadores.component.html',
   styleUrl: './pagina-roteadores.component.css'
 })
-export class PaginaRoteadoresComponent {
+export class PaginaRoteadoresComponent implements OnInit {
+
+  roteadores: Roteador[] = [];
+    cards = signal<Card[]>([]);
+    constructor(
+      private roteadorService: RoteadorService,
+    ) {
+      this.filteredProducts = [...this.allProducts]
+  
+      // Definir os valores mínimo e máximo com base nos produtos
+      this.updatePriceRange()
+     }
+  
+    ngOnInit(): void {
+      this.carregarRoteadores();
+      this.roteadorService.findAll().subscribe((data) => {
+        this.roteadores = data.resultado;
+      })
+    }
+  
+    carregarRoteadores() {
+      this.roteadorService.findAll().subscribe((data) => {
+        this.roteadores = data.resultado;
+        this.carregarCards();
+      })
+    }
+  
+    carregarCards() {
+      const cards: Card[] = [];
+      this.roteadores.forEach((roteador) => {
+        cards.push({
+          title: roteador.nome,
+          preco: roteador.preco,
+          bandaFrequencia: roteador.bandaFrequencia.nome,
+          protocoloSeguranca: roteador.protocoloSeguranca.nome,
+          quantidadeAntena: roteador.quantidadeAntena.quantidade,
+          rating: 4.8,
+          reviews: 100,
+          imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString())
+        })
+      })
+      this.cards.set(cards);
+    }
 
   // Filtros
-  priceRange = { min: 0, max: 1000 }
+  priceRange = { min: 0, max: 100000 }
   minPrice = 0
-  maxPrice = 10000
+  maxPrice = 100000
 
   // Opções de filtro
   securityProtocols = [
+    { name: "WPS", checked: false },
+    { name: "WPA2-PSK", checked: false },
     { name: "WPA3", checked: false },
-    { name: "WPA2", checked: false },
     { name: "WEP", checked: false },
-    { name: "Sem Segurança", checked: false },
   ]
 
   operatingSystems = [
-    { name: "Linux", checked: false },
-    { name: "Windows", checked: false },
-    { name: "Android", checked: false },
-    { name: "iOS", checked: false },
+    { name: "RouterOS", checked: false },
+    { name: "Cisco IOS", checked: false },
+    { name: "ZynOS", checked: false },
+    { name: "Juno OS", checked: false },
   ]
 
   frequencyBands = [
-    { name: "2.4 GHz", checked: false },
-    { name: "5 GHz", checked: false },
-    { name: "6 GHz", checked: false },
-    { name: "Dual Band", checked: false },
+    { name: "Single-Band", checked: false },
+    { name: "Dual-Band", checked: false },
+    { name: "Tri-Band", checked: false },
+    { name: "Quad-Band", checked: false },
   ]
 
   antennaCounts = [
@@ -65,8 +120,8 @@ export class PaginaRoteadoresComponent {
   ]
 
   wirelessSignals = [
-    { name: "Alta Potência", checked: false },
-    { name: "Padrão", checked: false },
+    { name: "Wi-Fi 6", checked: false },
+    { name: "Wi-Fi 5", checked: false },
   ]
 
   // Estado do filtro
@@ -280,14 +335,7 @@ export class PaginaRoteadoresComponent {
     },
   ]
 
-  filteredProducts: Product[] = []
-
-  constructor() {
-    this.filteredProducts = [...this.allProducts]
-
-    // Definir os valores mínimo e máximo com base nos produtos
-    this.updatePriceRange()
-  }
+  filteredProducts: Product[] = [];
 
   updatePriceRange() {
     const prices = this.allProducts.map((product) => product.salePrice || product.price)
@@ -422,16 +470,16 @@ export class PaginaRoteadoresComponent {
   }
 
   // Funções para gerenciar produtos
-  toggleWishlist(product: Product) {
+  toggleWishlist(product: any) {
     product.inWishlist = !product.inWishlist
     console.log(product.inWishlist ? "Adicionado à lista de desejos:" : "Removido da lista de desejos:", product)
   }
 
-  addToCart(product: Product) {
+  addToCart(product: any) {
     console.log("Adicionado ao carrinho:", product)
   }
 
-  isInWishlist(product: Product): boolean {
+  isInWishlist(product: any): boolean {
     return product.inWishlist
   }
 }

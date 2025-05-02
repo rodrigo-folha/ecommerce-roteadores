@@ -48,7 +48,6 @@ export class PaginaInicialComponent implements OnInit{
   }
 
   carregarCards() {
-    console.log('esses são os roteadores: ', this.roteadores);
     const cards: Card[] = [];
     this.roteadores.forEach((roteador) => {
       cards.push({
