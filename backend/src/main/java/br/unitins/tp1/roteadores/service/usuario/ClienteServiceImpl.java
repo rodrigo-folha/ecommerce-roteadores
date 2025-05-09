@@ -25,6 +25,7 @@ import br.unitins.tp1.roteadores.repository.ClienteRepository;
 import br.unitins.tp1.roteadores.repository.FuncionarioRepository;
 import br.unitins.tp1.roteadores.repository.UsuarioRepository;
 import br.unitins.tp1.roteadores.service.endereco.CidadeService;
+import br.unitins.tp1.roteadores.service.keycloak.KeycloakAdminService;
 import br.unitins.tp1.roteadores.service.roteador.RoteadorService;
 import br.unitins.tp1.roteadores.validation.ValidationException;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
@@ -52,6 +53,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Inject
     public HashService hashService;
+
+    @Inject
+    public KeycloakAdminService keycloakAdminService;
 
     @Override
     public Cliente findById(Long id) {
@@ -181,6 +185,9 @@ public class ClienteServiceImpl implements ClienteService {
 
         if (usuarioRepository.findByCpf(dto.usuario().cpf()) != null)
             throw new ValidationException("cpf", "cpf já cadastrado.");
+        
+        keycloakAdminService.criarUsuario(dto.usuario().email(), dto.usuario().email(), dto.usuario().senha());
+        keycloakAdminService.atribuirRoleUser(dto.usuario().email());
 
         Cliente cliente = new Cliente();
         Usuario usuario = new Usuario();

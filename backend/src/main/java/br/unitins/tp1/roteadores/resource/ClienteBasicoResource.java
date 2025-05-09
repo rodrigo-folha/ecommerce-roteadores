@@ -72,6 +72,7 @@ public class ClienteBasicoResource {
     public Response getMinhasInformacoes() {
         LOG.info("Execucao do metodo getMinhasInformacoes");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         return Response.ok(ClienteResponseDTO.valueOf(clienteService.getMinhasInformacoess(email))).build();
     }
 

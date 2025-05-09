@@ -40,7 +40,7 @@ public interface ClienteService {
     List<Roteador> getListaDesejos(String email);
     
     Cliente createClienteBasico(ClienteBasicoRequestDTO dto);
-    
+
     // metodos para o cliente utilizar
     Cliente getMinhasInformacoess(String email);
     Cliente update(String email, ClienteUpdateRequestDTO dto);
