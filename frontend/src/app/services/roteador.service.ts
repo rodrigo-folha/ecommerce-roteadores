@@ -80,7 +80,7 @@ export class RoteadorService {
       idBandaFrequencia: roteador.bandaFrequencia.id,
       idProtocoloSeguranca: roteador.protocoloSeguranca.id,
       idQuantidadeAntena: roteador.quantidadeAntena.id,
-      idFornecedor: roteador.fornecedor.id
+      idFornecedor: roteador.fornecedor.id,
     }
 
     return this.httpClient.post<Roteador>(`${this.baseUrl}`, data);
@@ -108,5 +108,18 @@ export class RoteadorService {
 
   getUrlImage(nomeImagem: string): string {
     return `${this.baseUrl}/download/imagem/${nomeImagem}`;
+  }
+
+  getUrlImages(listaImagem: string[]): string[] {
+    return listaImagem.map(nomeImagem => `${this.baseUrl}/download/imagem/${nomeImagem}`);
+  }
+
+  uploadImage(id: number, nomeImagem: string, imagem: File): Observable<any> {
+    const formData: FormData = new FormData();
+    console.log("Chegou aqui na parte de upload de imagem")
+    formData.append('nomeImagem', imagem.name);
+    formData.append('imagem', imagem, imagem.name);
+    
+    return this.httpClient.patch<Roteador>(`${this.baseUrl}/${id}/upload/imagem`, formData);
   }
 }

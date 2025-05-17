@@ -17,7 +17,7 @@
     
     <!-- 3. Search field -->
     <div class="search-container">
-      <input type="search" placeholder="Buscar produtos..." class="search-input">
+      <input type="search" placeholder="Buscar roteadores..." class="search-input">
       <button class="search-button">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
           <circle cx="11" cy="11" r="8"></circle>
@@ -68,22 +68,19 @@
     <!-- 5. Login button -->
     <ng-template #loginButton>
       <span class="header-link">Olá, 
-        <a routerLink="/login-user" class="header-link-primary">Entre</a>
+        <a routerLink="/login" class="header-link-primary">Entre</a>
         <span> ou</span>
         <br/>
-        <a routerLink="/registrar-user" class="header-link-primary">Cadastre-se</a>
+        <a routerLink="/cadastrar" class="header-link-primary">Cadastre-se</a>
       </span>
-      <button (click)="login()" class="login-button">
-        Entrar Temporario
-      </button>
     </ng-template>
 
-    <div class="header-profile" *ngIf="isLoggedIn; else loginButton">  
+    <div class="header-profile" *ngIf="usuarioLogado; else loginButton">  
       <div class="profile-container" >
         <img src="../login/person.svg" alt="Perfil do usuário" class="profile-image" />
       </div>
-      <span class="header-link">Olá, Fulano</span>
-      <button (click)="logout()" class="login-button">
+      <span class="header-link">Olá, {{usuarioLogado.nome}}</span>
+      <button (click)="deslogar()" class="login-button">
        Sair Temporario
      </button>
     </div>
@@ -105,8 +102,8 @@
         <a routerLink="/" class="sidebar-link">Home</a>
         <a routerLink="/roteadores" class="sidebar-link">Roteadores</a>
         <a routerLink="/categories" class="sidebar-link">Categorias</a>
-        <a routerLink="/about" class="sidebar-link">Sobre</a>
-        <a routerLink="/contact" class="sidebar-link">Contato</a>
+        <a routerLink="/sobre" class="sidebar-link">Sobre</a>
+        <a routerLink="/contato" class="sidebar-link">Contato</a>
       </nav>
     </div>
   </div>

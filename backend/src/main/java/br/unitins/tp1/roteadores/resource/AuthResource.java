@@ -3,6 +3,7 @@ package br.unitins.tp1.roteadores.resource;
 import org.jboss.logging.Logger;
 
 import br.unitins.tp1.roteadores.dto.usuario.AuthRequestDTO;
+import br.unitins.tp1.roteadores.dto.usuario.UsuarioBasicoResponseDTO;
 import br.unitins.tp1.roteadores.dto.usuario.UsuarioResponseDTO;
 import br.unitins.tp1.roteadores.model.usuario.Perfil;
 import br.unitins.tp1.roteadores.model.usuario.Usuario;
@@ -36,7 +37,7 @@ public class AuthResource {
     JwtService jwtService;
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    // @Produces(MediaType.TEXT_PLAIN)
     public Response loginUsuario(@Valid AuthRequestDTO authDTO) {
         LOG.info("Logando no sistema");
         String hash = hashService.getHashSenha(authDTO.senha());
@@ -58,7 +59,9 @@ public class AuthResource {
             usuario.getPerfis().add(Perfil.USER);
         }
 
-        return Response.ok()
+        UsuarioBasicoResponseDTO usuarioDTO = UsuarioBasicoResponseDTO.valueOf(usuario);
+
+        return Response.ok(usuarioDTO)
             .header("Authorization", jwtService.generateJwt(UsuarioResponseDTO.valueOf(usuario)))
             .build();
         
@@ -88,7 +91,9 @@ public class AuthResource {
             usuario.getPerfis().add(Perfil.ADM);
         }
 
-        return Response.ok()
+        UsuarioBasicoResponseDTO usuarioDTO = UsuarioBasicoResponseDTO.valueOf(usuario);
+
+        return Response.ok(usuarioDTO)
             .header("Authorization", jwtService.generateJwt(UsuarioResponseDTO.valueOf(usuario)))
             .build();
         

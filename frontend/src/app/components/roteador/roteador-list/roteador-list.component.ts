@@ -64,7 +64,7 @@ export class RoteadorListComponent {
   showSearch = false;
   filterValue = '';
   roteadoresFiltrados: Roteador[] = [];
-  tipoFiltro: string = '';
+  tipoFiltro: string = 'nome';
   filtro: string = '';
 
   constructor(private roteadorService: RoteadorService, private router: Router) {}
@@ -74,41 +74,17 @@ export class RoteadorListComponent {
   }
 
   carregarRoteadores(): void {
-    this.roteadorService.findAll().subscribe((roteadores) => {
-      this.roteadores = roteadores.resultado;
+    this.roteadorService.findAll(this.page, this.pageSize).subscribe((roteadores) => {
+      this.roteadoresFiltrados = roteadores.resultado;
 
-      this.roteadores.forEach((roteador) => {
+      this.roteadoresFiltrados.forEach((roteador) => {
         this.roteadorService.countQuantidadeTotalById(roteador.id).subscribe((estoque) => {
           roteador.quantidadeEstoque = estoque;
         });
       });
 
-      this.applyCurrentFilter();
       this.totalRecords = roteadores.total;
-    });
-  }
-
-  applyCurrentFilter(): void {
-    const normalizedFilter = this.filterValue.trim().toLowerCase();
-
-    const filtered = this.roteadores.filter(
-      (data) => 
-        data.nome.toString().toLowerCase().includes(normalizedFilter) ||
-        data.fornecedor.nome.toString().toLowerCase().includes(normalizedFilter) ||
-        data.sistemaOperacional.nome.toString().toLowerCase().includes(normalizedFilter) ||
-        data.bandaFrequencia.nome.toString().toLowerCase().includes(normalizedFilter) ||
-        data.protocoloSeguranca.nome.toString().toLowerCase().includes(normalizedFilter) ||
-        data.quantidadeAntena.quantidade.toString().toLowerCase().includes(normalizedFilter) ||
-        data.sinalWireless.toString().toLowerCase().includes(normalizedFilter) ||
-        data.preco.toString().toLowerCase().includes(normalizedFilter)
-    );
-
-    this.roteadoresFiltrados = filtered.slice(
-      this.page * this.pageSize,
-      (this.page + 1) * this.pageSize
-    );
-
-    this.totalRecords = filtered.length;
+    })
   }
     
   applyFilter(event?: Event): void {
@@ -132,7 +108,7 @@ export class RoteadorListComponent {
       }
     ); 
     } else {
-      this.roteadorService.findAll().subscribe((roteadores) => {
+      this.roteadorService.findAll(this.page, this.pageSize).subscribe((roteadores) => {
         this.roteadores = roteadores.resultado;
         this.totalRecords = roteadores.total;
         this.roteadores.forEach((roteador) => {
@@ -140,7 +116,7 @@ export class RoteadorListComponent {
             roteador.quantidadeEstoque = estoque;
           });
         });
-        this.applyCurrentFilter();
+        this.carregarRoteadores();
       });
     }
   }
@@ -154,7 +130,7 @@ export class RoteadorListComponent {
     this.pageSize = event.pageSize;
 
     if (this.filterValue) {
-      this.applyCurrentFilter();
+      this.applyFilter();
     } else {
       this.carregarRoteadores();
     }

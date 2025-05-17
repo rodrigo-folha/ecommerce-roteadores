@@ -56,7 +56,7 @@ public class RoteadorFileServiceImpl implements FileService {
             e.printStackTrace();
         }
 
-        return novoNomeArquivo;
+        return novoNomeArquivo + "." + extensao;
     }
 
     private void verificarTipoArquivo(String mimeType) throws IOException {
@@ -91,5 +91,18 @@ public class RoteadorFileServiceImpl implements FileService {
             throw new FileNotFoundException("Arquivo não encontrado: " + nomeArquivo);
         }
         return file;
+    }
+
+    @Override
+    public void delete(String nomeArquivo) throws IOException {
+        File file = new File(PATH_ROTEADOR + nomeArquivo);
+
+        if (!file.exists()) {
+            throw new FileNotFoundException("Arquivo não encontrado: " + nomeArquivo);
+        }
+
+        if (!file.delete()) {
+            throw new IOException("Não foi possível deletar o arquivo: " + nomeArquivo);
+        }
     }
 }

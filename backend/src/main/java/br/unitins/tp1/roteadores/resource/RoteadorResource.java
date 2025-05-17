@@ -157,8 +157,11 @@ public class RoteadorResource {
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid RoteadorRequestDTO roteador) {
         LOG.info("Execucao do metodo update. Id do roteador: " + id);
-        roteadorService.update(id, roteador);
-        return Response.noContent().build();
+        return Response.status(Status.CREATED)
+            .entity(RoteadorResponseDTO.valueOf(roteadorService.update(id, roteador)))
+            .build();
+        // roteadorService.update(id, roteador);
+        // return Response.noContent().build();
     }
 
     @DELETE
@@ -223,5 +226,22 @@ public class RoteadorResource {
     public Response countQuantidadeTotalById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo countQuantidadeTotalById");
         return Response.ok(roteadorService.countQuantidadeTotalById(id)).build();
+    }
+
+    @DELETE
+    // @RolesAllowed({"Adm"})
+    @Path("/{idRoteador}/delete/imagem/{nomeImagem}")
+    public Response deleteImage(@PathParam("idRoteador") Long idRoteador, @PathParam("nomeImagem") String nomeImagem) {
+        LOG.info("Execucao do metodo deleteImage. Nome da imagem: " + nomeImagem);
+        
+        try {
+            roteadorFileService.delete(nomeImagem);
+            roteadorService.updateNomeImagem(idRoteador, null);
+            return Response.noContent().build(); // 204 No Content
+        } catch (IOException e) {
+            LOG.errorf("Erro ao deletar a imagem: %s. Detalhes: %s", nomeImagem, e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                        .entity("Erro ao deletar a imagem.").build();
+        }
     }
 }

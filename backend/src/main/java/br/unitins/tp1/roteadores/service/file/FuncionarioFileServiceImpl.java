@@ -91,4 +91,17 @@ public class FuncionarioFileServiceImpl implements FileService {
         }
         return file;
     }
+
+    @Override
+    public void delete(String nomeArquivo) throws IOException {
+        File file = new File(PATH_FUNCIONARIO + nomeArquivo);
+
+        if (!file.exists()) {
+            throw new FileNotFoundException("Arquivo não encontrado: " + nomeArquivo);
+        }
+
+        if (!file.delete()) {
+            throw new IOException("Não foi possível deletar o arquivo: " + nomeArquivo);
+        }
+    }
 }

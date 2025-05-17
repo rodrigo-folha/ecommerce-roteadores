@@ -13,7 +13,7 @@
             </div>
 
             <div class="container-form">
-                <form [formGroup]="loginClienteForm" (ngSubmit)="onSubmit()">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                     <label for="email">Email:</label>
                     <mat-form-field class="login-input" appearance="outline">
                         <input
@@ -24,10 +24,10 @@
                         formControlName="email"
                         required
                         />
-                    <mat-error *ngIf="loginClienteForm.get('email')?.hasError('required')">
+                    <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
                         O e-mail é obrigatório.
                     </mat-error>
-                    <mat-error *ngIf="loginClienteForm.get('email')?.hasError('email')">
+                    <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
                         Insira um e-mail válido.
                     </mat-error>
                     </mat-form-field>
@@ -42,13 +42,13 @@
                             formControlName="senha"
                             [type]="hide() ? 'password' : 'text'" 
                         />
-                        <mat-error *ngIf="loginClienteForm.get('senha')?.hasError('required')">
+                        <mat-error *ngIf="loginForm.get('senha')?.hasError('required')">
                             A senha é obrigatória
                         </mat-error>
-                        <mat-error *ngIf="loginClienteForm.get('senha')?.hasError('minlength')">
+                        <mat-error *ngIf="loginForm.get('senha')?.hasError('minlength')">
                             A senha deve ter pelo menos 6 digitos.
                         </mat-error>
-                        <mat-error *ngIf="loginClienteForm.get('senha')?.hasError('maxlength')">
+                        <mat-error *ngIf="loginForm.get('senha')?.hasError('maxlength')">
                             A senha deve ter no máximo 20 digitos.
                         </mat-error>
                         <button

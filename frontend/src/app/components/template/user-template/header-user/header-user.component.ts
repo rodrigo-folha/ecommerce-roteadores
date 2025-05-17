@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Usuario } from '../../../../models/usuario.model';
+import { AuthService } from '../../../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header-user',
@@ -9,11 +12,34 @@ import { RouterLink } from '@angular/router';
   templateUrl: './header-user.component.html',
   styleUrl: './header-user.component.css'
 })
-export class HeaderUserComponent {
+export class HeaderUserComponent implements OnInit, OnDestroy {
 
   isMenuOpen = false
   isDarkMode = false
-  isLoggedIn = false
+  usuarioLogado: Usuario | null = null;
+  private subscription = new Subscription();
+
+  constructor(private authService: AuthService
+  ) {}
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+  
+  ngOnInit(): void {
+    this.obterUsuarioLogado();
+  }
+
+  obterUsuarioLogado() {
+    this.subscription.add(this.authService.getUsuarioLogado().subscribe(
+      usuario => this.usuarioLogado = usuario
+    ));
+  }
+
+  deslogar() {
+    this.authService.removeToken();
+    this.authService.removeUsuarioLogado();
+  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen
@@ -28,18 +54,6 @@ export class HeaderUserComponent {
     }
   }
 
-  login() {
-    // Implementação futura de login
-    this.isLoggedIn = true
-  }
 
-  logout() {
-    // Implementação futura de login
-    this.isLoggedIn = false
-  }
-
-  irParaLogin() {
-    
-  }
 
 }

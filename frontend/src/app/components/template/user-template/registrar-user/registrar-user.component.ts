@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { ClienteService } from '../../../../services/cliente.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-registrar-user',
@@ -13,18 +15,21 @@ export class RegistrarUserComponent {
   registerForm: FormGroup
   isSubmitting = false
   showPassword = false
-  showConfirmPassword = false
+  showconfirmarSenha = false
   registerError: string | null = null
   registerSuccess = false
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private clienteService: ClienteService,
+    private snackBar: MatSnackBar,
+  ) {
     this.registerForm = this.fb.group(
       {
-        name: ["", [Validators.required]],
+        nome: ["", [Validators.required]],
         cpf: ["", [Validators.required, this.cpfValidator]],
         email: ["", [Validators.required, Validators.email]],
-        password: ["", [Validators.required, Validators.minLength(6)]],
-        confirmPassword: ["", [Validators.required]],
+        senha: ["", [Validators.required, Validators.minLength(6)]],
+        confirmarSenha: ["", [Validators.required]],
         termsAccepted: [false, [Validators.requiredTrue]],
       },
       {
@@ -33,8 +38,8 @@ export class RegistrarUserComponent {
     )
   }
 
-  get name() {
-    return this.registerForm.get("name")
+  get nome() {
+    return this.registerForm.get("nome")
   }
 
   get cpf() {
@@ -45,12 +50,12 @@ export class RegistrarUserComponent {
     return this.registerForm.get("email")
   }
 
-  get password() {
-    return this.registerForm.get("password")
+  get senha() {
+    return this.registerForm.get("senha")
   }
 
-  get confirmPassword() {
-    return this.registerForm.get("confirmPassword")
+  get confirmarSenha() {
+    return this.registerForm.get("confirmarSenha")
   }
 
   get termsAccepted() {
@@ -61,8 +66,8 @@ export class RegistrarUserComponent {
     this.showPassword = !this.showPassword
   }
 
-  toggleConfirmPasswordVisibility() {
-    this.showConfirmPassword = !this.showConfirmPassword
+  toggleconfirmarSenhaVisibility() {
+    this.showconfirmarSenha = !this.showconfirmarSenha
   }
 
   // Validador personalizado para CPF
@@ -105,11 +110,11 @@ export class RegistrarUserComponent {
 
   // Validador para verificar se as senhas coincidem
   passwordMatchValidator(form: FormGroup) {
-    const password = form.get("password")?.value
-    const confirmPassword = form.get("confirmPassword")?.value
+    const senha = form.get("senha")?.value
+    const confirmarSenha = form.get("confirmarSenha")?.value
 
-    if (password !== confirmPassword) {
-      form.get("confirmPassword")?.setErrors({ passwordMismatch: true })
+    if (senha !== confirmarSenha) {
+      form.get("confirmarSenha")?.setErrors({ passwordMismatch: true })
       return { passwordMismatch: true }
     }
 
@@ -145,25 +150,33 @@ export class RegistrarUserComponent {
     this.isSubmitting = true
     this.registerError = null
 
-    // Simulação de registro - em um app real, você chamaria um serviço de autenticação
-    setTimeout(() => {
-      console.log("Registro com:", this.registerForm.value)
+    console.log("Enviando dados: ", this.registerForm.value)
 
-      // Simulação de erro para demonstração
-      // Em um app real, isso seria baseado na resposta do serviço de autenticação
-      const simulateError = false
+    if (this.registerForm.valid) {
+      const cliente = this.registerForm.value;
 
-      if (simulateError) {
-        this.registerError = "Este e-mail já está em uso. Por favor, tente outro ou faça login."
-        this.isSubmitting = false
-      } else {
-        // Mostrar mensagem de sucesso
-        this.registerSuccess = true
-        this.isSubmitting = false
-
-        // Em um app real, você redirecionaria para a página de login ou para a página inicial
-        // this.router.navigate(['/login'])
-      }
-    }, 1500)
+      this.clienteService.insertBasico(cliente).subscribe({
+        next: () => {
+          this.showSnackbarTopPosition("Cadastro realizado com sucesso", 'Fechar', 2000);
+          this.registerSuccess = true
+          this.isSubmitting = false
+        },
+        error: (err) => {
+          console.log(err);
+          this.showSnackbarTopPosition("Não foi possível cadastrar nesse momento", 'Fechar', 2000);
+          this.registerSuccess = false
+          this.isSubmitting = false
+        }
+      })
+    }
   }
+
+  showSnackbarTopPosition(content: any, action: any, duration: any) {
+    this.snackBar.open(content, action, {
+      duration: 2000,
+      verticalPosition: "top", // Allowed values are  'top' | 'bottom'
+      horizontalPosition: "center" // Allowed values are 'start' | 'center' | 'end' | 'left' | 'right'
+    });
+  }
+
 }

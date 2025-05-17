@@ -14,18 +14,16 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Nome</mat-label>
           <input matInput type="text" formControlName="nome" />
-          <mat-error
-            *ngIf="
+          <mat-error *ngIf="
               formGroup.get('nome') &&
               formGroup.get('nome')?.invalid &&
               formGroup.get('nome')?.touched
-            "
-          >
-          {{getErrorMessage('nome', formGroup.get('nome')?.errors)}}
+            ">
+            {{getErrorMessage('nome', formGroup.get('nome')?.errors)}}
 
-          @if (formGroup.get('nome')?.hasError('apiError')) {
-              <span> {{ formGroup.get('nome')?.getError('apiError') }}</span>
-          }
+            @if (formGroup.get('nome')?.hasError('apiError')) {
+            <span> {{ formGroup.get('nome')?.getError('apiError') }}</span>
+            }
           </mat-error>
         </mat-form-field>
         <div class="container">
@@ -33,85 +31,192 @@
             <div class="container-content-column">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Preço</mat-label>
-                <input matInput type="text" formControlName="preco" (input)="formatarPreco($event)"/>
-                <mat-error
-                  *ngIf="
+                <input matInput type="text" formControlName="preco" (input)="formatarPreco($event)" />
+                <mat-error *ngIf="
                     formGroup.get('preco') &&
                     formGroup.get('preco')?.invalid &&
                     formGroup.get('preco')?.touched
-                  "
-                >
-                {{getErrorMessage('preco', formGroup.get('preco')?.errors)}}
+                  ">
+                  {{getErrorMessage('preco', formGroup.get('preco')?.errors)}}
 
-                @if (formGroup.get('preco')?.hasError('apiError')) {
-                    <span> {{ formGroup.get('preco')?.getError('apiError') }}</span>
-                }
+                  @if (formGroup.get('preco')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('preco')?.getError('apiError') }}</span>
+                  }
                 </mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Descrição</mat-label>
                 <!-- <input matInput type="text" formControlName="descricao" /> -->
-                <textarea
-                  matInput
-                  formControlName="descricao"
-                  rows="9"
-                ></textarea>
-                <mat-error
-                  *ngIf="
+                <textarea matInput formControlName="descricao" rows="9"></textarea>
+                <mat-error *ngIf="
                     formGroup.get('descricao') &&
                     formGroup.get('descricao')?.invalid &&
                     formGroup.get('descricao')?.touched
-                  "
-                >
-                {{getErrorMessage('descricao', formGroup.get('descricao')?.errors)}}
+                  ">
+                  {{getErrorMessage('descricao', formGroup.get('descricao')?.errors)}}
 
-                @if (formGroup.get('descricao')?.hasError('apiError')) {
-                    <span> {{ formGroup.get('descricao')?.getError('apiError') }}</span>
-                }
+                  @if (formGroup.get('descricao')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('descricao')?.getError('apiError') }}</span>
+                  }
                 </mat-error>
               </mat-form-field>
+              <!-- <mat-form-field appearance="outline" class="full-width-input">
+              <mat-label>Imagem do Roteador</mat-label>
+             <input type="file" (change)="carregarImagensSelecionadas($event)" multiple>
+                <div *ngFor="let preview of imagePreviews">
+                  <img [src]="preview" alt="Prévia da imagem" width="100">
+                </div>
+                    
+                    <button mat-icon-button matSuffix (click)="fileInput.click()">
+                        <mat-icon>folder_open</mat-icon>
+                    </button>
+              </mat-form-field> -->
+              <!-- <div *ngIf="imagePreviews" class="image-grid">
+                <div *ngFor="let img of imagePreviews">
+                  <mat-card>
+                    <img mat-card-image [src]="img" alt="Imagem do roteador">
+                    <mat-card-content>
+                      <span>Prévia</span>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </div> -->
+              <div class="form-column">
+                <div class="form-section">
+                  <h2 class="section-title">Imagens do Roteador</h2>
+                  <p class="section-description">Adicione imagens do roteador. A primeira imagem será usada como imagem
+                    principal.</p>
+
+                  <div #dropZone class="image-drop-zone" [class.dragging]="isDragging" (click)="triggerFileInput()">
+                    <input #fileInput type="file" accept="image/*" multiple class="file-input"
+                      (change)="onFileSelected($event)">
+
+                    <div class="drop-zone-content">
+                      <div class="upload-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
+                          <path d="m18 2 4 4-10 10H8v-4L18 2z"></path>
+                        </svg>
+                      </div>
+                      <p class="drop-zone-text">
+                        <span class="drop-zone-primary">Clique para selecionar</span> 
+                      </p>
+                      <p class="drop-zone-help">Formatos aceitos: JPEG, JPG, PNG, GIF (máx. 10MB)</p>
+                    </div>
+                  </div>
+
+                  <div *ngIf="productImages.length > 0" class="image-list">
+                    <h3 class="image-list-title">Imagens Carregadas ({{ productImages.length }})</h3>
+
+                    <div class="image-grid">
+                      <div *ngFor="let image of productImages; let i = index" class="image-item"
+                        [class.primary]="image.isPrimary">
+                        <div class="image-preview">
+                          <img [src]="image.url" [alt]="'Imagem ' + (i + 1)" class="preview-image">
+
+                          <div *ngIf="image.isPrimary" class="primary-badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="badge-icon">
+                              <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                              </polygon>
+                            </svg>
+                            Principal
+                          </div>
+                        </div>
+
+                        <div class="image-actions">
+                          <button type="button" class="image-action-button" [class.active]="image.isPrimary"
+                            (click)="setAsPrimary(image.id)" [disabled]="image.isPrimary"
+                            title="Definir como principal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="action-icon">
+                              <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                              </polygon>
+                            </svg>
+                          </button>
+
+                          <button type="button" class="image-action-button" (click)="moveImageUp(image.id)"
+                            [disabled]="i === 0" title="Mover para cima">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="action-icon">
+                              <path d="m18 15-6-6-6 6"></path>
+                            </svg>
+                          </button>
+
+                          <button type="button" class="image-action-button" (click)="moveImageDown(image.id)"
+                            [disabled]="i === productImages.length - 1" title="Mover para baixo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="action-icon">
+                              <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                          </button>
+
+                          <button type="button" class="image-action-button delete" (click)="removeImage(image.id)"
+                            title="Remover imagem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="action-icon">
+                              <path d="M3 6h18"></path>
+                              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                            </svg>
+                          </button>
+                        </div>
+
+                        <div class="image-info">
+                          <span class="image-name">{{ image.file?.name || 'Imagem ' + (i + 1) }}</span>
+                          <span class="image-size" *ngIf="image.file">{{ (image.file.size / 1024).toFixed(1) }}
+                            KB</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
             </div>
 
-            <div class="container-content-column">
-              <div class="form-row">
+            <div class="container-content-column-dir">
+              <!-- <div class="form-row"> -->
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Sistema Operacional</mat-label>
                   <mat-select formControlName="sistemaOperacional" [compareWith]="compareById">
                     <mat-option>None</mat-option>
                     @for (item of sistemasOperacionais; track item) {
-                      <mat-option [value]="item">
-                        {{ item.nome }}
-                      </mat-option>
+                    <mat-option [value]="item">
+                      {{ item.nome }}
+                    </mat-option>
                     }
                     <mat-option (click)="abrirDialogSistemaOperacional()">
                       <mat-icon>add</mat-icon>
                       Adicionar Novo Item
                     </mat-option>
                   </mat-select>
-                  <mat-error
-                  *ngIf="
+                  <mat-error *ngIf="
                     formGroup.get('sistemaOperacional') &&
                     formGroup.get('sistemaOperacional')?.invalid &&
                     formGroup.get('sistemaOperacional')?.touched
-                  "
-                  >
-                  {{getErrorMessage('sistemaOperacional', formGroup.get('sistemaOperacional')?.errors)}}
+                  ">
+                    {{getErrorMessage('sistemaOperacional', formGroup.get('sistemaOperacional')?.errors)}}
 
-                  @if (formGroup.get('sistemaOperacional')?.hasError('apiError')) {
-                      <span> {{ formGroup.get('sistemaOperacional')?.getError('apiError') }}</span>
-                  }
+                    @if (formGroup.get('sistemaOperacional')?.hasError('apiError')) {
+                    <span> {{ formGroup.get('sistemaOperacional')?.getError('apiError') }}</span>
+                    }
                   </mat-error>
                 </mat-form-field>
-                <button
-                  mat-fab
-                  color="primary"
-                  (click)="abrirDialogSistemaOperacional()"
-                >
+                <!-- <button mat-fab color="primary" (click)="abrirDialogSistemaOperacional()">
                   <mat-icon>add</mat-icon>
-                </button>
-              </div>
+                </button> -->
+              <!-- </div> -->
 
-              <div class="form-row">
+              <!-- <div class="form-row"> -->
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Banda de Frequência</mat-label>
                   <mat-select formControlName="bandaFrequencia" [compareWith]="compareById">
@@ -126,30 +231,24 @@
                       Adicionar Novo Item
                     </mat-option>
                   </mat-select>
-                  <mat-error
-                  *ngIf="
+                  <mat-error *ngIf="
                     formGroup.get('bandaFrequencia') &&
                     formGroup.get('bandaFrequencia')?.invalid &&
                     formGroup.get('bandaFrequencia')?.touched
-                  "
-                  >
-                  {{getErrorMessage('bandaFrequencia', formGroup.get('bandaFrequencia')?.errors)}}
+                  ">
+                    {{getErrorMessage('bandaFrequencia', formGroup.get('bandaFrequencia')?.errors)}}
 
-                  @if (formGroup.get('bandaFrequencia')?.hasError('apiError')) {
-                      <span> {{ formGroup.get('bandaFrequencia')?.getError('apiError') }}</span>
-                  }
+                    @if (formGroup.get('bandaFrequencia')?.hasError('apiError')) {
+                    <span> {{ formGroup.get('bandaFrequencia')?.getError('apiError') }}</span>
+                    }
                   </mat-error>
                 </mat-form-field>
-                <button
-                  mat-fab
-                  color="primary"
-                  (click)="abrirDialogBandaFrequencia()"
-                >
+                <!-- <button mat-fab color="primary" (click)="abrirDialogBandaFrequencia()">
                   <mat-icon>add</mat-icon>
-                </button>
-              </div>
+                </button> -->
+              <!-- </div> -->
 
-              <div class="form-row">
+              <!-- <div class="form-row"> -->
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Protocolo de Segurança</mat-label>
                   <mat-select formControlName="protocoloSeguranca" [compareWith]="compareById">
@@ -164,30 +263,24 @@
                       Adicionar Novo Item
                     </mat-option>
                   </mat-select>
-                  <mat-error
-                  *ngIf="
+                  <mat-error *ngIf="
                     formGroup.get('protocoloSeguranca') &&
                     formGroup.get('protocoloSeguranca')?.invalid &&
                     formGroup.get('protocoloSeguranca')?.touched
-                  "
-                  >
-                  {{getErrorMessage('protocoloSeguranca', formGroup.get('protocoloSeguranca')?.errors)}}
+                  ">
+                    {{getErrorMessage('protocoloSeguranca', formGroup.get('protocoloSeguranca')?.errors)}}
 
-                  @if (formGroup.get('protocoloSeguranca')?.hasError('apiError')) {
-                      <span> {{ formGroup.get('protocoloSeguranca')?.getError('apiError') }}</span>
-                  }
+                    @if (formGroup.get('protocoloSeguranca')?.hasError('apiError')) {
+                    <span> {{ formGroup.get('protocoloSeguranca')?.getError('apiError') }}</span>
+                    }
                   </mat-error>
                 </mat-form-field>
-                <button
-                  mat-fab
-                  color="primary"
-                  (click)="abrirDialogProtocoloSeguranca()"
-                >
+                <!-- <button mat-fab color="primary" (click)="abrirDialogProtocoloSeguranca()">
                   <mat-icon>add</mat-icon>
-                </button>
-              </div>
+                </button> -->
+              <!-- </div> -->
 
-              <div class="form-row">
+              <!-- <div class="form-row"> -->
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Quantidade de Antenas</mat-label>
                   <mat-select formControlName="quantidadeAntena" [compareWith]="compareById">
@@ -202,30 +295,24 @@
                       Adicionar Novo Item
                     </mat-option>
                   </mat-select>
-                  <mat-error
-                  *ngIf="
+                  <mat-error *ngIf="
                     formGroup.get('quantidadeAntena') &&
                     formGroup.get('quantidadeAntena')?.invalid &&
                     formGroup.get('quantidadeAntena')?.touched
-                  "
-                  >
-                  {{getErrorMessage('quantidadeAntena', formGroup.get('quantidadeAntena')?.errors)}}
+                  ">
+                    {{getErrorMessage('quantidadeAntena', formGroup.get('quantidadeAntena')?.errors)}}
 
-                  @if (formGroup.get('quantidadeAntena')?.hasError('apiError')) {
-                      <span> {{ formGroup.get('quantidadeAntena')?.getError('apiError') }}</span>
-                  }
+                    @if (formGroup.get('quantidadeAntena')?.hasError('apiError')) {
+                    <span> {{ formGroup.get('quantidadeAntena')?.getError('apiError') }}</span>
+                    }
                   </mat-error>
                 </mat-form-field>
-                <button
-                  mat-fab
-                  color="primary"
-                  (click)="abrirDialogQuantidadeAntena()"
-                >
+                <!-- <button mat-fab color="primary" (click)="abrirDialogQuantidadeAntena()">
                   <mat-icon>add</mat-icon>
-                </button>
-              </div>
+                </button> -->
+              <!-- </div> -->
 
-              <div class="form-row">
+              <!-- <div class="form-row"> -->
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Sinal de Wireless</mat-label>
                   <mat-select formControlName="sinalWireless" [compareWith]="compareById">
@@ -240,26 +327,24 @@
                       Adicionar Novo Item
                     </mat-option>
                   </mat-select>
-                  <mat-error
-                    *ngIf="
+                  <mat-error *ngIf="
                       formGroup.get('sinalWireless') &&
                       formGroup.get('sinalWireless')?.invalid &&
                       formGroup.get('sinalWireless')?.touched
-                    "
-                    >
+                    ">
                     {{getErrorMessage('sinalWireless', formGroup.get('sinalWireless')?.errors)}}
-  
-                    @if (formGroup.get('sinalWireless')?.hasError('apiError')) {
-                        <span> {{ formGroup.get('sinalWireless')?.getError('apiError') }}</span>
-                    }
-                    </mat-error>
-                </mat-form-field>
-                <button mat-fab color="primary" (click)="abrirDialogSinalWireless()">
-                  <mat-icon>add</mat-icon>
-                </button>
-              </div>
 
-              <div class="form-row">
+                    @if (formGroup.get('sinalWireless')?.hasError('apiError')) {
+                    <span> {{ formGroup.get('sinalWireless')?.getError('apiError') }}</span>
+                    }
+                  </mat-error>
+                </mat-form-field>
+                <!-- <button mat-fab color="primary" (click)="abrirDialogSinalWireless()">
+                  <mat-icon>add</mat-icon>
+                </button> -->
+              <!-- </div> -->
+
+              <!-- <div class="form-row"> -->
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Fornecedor</mat-label>
                   <mat-select formControlName="fornecedor">
@@ -270,24 +355,22 @@
                     </mat-option>
                     }
                   </mat-select>
-                  <mat-error
-                  *ngIf="
+                  <mat-error *ngIf="
                     formGroup.get('fornecedor') &&
                     formGroup.get('fornecedor')?.invalid &&
                     formGroup.get('fornecedor')?.touched
-                  "
-                  >
-                  {{getErrorMessage('fornecedor', formGroup.get('fornecedor')?.errors)}}
+                  ">
+                    {{getErrorMessage('fornecedor', formGroup.get('fornecedor')?.errors)}}
 
-                  @if (formGroup.get('fornecedor')?.hasError('apiError')) {
-                      <span> {{ formGroup.get('fornecedor')?.getError('apiError') }}</span>
-                  }
+                    @if (formGroup.get('fornecedor')?.hasError('apiError')) {
+                    <span> {{ formGroup.get('fornecedor')?.getError('apiError') }}</span>
+                    }
                   </mat-error>
                 </mat-form-field>
-                <button mat-fab color="primary" routerLink="/admin/fornecedores/new">
+                <!-- <button mat-fab color="primary" routerLink="/admin/fornecedores/new">
                   <mat-icon>add</mat-icon>
-                </button>
-              </div>
+                </button> -->
+              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -296,20 +379,11 @@
 
     <mat-card-actions>
       <button mat-raised-button routerLink="/admin/roteadores">Cancelar</button>
-      <button
-        mat-raised-button
-        *ngIf="formGroup?.get('id')?.value"
-        color="warn"
-        [disabled]="formGroup.invalid"
-        (click)="excluir()"
-      >
+      <button mat-raised-button *ngIf="formGroup?.get('id')?.value" color="warn" [disabled]="formGroup.invalid"
+        (click)="excluir()">
         Excluir
       </button>
-      <button
-        mat-raised-button
-        color="primary-salvar"
-        (click)="salvar()"
-      >
+      <button mat-raised-button color="primary-salvar" (click)="salvar()">
         Salvar
       </button>
     </mat-card-actions>

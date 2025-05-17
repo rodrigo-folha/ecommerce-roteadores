@@ -9,5 +9,7 @@ public interface FileService {
 
     File find(String nomeArquivo) throws IOException;
 
+    void delete(String nomeArquivo) throws IOException;
+
     
 }

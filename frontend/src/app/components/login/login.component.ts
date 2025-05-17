@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -37,75 +38,49 @@ export class LoginComponent {
     this.hide.set(!this.hide());
   }
 
-  loginClienteForm!: FormGroup;
+  loginForm!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    // private sessionTokenService: SessionTokenService,
     private authService: AuthService,
-    private navigationService: NavigationService,
+    private router: Router,
     private snackBar: MatSnackBar
-  ) {
-    this.loginClienteForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
+  ) { }
+
+  ngOnInit(): void {
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.minLength(3)]],
+      senha: ['', [Validators.required, Validators.minLength(3)]]
     });
   }
-  
+
   onSubmit() {
-    const email = this.loginClienteForm.get('email')?.value;
-    const senha = this.loginClienteForm.get('senha')?.value;
+    if (this.loginForm.valid) {
+      const email = this.loginForm.get('email')!.value;
+      const senha = this.loginForm.get('senha')!.value;
 
-    if (!email || !senha) {
-      return;
-    }
-
-    this.authService.login(email, senha, 'cliente')
-      .subscribe({
-        next: (response) => {
-          const token = response.token;
-          this.authService.setToken(token);
-          this.loginClienteForm.reset();
-          this.errorMessage = '';
-          this.showNotification('Login realizado com sucesso!', 'success');
-          this.navigationService.navigateTo('');
+      this.authService.loginUser(email, senha).subscribe({
+        next: (resp) => {
+          this.router.navigateByUrl('/admin')
         },
-        error: (error) => {
-          console.log(email + ' ' + senha);
-          this.showNotification('Usuário ou senha inválidos.', 'error');
-          this.errorMessage = 'Usuário ou senha inválidos.';
+        error: (err) => {
+          console.log(err);
+          this.showSnackbarTopPosition("Dados inválidos", 'Fechar', 2000);
         }
       });
-
-    // this.sessionTokenService.authenticateCliente(email, senha)
-    //   .subscribe({
-    //     next: (response) => {
-    //       const token = response.token;
-    //       this.sessionTokenService.saveSessionToken(token);
-    //       this.loginClienteForm.reset();
-    //       this.errorMessage = '';
-    //       this.showNotification('Login realizado com sucesso!', 'success');
-    //       this.navigationService.navigateTo('');
-    //     },
-    //     error: (error) => {
-    //       console.log(email + ' ' + senha);
-    //       this.showNotification('Usuário ou senha inválidos.', 'error');
-    //       this.errorMessage = 'Usuário ou senha inválidos.';
-    //     }
-    //   });
+      
+    } 
   }
 
-  cadastrarCliente(): void {
-    this.navigationService.navigateTo('cadastrar');
+  onRegister() {
+    // criar usuário
   }
 
-  showNotification(message: string, type: 'success' | 'error') {
-    this.snackBar.open(message, 'Fechar', {
+  showSnackbarTopPosition(content: any, action: any, duration: any) {
+    this.snackBar.open(content, action, {
       duration: 2000,
-      verticalPosition: 'bottom',
-      horizontalPosition: 'center',
-      panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
+      verticalPosition: "top", // Allowed values are  'top' | 'bottom'
+      horizontalPosition: "center" // Allowed values are 'start' | 'center' | 'end' | 'left' | 'right'
     });
   }
-
 }

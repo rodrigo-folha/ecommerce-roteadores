@@ -52,6 +52,9 @@ import { PaginaProdutoComponent } from './components/template/user-template/pagi
 import { LoginUserComponent } from './components/template/user-template/login-user/login-user.component';
 import { RegistrarUserComponent } from './components/template/user-template/registrar-user/registrar-user.component';
 import { PaginaRoteadoresComponent } from './components/template/user-template/pagina-roteadores/pagina-roteadores.component';
+import { HomeAdminComponent } from './components/template/admin-template/home-admin/home-admin.component';
+import { PerfilAdminComponent } from './components/template/admin-template/perfil-admin/perfil-admin.component';
+import { ProdutoAdminComponent } from './components/template/admin-template/produto-admin/produto-admin.component';
 
 export const routes: Routes = [
   {
@@ -62,13 +65,13 @@ export const routes: Routes = [
       {path: '', pathMatch: 'full', redirectTo: ''},
       {path: '', component: HomeUserComponent},
       {path: 'pagina-produto', component: PaginaProdutoComponent},
-
-      {path: 'login', component: LoginComponent},
-      {path: 'login-user', component: LoginUserComponent},
-      {path: 'registrar-user', component: RegistrarUserComponent},
+      
+      {path: 'login', component: LoginUserComponent},
+      {path: 'cadastrar', component: RegistrarUserComponent},
       {path: 'roteadores', component: PaginaRoteadoresComponent},
       
-      {path: 'cadastrar', component: CadastroComponent},
+      // {path: 'login', component: LoginComponent},
+      // {path: 'cadastrar', component: CadastroComponent},
     ]
   },
 
@@ -80,6 +83,10 @@ export const routes: Routes = [
       // {path: 'sidebar', component: SidebarComponent},
         {path: '', pathMatch: 'full', redirectTo: 'admin'},
         {path: '', component: HomeComponent, title: 'Home'},
+
+        {path: 'home-admin', component: HomeAdminComponent, title: 'Home Admin'},
+        {path: 'perfil', component: PerfilAdminComponent, title: 'Perfil Admin'},
+        {path: 'produto-admin', component: ProdutoAdminComponent, title: 'Produto Admin'},
 
         {path: 'estados', component: EstadoListComponent},
         {path: 'estados/new', component: EstadoFormComponent},

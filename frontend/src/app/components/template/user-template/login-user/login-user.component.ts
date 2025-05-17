@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login-user',
@@ -16,10 +18,14 @@ export class LoginUserComponent {
   showPassword = false
   loginError: string | null = null
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar,
+  ) {
     this.loginForm = this.fb.group({
       email: ["", [Validators.required, Validators.email]],
-      password: ["", [Validators.required, Validators.minLength(6)]],
+      senha: ["", [Validators.required, Validators.minLength(6)]],
       rememberMe: [false],
     })
   }
@@ -28,8 +34,8 @@ export class LoginUserComponent {
     return this.loginForm.get("email")
   }
 
-  get password() {
-    return this.loginForm.get("password")
+  get senha() {
+    return this.loginForm.get("senha")
   }
 
   togglePasswordVisibility() {
@@ -42,27 +48,29 @@ export class LoginUserComponent {
       return
     }
 
-    this.isSubmitting = true
-    this.loginError = null
+    // this.isSubmitting = true
+    // this.loginError = null
 
-    // Simulação de login - em um app real, você chamaria um serviço de autenticação
-    setTimeout(() => {
-      console.log("Login com:", this.loginForm.value)
+    const email = this.loginForm.get('email')!.value;
+    const senha = this.loginForm.get('senha')!.value;
 
-      // Simulação de erro para demonstração
-      // Em um app real, isso seria baseado na resposta do serviço de autenticação
-      const simulateError = false
+      this.authService.loginUser(email, senha).subscribe({
+        next: (resp) => {
+          this.router.navigateByUrl('')
+        },
+        error: (err) => {
+          console.log(err);
+          this.showSnackbarTopPosition("Dados inválidos", 'Fechar', 2000);
+        }
+      });
+  }
 
-      if (simulateError) {
-        this.loginError = "E-mail ou senha incorretos. Por favor, tente novamente."
-        this.isSubmitting = false
-      } else {
-        // Redirecionar para a página inicial após login bem-sucedido
-        // Em um app real, você usaria o Router para navegar
-        console.log("Login bem-sucedido, redirecionando...")
-        // this.router.navigate(['/'])
-      }
-    }, 1500)
+  showSnackbarTopPosition(content: any, action: any, duration: any) {
+    this.snackBar.open(content, action, {
+      duration: 2000,
+      verticalPosition: "top", // Allowed values are  'top' | 'bottom'
+      horizontalPosition: "center" // Allowed values are 'start' | 'center' | 'end' | 'left' | 'right'
+    });
   }
 
 }
