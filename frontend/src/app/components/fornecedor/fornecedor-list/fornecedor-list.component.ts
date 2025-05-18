@@ -13,6 +13,9 @@ import Swal from 'sweetalert2';
 import { Fornecedor } from '../../../models/fornecedor.model';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { FornecedorService } from '../../../services/fornecedor.service';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { CnpjPipe } from '../../../pipe/cnpj.pipe';
 
 @Component({
   selector: 'app-fornecedor-list',
@@ -29,6 +32,9 @@ import { FornecedorService } from '../../../services/fornecedor.service';
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
+    CnpjPipe,
   ],
   templateUrl: './fornecedor-list.component.html',
   styleUrl: './fornecedor-list.component.css',
@@ -42,6 +48,8 @@ export class FornecedorListComponent {
   showSearch = false;
   filterValue = '';
   fornecedoresFiltrados: Fornecedor[] = [];
+  tipoFiltro: string = 'nome';
+  filtro: string = '';
 
   constructor(private fornecedorService: FornecedorService, private router: Router) {}
 
@@ -50,34 +58,32 @@ export class FornecedorListComponent {
   }
 
   carregarFornecedores(): void {
-    this.fornecedorService.findAll().subscribe((data) => {
-      this.fornecedores = data.resultado;
-      this.applyCurrentFilter();
+    this.fornecedorService.findAll(this.page, this.pageSize).subscribe((data) => {
+      this.fornecedoresFiltrados = data.resultado;
       this.totalRecords = data.total;
     });
   }
 
-  applyCurrentFilter(): void {
-      const normalizedFilter = this.filterValue.trim().toLowerCase();
-  
-      const filtered = this.fornecedores.filter((data) =>
-        data.nome.toString().toLowerCase().includes(normalizedFilter)
-      );
-  
-      this.fornecedoresFiltrados = filtered.slice(
-        this.page * this.pageSize,
-        (this.page + 1) * this.pageSize
-      );
-  
-      this.totalRecords = filtered.length;
-    }
-  
-    applyFilter(event: Event): void {
-      this.filterValue = (event.target as HTMLInputElement).value
-        .trim()
-        .toLowerCase();
+    applyFilter(event?: Event): void {
+      this.filterValue = this.filtro?.trim().toLowerCase() || '';
       this.page = 0;
-      this.applyCurrentFilter();
+      if (this.filterValue !== '' && this.tipoFiltro === 'nome') {
+      this.fornecedorService.findByNome(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (item) => {
+          this.fornecedoresFiltrados = item.resultado;
+          this.totalRecords = item.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por nome' + JSON.stringify(error));
+        }
+      })
+    } else {
+      this.fornecedorService.findAll(this.page, this.pageSize).subscribe((item) => {
+        this.fornecedores = item.resultado;
+        this.totalRecords = item.total;
+        this.carregarFornecedores();
+      })
+    }
     }
   
     toggleSearch(): void {
@@ -89,7 +95,7 @@ export class FornecedorListComponent {
       this.pageSize = event.pageSize;
   
       if (this.filterValue) {
-        this.applyCurrentFilter();
+        this.applyFilter();
       } else {
         this.carregarFornecedores();
       }

@@ -83,6 +83,7 @@ export class RoteadorFormComponent {
   fileNames: string[] = [];
   selectedFiles: File[] = []; 
   imagePreviews: string[] = [];
+  precoFormatado: string = 'R$ 0,00';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -148,6 +149,14 @@ export class RoteadorFormComponent {
       this.loadImagesFromRoteador(roteador);
     }
 
+    let precoInicialFormatado = 'R$ 0,00';
+    if (roteador && roteador.preco !== null && roteador.preco !== undefined) {
+      precoInicialFormatado = `R$ ${roteador.preco.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
+    }
+
     this.formGroup = this.formBuilder.group({
       id: [ 
         (roteador && roteador.id) ? roteador.id : null],
@@ -167,6 +176,8 @@ export class RoteadorFormComponent {
       sinalWireless: [sinalWireless, Validators.required],
       fornecedor: [fornecedor, Validators.required],
     })
+
+    this.precoFormatado = precoInicialFormatado;
   }
 
   salvar() {
@@ -591,11 +602,27 @@ export class RoteadorFormComponent {
   }
 
   loadImagesFromRoteador(roteador: Roteador) {
-  this.productImages = roteador.listaImagem.map((nomeImagem, index) => ({
-    id: index.toString(),
-    url: this.roteadorService.getUrlImage(nomeImagem), // gera a url completa
-    isPrimary: index === 0,  // a primeira imagem é a principal
-  }));
-}
+    this.productImages = roteador.listaImagem.map((nomeImagem, index) => ({
+      id: index.toString(),
+      url: this.roteadorService.getUrlImage(nomeImagem), // gera a url completa
+      isPrimary: index === 0,  // a primeira imagem é a principal
+    }));
+  }
+
+  formatarValorMonetario(event: any): void {
+    let valor = event.target.value.replace(/\D/g, ''); // Remove tudo que não for dígito
+    const floatValue = parseFloat(valor) / 100; // Converte para float (centavos para reais)
+
+    this.formGroup.get('preco')?.setValue(floatValue.toFixed(2)); // Atualiza o formControl com o valor numérico
+
+    // Formata para exibição com "R$" e vírgula
+    this.precoFormatado = `R$ ${floatValue.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
+    // Atualiza visualmente o input (isso é importante para o cursor não pular)
+    event.target.value = this.precoFormatado;
+  }
   
 }

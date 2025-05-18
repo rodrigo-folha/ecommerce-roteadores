@@ -25,15 +25,23 @@ export class ClienteService {
       }
     }
 
-    return this.httpClient.get<IPaginator<Cliente>>(this.baseUrl, {params});
+    return this.httpClient.get<IPaginator<Cliente>>(this.baseUrl, { params });
   }
 
   findById(id: string): Observable<Cliente> {
     return this.httpClient.get<Cliente>(`${this.baseUrl}/${id}`);
   }
 
-  findByNome(nome: string): Observable<Cliente[]> {
-    return this.httpClient.get<Cliente[]>(`${this.baseUrl}/nome/${nome}`);
+  findByNome(nome?: string, page?: number, pageSize?: number): Observable<IPaginator<Cliente>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<Cliente>>(`${this.baseUrl}/search/nome/${nome}`, { params });
   }
 
   findByCpf(cpf: string): Observable<Cliente> {
@@ -57,53 +65,53 @@ export class ClienteService {
   }
 
   insert(usuario: Usuario): Observable<Cliente> {
-        const data = {
-          usuario: {
-            nome: usuario.nome,
-            cpf: usuario.cpf,
-            dataNascimento: usuario.dataNascimento,
-            email: usuario.email,
-            senha: usuario.senha,
-            telefones: usuario.telefones.map(telefone => ({
-              codigoArea: telefone.codigoArea,
-              numero: telefone.numero
-            })),
-            enderecos: usuario.enderecos.map(endereco => ({
-              logradouro: endereco.logradouro,
-              bairro: endereco.bairro,
-              numero: endereco.numero,
-              complemento: endereco.complemento,
-              cep: endereco.cep,
-              idCidade: endereco.cidade.id
-            }))
-          }
-        };
-        return this.httpClient.post<Cliente>(`${this.baseUrl}`, data);
+    const data = {
+      usuario: {
+        nome: usuario.nome,
+        cpf: usuario.cpf,
+        dataNascimento: usuario.dataNascimento,
+        email: usuario.email,
+        senha: usuario.senha,
+        telefones: usuario.telefones.map(telefone => ({
+          codigoArea: telefone.codigoArea,
+          numero: telefone.numero
+        })),
+        enderecos: usuario.enderecos.map(endereco => ({
+          logradouro: endereco.logradouro,
+          bairro: endereco.bairro,
+          numero: endereco.numero,
+          complemento: endereco.complemento,
+          cep: endereco.cep,
+          idCidade: endereco.cidade.id
+        }))
       }
+    };
+    return this.httpClient.post<Cliente>(`${this.baseUrl}`, data);
+  }
 
   update(usuario: Usuario): Observable<Cliente> {
-        const data = {
-          nome: usuario.nome,
-          cpf: usuario.cpf,
-          dataNascimento: usuario.dataNascimento,
-          email: usuario.email,
-          senha: usuario.senha,
-          telefones: usuario.telefones.map(telefone => ({
-            codigoArea: telefone.codigoArea,
-            numero: telefone.numero
-          })),
-          enderecos: usuario.enderecos.map(endereco => ({
-            logradouro: endereco.logradouro,
-            bairro: endereco.bairro,
-            numero: endereco.numero,
-            complemento: endereco.complemento,
-            cep: endereco.cep,
-            idCidade: endereco.cidade.id
-          }))
-        };
-  
-        return this.httpClient.put<Cliente>(`${this.baseUrl}/${usuario.id}`, data);
-      }
+    const data = {
+      nome: usuario.nome,
+      cpf: usuario.cpf,
+      dataNascimento: usuario.dataNascimento,
+      email: usuario.email,
+      senha: usuario.senha,
+      telefones: usuario.telefones.map(telefone => ({
+        codigoArea: telefone.codigoArea,
+        numero: telefone.numero
+      })),
+      enderecos: usuario.enderecos.map(endereco => ({
+        logradouro: endereco.logradouro,
+        bairro: endereco.bairro,
+        numero: endereco.numero,
+        complemento: endereco.complemento,
+        cep: endereco.cep,
+        idCidade: endereco.cidade.id
+      }))
+    };
+
+    return this.httpClient.put<Cliente>(`${this.baseUrl}/${usuario.id}`, data);
+  }
 
   delete(cliente: Cliente): Observable<Cliente> {
     return this.httpClient.delete<Cliente>(`${this.baseUrl}/${cliente.id}`);

@@ -20,28 +20,34 @@
                 formGroup.get('nome') &&
                 formGroup.get('nome')?.invalid &&
                 formGroup.get('nome')?.touched
-              "
-            >
-              O nome é obrigatório.
+              ">
+              {{getErrorMessage('nome', formGroup.get('nome')?.errors)}}
+
+              @if (formGroup.get('nome')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('nome')?.getError('apiError') }}</span>
+              }
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>CPF</mat-label>
-            <input matInput type="text" formControlName="cpf" />
+            <input matInput type="text" formControlName="cpf" onkeypress="return /^[0-9]+$/.test(event.key)" mask="000.000.000-00"/>
             <mat-error
               *ngIf="
                 formGroup.get('cpf') &&
                 formGroup.get('cpf')?.invalid &&
                 formGroup.get('cpf')?.touched
-              "
-            >
-              O cpf é obrigatório.
+              ">
+              {{getErrorMessage('cpf', formGroup.get('cpf')?.errors)}}
+
+              @if (formGroup.get('cpf')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('cpf')?.getError('apiError') }}</span>
+              }
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Data de Nascimento</mat-label>
   
-            <input matInput [matDatepicker]="picker" formControlName="dataNascimento" />
+            <input matInput [matDatepicker]="picker" formControlName="dataNascimento" [max]="maxDate" />
             <mat-hint>Clique no calendário para escolher a data</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -50,9 +56,12 @@
                 formGroup.get('dataNascimento') &&
                 formGroup.get('dataNascimento')?.invalid &&
                 formGroup.get('dataNascimento')?.touched
-              "
-            >
-              A Data de Nascimento é obrigatória.
+              ">
+              {{getErrorMessage('dataNascimento', formGroup.get('dataNascimento')?.errors)}}
+
+              @if (formGroup.get('dataNascimento')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('dataNascimento')?.getError('apiError') }}</span>
+              }
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" class="full-width">
@@ -63,9 +72,12 @@
                 formGroup.get('email') &&
                 formGroup.get('email')?.hasError('required') &&
                 formGroup.get('email')?.touched
-              "
-            >
-              O email é obrigatório.
+              ">
+              {{getErrorMessage('email', formGroup.get('email')?.errors)}}
+
+              @if (formGroup.get('email')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('email')?.getError('apiError') }}</span>
+              }
             </mat-error>
             <mat-error *ngIf="formGroup.get('email')?.hasError('email')">
               Insira um e-mail válido..
@@ -79,9 +91,12 @@
                 formGroup.get('senha') &&
                 formGroup.get('senha')?.invalid &&
                 formGroup.get('senha')?.touched
-              "
-            >
-              A senha é obrigatória.
+              ">
+              {{getErrorMessage('senha', formGroup.get('senha')?.errors)}}
+
+              @if (formGroup.get('senha')?.hasError('apiError')) {
+                  <span> {{ formGroup.get('senha')?.getError('apiError') }}</span>
+              }
             </mat-error>
           </mat-form-field>
   

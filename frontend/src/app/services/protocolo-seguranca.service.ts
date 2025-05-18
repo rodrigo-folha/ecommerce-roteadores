@@ -24,6 +24,18 @@ export class ProtocoloSegurancaService {
     return this.httpClient.get<IPaginator<ProtocoloSeguranca>>(this.baseUrl, {params});
   }
 
+  findByNome(nome?:string, page?: number, pageSize?: number): Observable<IPaginator<ProtocoloSeguranca>> {
+    let params = {};
+  
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<ProtocoloSeguranca>>(`${this.baseUrl}/search/nome/${nome}`, {params});
+  }
+
   findById(id: String): Observable<ProtocoloSeguranca> {
     return this.httpClient.get<ProtocoloSeguranca>(`${this.baseUrl}/${id}`);
   }

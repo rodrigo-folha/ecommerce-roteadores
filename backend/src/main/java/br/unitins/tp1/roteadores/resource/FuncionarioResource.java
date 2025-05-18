@@ -69,7 +69,7 @@ public class FuncionarioResource {
 
     @GET
     // @RolesAllowed({ "Adm" })
-    @Path("/search/{nome}")
+    @Path("/search/nome/{nome}")
     public Response findByNome(@PathParam("nome") String nome,
         @QueryParam("page") @DefaultValue("0") int page,
         @QueryParam("pageSize") @DefaultValue("100") int pageSize

@@ -11,7 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class FornecedorRepository implements PanacheRepository<Fornecedor> {
 
     public PanacheQuery<Fornecedor> findByNome(String nome) {
-        return find("nome LIKE ?1", "%" + nome + "%");
+        return find("nome ILIKE ?1", "%" + nome + "%");
     }
 
     public List<Fornecedor> findByCnpj(String cnpj) {
@@ -19,7 +19,7 @@ public class FornecedorRepository implements PanacheRepository<Fornecedor> {
     }
 
     public List<Fornecedor> findByEmail(String email) {
-        return find("email LIKE ?1", "%" + email + "%").list();
+        return find("email ILIKE ?1", "%" + email + "%").list();
     }
     
 }

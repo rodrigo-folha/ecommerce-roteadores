@@ -8,6 +8,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class BandaFrequenciaRepository implements PanacheRepository<BandaFrequencia> {
     public PanacheQuery<BandaFrequencia> findByNome (String nome) {
-        return find("SELECT b FROM BandaFrequencia b WHERE b.nome LIKE ?1", "%" + nome + "%");
+        return find("SELECT b FROM BandaFrequencia b WHERE b.nome ILIKE ?1", "%" + nome + "%");
     }    
 }

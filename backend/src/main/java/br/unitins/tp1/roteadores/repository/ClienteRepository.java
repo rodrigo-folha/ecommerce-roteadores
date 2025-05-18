@@ -10,7 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ClienteRepository implements PanacheRepository<Cliente> {
     public PanacheQuery<Cliente> findByNome (String nome) {
-        return find("SELECT c FROM Cliente c JOIN c.usuario u WHERE u.nome LIKE ?1", "%" + nome + "%");
+        return find("SELECT c FROM Cliente c JOIN c.usuario u WHERE u.nome ILIKE ?1", "%" + nome + "%");
     }   
     
     public Cliente findByUsuario (String email) {
@@ -18,6 +18,6 @@ public class ClienteRepository implements PanacheRepository<Cliente> {
     }
     
     public List<Cliente> findByEmail (String email) {
-        return find("SELECT c FROM Cliente c JOIN c.usuario u WHERE u.email LIKE ?1", "%" + email + "%").list();
+        return find("SELECT c FROM Cliente c JOIN c.usuario u WHERE u.email ILIKE ?1", "%" + email + "%").list();
     }   
 }

@@ -8,6 +8,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ProtocoloSegurancaRepository implements PanacheRepository<ProtocoloSeguranca> {
     public PanacheQuery<ProtocoloSeguranca> findByNome (String nome) {
-        return find("nome LIKE ?1", "%" + nome + "%");
+        return find("nome ILIKE ?1", "%" + nome + "%");
     }    
 }

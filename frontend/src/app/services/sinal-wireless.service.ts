@@ -24,6 +24,18 @@ export class SinalWirelessService {
     return this.httpClient.get<IPaginator<SinalWireless>>(this.baseUrl, {params});
   }
 
+  findByNome(nome?:string, page?: number, pageSize?: number): Observable<IPaginator<SinalWireless>> {
+      let params = {};
+    
+      if (page !== undefined && pageSize !== undefined) {
+        params = {
+          page: page.toString(),
+          pageSize: pageSize.toString()
+        }
+      }
+      return this.httpClient.get<IPaginator<SinalWireless>>(`${this.baseUrl}/search/nome/${nome}`, {params});
+    }
+
   findById(id: String): Observable<SinalWireless> {
     return this.httpClient.get<SinalWireless>(`${this.baseUrl}/${id}`);
   }

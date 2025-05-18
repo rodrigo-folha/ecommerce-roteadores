@@ -12,6 +12,8 @@ import { Cidade } from '../../../models/cidade.model';
 import { CidadeService } from '../../../services/cidade.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cidade-list',
@@ -25,6 +27,8 @@ import { MatInputModule } from '@angular/material/input';
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
   ],
   templateUrl: './cidade-list.component.html',
   styleUrl: './cidade-list.component.css',
@@ -38,6 +42,8 @@ export class CidadeListComponent {
   showSearch = false;
   filterValue = '';
   cidadesFiltradas: Cidade[] = [];
+  tipoFiltro: string = 'nome';
+  filtro: string = '';
 
   constructor(private cidadeService: CidadeService, private router: Router) {}
 
@@ -47,33 +53,33 @@ export class CidadeListComponent {
   }
 
   carregarcidades(): void {
-    this.cidadeService.findAll().subscribe((data) => {
-      this.cidades = data.resultado;
-      this.applyCurrentFilter();
+    this.cidadeService.findAll(this.page, this.pageSize).subscribe((data) => {
+      this.cidadesFiltradas = data.resultado;
       this.totalRecords = data.total;
     });
   }
 
-  applyCurrentFilter(): void {
-    const normalizedFilter = this.filterValue.trim().toLowerCase();
-    
-    const filtered = this.cidades.filter(
-      (data) => 
-        data.nome.toString().toLowerCase().includes(normalizedFilter)
-    );
-  
-    this.cidadesFiltradas = filtered.slice(
-      this.page * this.pageSize,
-      (this.page + 1) * this.pageSize
-    );
-  
-    this.totalRecords = filtered.length;  
-  }
+  applyFilter(event?: Event): void {
+    this.filterValue = this.filtro?.trim().toLowerCase() || '';
+    this.page = 0;
 
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-  this.page = 0;
-  this.applyCurrentFilter();
+    if (this.filterValue !== '' && this.tipoFiltro === 'nome') {
+      this.cidadeService.findByNome(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (item) => {
+          this.cidadesFiltradas = item.resultado;
+          this.totalRecords = item.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por nome' + JSON.stringify(error));
+        }
+      })
+    } else {
+      this.cidadeService.findAll(this.page, this.pageSize).subscribe((item) => {
+        this.cidades = item.resultado;
+        this.totalRecords = item.total;
+        this.carregarcidades();
+      })
+    }
   }
 
   toggleSearch():void {
@@ -85,7 +91,7 @@ export class CidadeListComponent {
     this.pageSize = event.pageSize;
 
     if (this.filterValue) {
-      this.applyCurrentFilter();
+      this.applyFilter();
     } else {
       this.carregarcidades();
     }

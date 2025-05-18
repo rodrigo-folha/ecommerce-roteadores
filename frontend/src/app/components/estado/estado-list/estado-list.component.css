@@ -3,16 +3,6 @@
   text-align: center;
 }
 
-.flex-container {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.busca {
-  width: 0px;
-}
-
 button[color="warn"] mat-icon {
   color: #f44336;
 }
@@ -21,11 +11,44 @@ button[color="primary"] mat-icon {
   color: #005CBB;
 }
 
+.container {
+  padding: 0.8rem;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  width: 80%;
+}
+
+#meuBotaoPesquisar { 
+  margin-left: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transform: scale(1.4);
+}
+
+.input-field {
+  width: 100%;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
 .mat-column-id {
   width: 5em;
   border-right: 1px solid currentColor;
   padding-right: 24px;
   text-align: center;
+}
+
+.busca {
+  width: 0px;
 }
 
 .mat-column-nome {

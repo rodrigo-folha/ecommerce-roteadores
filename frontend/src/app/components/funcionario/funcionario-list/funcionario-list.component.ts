@@ -13,6 +13,10 @@ import { FuncionarioService } from '../../../services/funcionario.service';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { NgxMaskDirective } from 'ngx-mask';
+import { CpfPipe } from '../../../pipe/cpf.pipe';
 
 @Component({
   selector: 'app-funcionario-list',
@@ -29,6 +33,9 @@ import { MatInputModule } from '@angular/material/input';
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
+    CpfPipe,
   ],
   templateUrl: './funcionario-list.component.html',
   styleUrl: './funcionario-list.component.css',
@@ -42,6 +49,8 @@ export class FuncionarioListComponent {
   showSearch = false;
   filterValue = '';
   funcionariosFiltrados: Funcionario[] = [];
+  tipoFiltro: string = 'nome';
+  filtro: string = '';
 
   constructor(private funcionarioService: FuncionarioService, private router: Router) {}
 
@@ -51,36 +60,32 @@ export class FuncionarioListComponent {
   }
 
   carregarFuncionarios(): void {
-    this.funcionarioService.findAll().subscribe((data) => {
-      this.funcionarios = data.resultado;
-      this.applyCurrentFilter();
+    this.funcionarioService.findAll(this.page, this.pageSize).subscribe((data) => {
+      this.funcionariosFiltrados = data.resultado;
       this.totalRecords = data.total;
     });
   }
 
-  applyCurrentFilter(): void {
-    const normalizedFilter = this.filterValue.trim().toLowerCase();
-    
-    const filtered = this.funcionarios.filter(
-      (data) => 
-        data.usuario.nome.toString().toLowerCase().includes(normalizedFilter) ||
-        data.usuario.cpf.toString().toLowerCase().includes(normalizedFilter) ||
-        data.usuario.email.toString().toLowerCase().includes(normalizedFilter) ||
-        data.usuario.dataNascimento.toString().toLowerCase().includes(normalizedFilter)
-    );
-  
-    this.funcionariosFiltrados = filtered.slice(
-      this.page * this.pageSize,
-      (this.page + 1) * this.pageSize
-    );
-  
-    this.totalRecords = filtered.length;  
-  }
-
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-  this.page = 0;
-  this.applyCurrentFilter();
+  applyFilter(event?: Event): void {
+    this.filterValue = this.filtro?.trim().toLowerCase();
+    this.page = 0;
+    if (this.filterValue !== '' && this.tipoFiltro === 'nome') {
+      this.funcionarioService.findByNome(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (item) => {
+          this.funcionariosFiltrados = item.resultado;
+          this.totalRecords = item.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por nome' + JSON.stringify(error));
+        }
+      })
+    } else {
+      this.funcionarioService.findAll(this.page, this.pageSize).subscribe((item) => {
+        this.funcionariosFiltrados = item.resultado;
+        this.totalRecords = item.total;
+        this.carregarFuncionarios();
+      })
+    }
   }
 
   toggleSearch():void {
@@ -92,7 +97,7 @@ export class FuncionarioListComponent {
     this.pageSize = event.pageSize;
 
     if (this.filterValue) {
-      this.applyCurrentFilter();
+      this.applyFilter();
     } else {
       this.carregarFuncionarios();
     }

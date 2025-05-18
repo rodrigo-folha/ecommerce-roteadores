@@ -4,14 +4,50 @@
     <mat-form-field appearance="outline">
       <mat-label>Logradouro</mat-label>
       <input matInput formControlName="logradouro" required />
+      <mat-error
+        *ngIf="
+          enderecoForm.get('logradouro') &&
+          enderecoForm.get('logradouro')?.invalid &&
+          enderecoForm.get('logradouro')?.touched
+        ">
+        {{getErrorMessage('logradouro', enderecoForm.get('logradouro')?.errors)}}
+
+        @if (enderecoForm.get('logradouro')?.hasError('apiError')) {
+            <span> {{ enderecoForm.get('logradouro')?.getError('apiError') }}</span>
+        }
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Bairro</mat-label>
       <input matInput formControlName="bairro" required />
+      <mat-error
+        *ngIf="
+          enderecoForm.get('bairro') &&
+          enderecoForm.get('bairro')?.invalid &&
+          enderecoForm.get('bairro')?.touched
+        ">
+        {{getErrorMessage('bairro', enderecoForm.get('bairro')?.errors)}}
+
+        @if (enderecoForm.get('bairro')?.hasError('apiError')) {
+            <span> {{ enderecoForm.get('bairro')?.getError('apiError') }}</span>
+        }
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Número</mat-label>
-      <input matInput formControlName="numero" required />
+      <input matInput formControlName="numero" required onkeypress="return /^[0-9]+$/.test(event.key)" />
+      <mat-error
+        *ngIf="
+          enderecoForm.get('numero') &&
+          enderecoForm.get('numero')?.invalid &&
+          enderecoForm.get('numero')?.touched
+        ">
+        {{getErrorMessage('numero', enderecoForm.get('numero')?.errors)}}
+
+        @if (enderecoForm.get('numero')?.hasError('apiError')) {
+            <span> {{ enderecoForm.get('numero')?.getError('apiError') }}</span>
+        }
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Complemento</mat-label>
@@ -19,13 +55,37 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>CEP</mat-label>
-      <input matInput formControlName="cep" required />
+      <input matInput formControlName="cep" required onkeypress="return /^[0-9]+$/.test(event.key)"/>
+      <mat-error
+        *ngIf="
+          enderecoForm.get('cep') &&
+          enderecoForm.get('cep')?.invalid &&
+          enderecoForm.get('cep')?.touched
+        ">
+        {{getErrorMessage('cep', enderecoForm.get('cep')?.errors)}}
+
+        @if (enderecoForm.get('cep')?.hasError('apiError')) {
+            <span> {{ enderecoForm.get('cep')?.getError('apiError') }}</span>
+        }
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Cidade</mat-label>
       <mat-select formControlName="cidade" required>
         <mat-option *ngFor="let cidade of cidades" [value]="cidade">{{ cidade.nome }}</mat-option>
       </mat-select>
+      <mat-error
+        *ngIf="
+          enderecoForm.get('cidade') &&
+          enderecoForm.get('cidade')?.invalid &&
+          enderecoForm.get('cidade')?.touched
+        ">
+        {{getErrorMessage('cidade', enderecoForm.get('cidade')?.errors)}}
+
+        @if (enderecoForm.get('cidade')?.hasError('apiError')) {
+            <span> {{ enderecoForm.get('cidade')?.getError('apiError') }}</span>
+        }
+      </mat-error>
     </mat-form-field>
   </form>
 </div>

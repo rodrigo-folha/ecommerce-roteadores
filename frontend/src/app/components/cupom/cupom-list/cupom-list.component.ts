@@ -13,6 +13,8 @@ import Swal from 'sweetalert2';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cupom-list',
@@ -29,6 +31,8 @@ import { MatInputModule } from '@angular/material/input';
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
   ],
   templateUrl: './cupom-list.component.html',
   styleUrl: './cupom-list.component.css',
@@ -42,6 +46,8 @@ export class CupomListComponent {
   showSearch = false;
   filterValue = '';
   cuponsFiltrados: Cupom[] = [];
+  tipoFiltro: string = 'codigo';
+  filtro: string = '';
 
   constructor(private cupomService: CupomService, private router: Router) {}
 
@@ -50,7 +56,7 @@ export class CupomListComponent {
   }
 
   carregarCupons(): void {
-    this.cupomService.findAll().subscribe((data) => {
+    this.cupomService.findAll(this.page, this.pageSize).subscribe((data) => {
       this.cupons = data.resultado;
       this.applyCurrentFilter();
       this.totalRecords = data.total;
@@ -75,8 +81,8 @@ export class CupomListComponent {
     this.totalRecords = filtered.length;  
   }
 
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  applyFilter(event?: Event): void {
+    this.filterValue = this.filtro?.trim().toLowerCase() || '';
   this.page = 0;
   this.applyCurrentFilter();
   }

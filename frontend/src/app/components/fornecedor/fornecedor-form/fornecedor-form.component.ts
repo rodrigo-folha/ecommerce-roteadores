@@ -24,11 +24,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { TelefoneDialogComponent } from '../../../dialogs/telefone-dialog/telefone-dialog.component';
 import { EnderecoDialogComponent } from '../../../dialogs/endereco-dialog/endereco-dialog.component';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-fornecedor-form',
   providers: [provideNativeDateAdapter(), {
-      provide: MAT_DATE_LOCALE, useValue: 'pt-BR'}
+      provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+      provideNgxMask()
     ],
   imports: [
     NgIf,
@@ -44,6 +46,7 @@ import { EnderecoDialogComponent } from '../../../dialogs/endereco-dialog/endere
     MatCardModule,
     MatSelectModule,
     RouterLink,
+    NgxMaskDirective
   ],
   templateUrl: './fornecedor-form.component.html',
   styleUrl: './fornecedor-form.component.css',

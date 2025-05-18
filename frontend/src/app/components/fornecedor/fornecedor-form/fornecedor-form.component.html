@@ -31,7 +31,7 @@
           </mat-form-field>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>CNPJ</mat-label>
-            <input matInput type="text" formControlName="cnpj" />
+            <input matInput type="text" formControlName="cnpj" onkeypress="return /^[0-9]+$/.test(event.key)" mask="00.000.000/0000-00"/>
             <mat-error
               *ngIf="
                 formGroup.get('cnpj') &&

@@ -25,12 +25,20 @@ export class CidadeService {
     return this.httpClient.get<IPaginator<Cidade>>(this.baseUrl, {params});
   }
 
+  findByNome(nome?:string, page?: number, pageSize?: number): Observable<IPaginator<Cidade>> {
+      let params = {};
+    
+      if (page !== undefined && pageSize !== undefined) {
+        params = {
+          page: page.toString(),
+          pageSize: pageSize.toString()
+        }
+      }
+      return this.httpClient.get<IPaginator<Cidade>>(`${this.baseUrl}/search/nome/${nome}`, {params});
+    }
+
   findById(id: String): Observable<Cidade> {
     return this.httpClient.get<Cidade>(`${this.baseUrl}/${id}`);
-  }
-
-  findByNome(nome: String): Observable<Cidade[]> {
-    return this.httpClient.get<Cidade[]>(`${this.baseUrl}/search/${nome}`);
   }
 
   insert(cidade: Cidade): Observable<Cidade> {

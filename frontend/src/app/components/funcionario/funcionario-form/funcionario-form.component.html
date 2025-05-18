@@ -31,7 +31,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>CPF</mat-label>
-          <input matInput type="text" formControlName="cpf" />
+          <input matInput type="text" formControlName="cpf" onkeypress="return /^[0-9]+$/.test(event.key)" mask="000.000.000-00"/>
           <mat-error
             *ngIf="
               formGroup.get('cpf') &&
@@ -49,7 +49,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Data de Nascimento</mat-label>
 
-          <input matInput [matDatepicker]="picker" formControlName="dataNascimento" />
+          <input matInput [matDatepicker]="picker" formControlName="dataNascimento" [max]="maxDate" />
           <mat-hint>Clique no calendário para escolher a data</mat-hint>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>

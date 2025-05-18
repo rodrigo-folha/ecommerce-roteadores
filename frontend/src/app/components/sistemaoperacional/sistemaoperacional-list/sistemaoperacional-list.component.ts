@@ -12,6 +12,8 @@ import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { SistemaOperacional } from '../../../models/sistema-operacional.model';
 import { SistemaOperacionalService } from '../../../services/sistema-operacional.service';
+import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-sistemaoperacional-list',
@@ -25,6 +27,8 @@ import { SistemaOperacionalService } from '../../../services/sistema-operacional
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
   ],
   templateUrl: './sistemaoperacional-list.component.html',
   styleUrl: './sistemaoperacional-list.component.css',
@@ -38,6 +42,8 @@ export class SistemaoperacionalListComponent {
   showSearch = false;
   filterValue = '';
   sistemasOperacionaisFiltrados: SistemaOperacional[] = [];
+  tipoFiltro: string = 'nome';
+  filtro: string = '';
 
   constructor(
     private sistemaOperacionalService: SistemaOperacionalService,
@@ -49,34 +55,33 @@ export class SistemaoperacionalListComponent {
   }
 
   carregarSistemasoperacionais(): void {
-    this.sistemaOperacionalService.findAll().subscribe((data) => {
-      this.sistemasOperacionais = data.resultado;
-      this.applyCurrentFilter();
+    this.sistemaOperacionalService.findAll(this.page, this.pageSize).subscribe((data) => {
+      this.sistemasOperacionaisFiltrados = data.resultado;
       this.totalRecords = data.total;
     });
   }
 
-  applyCurrentFilter(): void {
-    const normalizedFilter = this.filterValue.trim().toLowerCase();
-
-    const filtered = this.sistemasOperacionais.filter((data) =>
-      data.nome.toString().toLowerCase().includes(normalizedFilter)
-    );
-
-    this.sistemasOperacionaisFiltrados = filtered.slice(
-      this.page * this.pageSize,
-      (this.page + 1) * this.pageSize
-    );
-
-    this.totalRecords = filtered.length;
-  }
-
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value
-      .trim()
-      .toLowerCase();
+  applyFilter(event?: Event): void {
+    this.filterValue = this.filtro?.trim().toLowerCase() || '';
     this.page = 0;
-    this.applyCurrentFilter();
+
+    if (this.filterValue !== '' && this.tipoFiltro === 'nome') {
+      this.sistemaOperacionalService.findByNome(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (item) => {
+          this.sistemasOperacionaisFiltrados = item.resultado;
+          this.totalRecords = item.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por nome' + JSON.stringify(error));
+        }
+      })
+    } else {
+      this.sistemaOperacionalService.findAll(this.page, this.pageSize).subscribe((item) => {
+        this.sistemasOperacionais = item.resultado;
+        this.totalRecords = item.total;
+        this.carregarSistemasoperacionais();
+      })
+    }
   }
 
   toggleSearch(): void {
@@ -88,7 +93,7 @@ export class SistemaoperacionalListComponent {
     this.pageSize = event.pageSize;
 
     if (this.filterValue) {
-      this.applyCurrentFilter();
+      this.applyFilter();
     } else {
       this.carregarSistemasoperacionais();
     }

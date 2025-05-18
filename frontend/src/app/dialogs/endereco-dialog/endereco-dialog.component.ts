@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -45,7 +45,7 @@ export class EnderecoDialogComponent {
       numero: [data?.numero || '', Validators.required],
       complemento: [data?.complemento || ''],
       cep: [data?.cep || '', Validators.required],
-      cidade: [data?.cidades || '', Validators.required]
+      cidade: [data?.cidade || '', Validators.required]
     });
   }
 
@@ -54,6 +54,8 @@ export class EnderecoDialogComponent {
   }
 
   salvar() {
+    this.enderecoForm.markAllAsTouched();
+
     if (this.enderecoForm.valid) {
       this.dialogRef.close(this.enderecoForm.value);
     }
@@ -63,5 +65,45 @@ export class EnderecoDialogComponent {
     this.dialogRef.close(null);
   }
 
+  getErrorMessage(controlName: string, errors: ValidationErrors | null | undefined) : string {
+      if (!errors || !this.errorMessages[controlName]) {
+        return 'invalid field';
+      }
+  
+      for(const errorName in errors) {
+        // console.log(errorName);
+        if (this.errorMessages[controlName][errorName]){
+          return this.errorMessages[controlName][errorName];
+        }
+      }
+      return 'invalid field';
+    }
+
   // TODO: Falta colocar as validações daqui pra baixo...
+  errorMessages: {[controlName: string] : {[errorName: string] : string}} = {
+    logradouro: {
+      required: 'O logradouro deve ser informado.',
+      apiError: ' '
+    },
+
+    numero: {
+      required: 'O número deve ser informado.',
+      apiError: ' '
+    },
+
+    bairro: {
+      required: 'O bairro deve ser informado.',
+      apiError: ' '
+    },
+
+    cep: {
+      required: 'O cep deve ser informado.',
+      apiError: ' '
+    },
+
+    cidade: {
+      required: 'A cidade deve ser informada.',
+      apiError: ' '
+    }
+  }
 }

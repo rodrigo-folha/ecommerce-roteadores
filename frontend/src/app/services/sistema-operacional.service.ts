@@ -24,6 +24,18 @@ export class SistemaOperacionalService {
     return this.httpClient.get<IPaginator<SistemaOperacional>>(this.baseUrl, {params});
   }
 
+  findByNome(nome?:string, page?: number, pageSize?: number): Observable<IPaginator<SistemaOperacional>> {
+      let params = {};
+    
+      if (page !== undefined && pageSize !== undefined) {
+        params = {
+          page: page.toString(),
+          pageSize: pageSize.toString()
+        }
+      }
+      return this.httpClient.get<IPaginator<SistemaOperacional>>(`${this.baseUrl}/search/nome/${nome}`, {params});
+    }
+
   findById(id: String): Observable<SistemaOperacional> {
     return this.httpClient.get<SistemaOperacional>(`${this.baseUrl}/${id}`);
   }

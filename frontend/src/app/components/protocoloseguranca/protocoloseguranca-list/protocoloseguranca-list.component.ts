@@ -12,6 +12,8 @@ import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ProtocoloSeguranca } from '../../../models/protocolo-seguranca.model';
 import { ProtocoloSegurancaService } from '../../../services/protocolo-seguranca.service';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-protocoloseguranca-list',
@@ -25,6 +27,8 @@ import { ProtocoloSegurancaService } from '../../../services/protocolo-seguranca
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
   ],
   templateUrl: './protocoloseguranca-list.component.html',
   styleUrl: './protocoloseguranca-list.component.css',
@@ -38,6 +42,8 @@ export class ProtocolosegurancaListComponent {
   showSearch = false;
   filterValue = '';
   protocolosSegurancaFiltrados: ProtocoloSeguranca[] = [];
+  tipoFiltro: string = 'nome';
+  filtro: string = '';
 
   constructor(
     private protocoloSegurancaService: ProtocoloSegurancaService,
@@ -49,34 +55,33 @@ export class ProtocolosegurancaListComponent {
   }
 
   carregarProtocolosSeguranca(): void {
-    this.protocoloSegurancaService.findAll().subscribe((data) => {
-      this.protocolosSeguranca = data.resultado;
-      this.applyCurrentFilter();
+    this.protocoloSegurancaService.findAll(this.page, this.pageSize).subscribe((data) => {
+      this.protocolosSegurancaFiltrados = data.resultado;
       this.totalRecords = data.total;
     });
   }
 
-  applyCurrentFilter(): void {
-    const normalizedFilter = this.filterValue.trim().toLowerCase();
-
-    const filtered = this.protocolosSeguranca.filter((data) =>
-      data.nome.toString().toLowerCase().includes(normalizedFilter)
-    );
-
-    this.protocolosSegurancaFiltrados = filtered.slice(
-      this.page * this.pageSize,
-      (this.page + 1) * this.pageSize
-    );
-
-    this.totalRecords = filtered.length;
-  }
-
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value
-      .trim()
-      .toLowerCase();
+  applyFilter(event?: Event): void {
+    this.filterValue = this.filtro?.trim().toLowerCase() || '';
     this.page = 0;
-    this.applyCurrentFilter();
+
+    if (this.filterValue !== '' && this.tipoFiltro === 'nome') {
+      this.protocoloSegurancaService.findByNome(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (item) => {
+          this.protocolosSegurancaFiltrados = item.resultado;
+          this.totalRecords = item.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por nome' + JSON.stringify(error));
+        }
+      })
+    } else {
+      this.protocoloSegurancaService.findAll(this.page, this.pageSize).subscribe((item) => {
+        this.protocolosSeguranca = item.resultado;
+        this.totalRecords = item.total;
+        this.carregarProtocolosSeguranca();
+      })
+    }
   }
 
   toggleSearch(): void {
@@ -88,7 +93,7 @@ export class ProtocolosegurancaListComponent {
     this.pageSize = event.pageSize;
 
     if (this.filterValue) {
-      this.applyCurrentFilter();
+      this.applyFilter();
     } else {
       this.carregarProtocolosSeguranca();
     }

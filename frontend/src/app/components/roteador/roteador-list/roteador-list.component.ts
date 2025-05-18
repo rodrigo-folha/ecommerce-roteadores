@@ -109,9 +109,9 @@ export class RoteadorListComponent {
     ); 
     } else {
       this.roteadorService.findAll(this.page, this.pageSize).subscribe((roteadores) => {
-        this.roteadores = roteadores.resultado;
+        this.roteadoresFiltrados = roteadores.resultado;
         this.totalRecords = roteadores.total;
-        this.roteadores.forEach((roteador) => {
+        this.roteadoresFiltrados.forEach((roteador) => {
           this.roteadorService.countQuantidadeTotalById(roteador.id).subscribe((estoque) => {
             roteador.quantidadeEstoque = estoque;
           });

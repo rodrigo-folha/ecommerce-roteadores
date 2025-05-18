@@ -13,7 +13,7 @@ public class CidadeRepository implements PanacheRepository<Cidade> {
 
     public PanacheQuery<Cidade> findByNome(String nome) {
         // return find("SELECT c FROM Cidade c WHERE c.nome LIKE ?1", "%" + nome + "%").list();
-        return find("nome LIKE ?1", "%" + nome + "%");
+        return find("nome ILIKE ?1", "%" + nome + "%");
     }
 
     public List<Cidade> findByEstado(Estado estado) {

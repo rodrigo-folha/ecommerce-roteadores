@@ -24,6 +24,19 @@ export class QuantidadeAntenaService {
     return this.httpClient.get<IPaginator<QuantidadeAntena>>(this.baseUrl, {params});
   }
 
+  findByQuantidade(quantidade?:string, page?: number, pageSize?: number): Observable<IPaginator<QuantidadeAntena>> {
+      let params = {};
+    
+      if (page !== undefined && pageSize !== undefined) {
+        params = {
+          page: page.toString(),
+          pageSize: pageSize.toString()
+        }
+      }
+      return this.httpClient.get<IPaginator<QuantidadeAntena>>(`${this.baseUrl}/search/quantidade/${quantidade}`, {params});
+    }
+
+
   findById(id: String): Observable<QuantidadeAntena> {
     return this.httpClient.get<QuantidadeAntena>(`${this.baseUrl}/${id}`);
   }

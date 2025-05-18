@@ -31,7 +31,7 @@
             <div class="container-content-column">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Preço</mat-label>
-                <input matInput type="text" formControlName="preco" (input)="formatarPreco($event)" />
+                <input matInput type="text" formControlName="preco" (input)="formatarValorMonetario($event)" [value]="precoFormatado"/>
                 <mat-error *ngIf="
                     formGroup.get('preco') &&
                     formGroup.get('preco')?.invalid &&

@@ -42,7 +42,7 @@ public class QuantidadeAntenaResource {
 
     @GET
     // @RolesAllowed({"Adm", "User"})
-    @Path("/search/{quantidade}")
+    @Path("/search/quantidade/{quantidade}")
     public Response findByQuantidade(@PathParam("quantidade") Integer quantidade,
         @QueryParam("page") @DefaultValue("0") int page,
         @QueryParam("pageSize") @DefaultValue("100") int pageSize

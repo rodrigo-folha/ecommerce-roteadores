@@ -1,0 +1,60 @@
+mat-card {
+  padding: 24px;
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  background-color: #f9f9f9;
+}
+
+mat-card h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+mat-card p {
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+mat-card div {
+  border-bottom: 1px solid #ddd;
+  padding: 12px 0;
+}
+
+mat-card div:last-child {
+  border-bottom: none;
+}
+
+button {
+  margin-top: 8px;
+}
+
+button + button {
+  margin-left: 12px;
+}
+
+p:last-of-type {
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 16px;
+}
+
+@media (max-width: 600px) {
+  mat-card {
+    padding: 16px;
+    margin: 12px;
+  }
+
+  mat-card h3 {
+    font-size: 18px;
+  }
+
+  mat-card p {
+    font-size: 14px;
+  }
+
+  p:last-of-type {
+    font-size: 16px;
+  }
+}

@@ -8,7 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class SinalWirelessRepository implements PanacheRepository<SinalWireless> {
     public PanacheQuery<SinalWireless> findByNome(String nome) {
-        return find("SELECT s FROM SinalWireless s WHERE s.nome LIKE ?1", "%" + nome + "%");
+        return find("SELECT s FROM SinalWireless s WHERE s.nome ILIKE ?1", "%" + nome + "%");
     }    
     
 }

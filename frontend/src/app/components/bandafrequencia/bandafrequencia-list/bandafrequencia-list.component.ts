@@ -11,6 +11,8 @@ import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { BandaFrequencia } from '../../../models/banda-frequencia.model';
 import { BandaFrequenciaService } from '../../../services/banda-frequencia.service';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-bandafrequencia-list',
@@ -24,6 +26,8 @@ import { BandaFrequenciaService } from '../../../services/banda-frequencia.servi
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
   ],
   templateUrl: './bandafrequencia-list.component.html',
   styleUrl: './bandafrequencia-list.component.css',
@@ -37,6 +41,8 @@ export class BandafrequenciaListComponent {
   showSearch = false;
   filterValue = '';
   bandaFrequenciasFiltrado: BandaFrequencia[] = [];
+  tipoFiltro: string = 'nome';
+  filtro: string = '';
 
   constructor(
     private bandaFrequenciaService: BandaFrequenciaService,
@@ -48,50 +54,49 @@ export class BandafrequenciaListComponent {
   }
 
   carregarBandafrequencias(): void {
-      this.bandaFrequenciaService.findAll().subscribe((data) => {
-        this.bandaFrequencias = data.resultado;
-        this.applyCurrentFilter();
-        this.totalRecords = data.total;
-      });
-    }
+    this.bandaFrequenciaService.findAll(this.page, this.pageSize).subscribe((data) => {
+      this.bandaFrequenciasFiltrado = data.resultado;
+      this.totalRecords = data.total;
+    });
+  }
   
-    applyCurrentFilter(): void {
-      const normalizedFilter = this.filterValue.trim().toLowerCase();
-  
-      const filtered = this.bandaFrequencias.filter((data) =>
-        data.nome.toString().toLowerCase().includes(normalizedFilter)
-      );
-  
-      this.bandaFrequenciasFiltrado = filtered.slice(
-        this.page * this.pageSize,
-        (this.page + 1) * this.pageSize
-      );
-  
-      this.totalRecords = filtered.length;
-    }
-  
-    applyFilter(event: Event): void {
-      this.filterValue = (event.target as HTMLInputElement).value
-        .trim()
-        .toLowerCase();
-      this.page = 0;
-      this.applyCurrentFilter();
-    }
-  
-    toggleSearch(): void {
-      this.showSearch = !this.showSearch;
-    }
-  
-    paginar(event: PageEvent): void {
-      this.page = event.pageIndex;
-      this.pageSize = event.pageSize;
-  
-      if (this.filterValue) {
-        this.applyCurrentFilter();
-      } else {
+  applyFilter(event?: Event): void {
+    this.filterValue = this.filtro?.trim().toLowerCase() || '';
+    this.page = 0;
+
+    if (this.filterValue !== '' && this.tipoFiltro === 'nome') {
+      this.bandaFrequenciaService.findByNome(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (item) => {
+          this.bandaFrequenciasFiltrado = item.resultado;
+          this.totalRecords = item.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por nome' + JSON.stringify(error));
+        }
+      })
+    } else {
+      this.bandaFrequenciaService.findAll(this.page, this.pageSize).subscribe((item) => {
+        this.bandaFrequencias = item.resultado;
+        this.totalRecords = item.total;
         this.carregarBandafrequencias();
-      }
+      })
     }
+  }
+  
+  toggleSearch(): void {
+    this.showSearch = !this.showSearch;
+  }
+
+  paginar(event: PageEvent): void {
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    if (this.filterValue) {
+      this.applyFilter();
+    } else {
+      this.carregarBandafrequencias();
+    }
+  }
 
   excluir(bandaFrequencia: BandaFrequencia): void {
     Swal.fire({

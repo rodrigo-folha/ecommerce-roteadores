@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,12 +27,14 @@ export class TelefoneDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.telefoneForm = this.fb.group({
-      codigoArea: [data?.codigoArea || '', Validators.required],
-      numero: [data?.numero || '', Validators.required]
+      codigoArea: [data?.codigoArea || '', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
+      numero: [data?.numero || '', [Validators.required, Validators.minLength(8), Validators.maxLength(9)]]
     });
   }
 
   salvar() {
+    this.telefoneForm.markAllAsTouched();
+
     if (this.telefoneForm.valid) {
       this.dialogRef.close(this.telefoneForm.value);
     }
@@ -42,5 +44,34 @@ export class TelefoneDialogComponent {
     this.dialogRef.close(null);
   }
 
-  // TODO: Falta colocar as validações daqui pra baixo...
+  getErrorMessage(controlName: string, errors: ValidationErrors | null | undefined) : string {
+        if (!errors || !this.errorMessages[controlName]) {
+          return 'invalid field';
+        }
+    
+        for(const errorName in errors) {
+          // console.log(errorName);
+          if (this.errorMessages[controlName][errorName]){
+            return this.errorMessages[controlName][errorName];
+          }
+        }
+        return 'invalid field';
+      }
+  
+    // TODO: Falta colocar as validações daqui pra baixo...
+    errorMessages: {[controlName: string] : {[errorName: string] : string}} = {
+      codigoArea: {
+        required: 'O código de área deve ser informado.',
+        minlength: 'O código deve ter no mínimo 2 números',
+        maxlength: 'O código deve ter no máximo 2 números',
+        apiError: ' '
+      },
+  
+      numero: {
+        required: 'O número deve ser informado.',
+        minlength: 'O número deve ter no mínimo 8 números',
+        maxlength: 'O número deve ter no máximo 9 números',
+        apiError: ' '
+      },
+    }
 }

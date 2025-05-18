@@ -10,7 +10,7 @@ import { IPaginator } from '../interfaces/ipaginator';
 export class FornecedorService {
   private baseUrl = 'http://localhost:8080/fornecedores';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   findAll(page?: number, pageSize?: number): Observable<IPaginator<Fornecedor>> {
     let params = {};
@@ -21,15 +21,23 @@ export class FornecedorService {
         pageSize: pageSize.toString()
       }
     }
-    return this.httpClient.get<IPaginator<Fornecedor>>(this.baseUrl, {params});
+    return this.httpClient.get<IPaginator<Fornecedor>>(this.baseUrl, { params });
   }
 
   findById(id: string): Observable<Fornecedor> {
     return this.httpClient.get<Fornecedor>(`${this.baseUrl}/${id}`);
   }
 
-  findByNome(nome: string): Observable<Fornecedor[]> {
-    return this.httpClient.get<Fornecedor[]>(`${this.baseUrl}/nome/${nome}`);
+  findByNome(nome?: string, page?: number, pageSize?: number): Observable<IPaginator<Fornecedor>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<Fornecedor>>(`${this.baseUrl}/search/nome/${nome}`, { params });
   }
 
   findByCpf(cpf: string): Observable<Fornecedor> {

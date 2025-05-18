@@ -3,12 +3,36 @@
 <mat-dialog-content [formGroup]="telefoneForm">
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Código de Área</mat-label>
-    <input matInput formControlName="codigoArea">
+    <input matInput formControlName="codigoArea" onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="2">
+    <mat-error
+        *ngIf="
+          telefoneForm.get('codigoArea') &&
+          telefoneForm.get('codigoArea')?.invalid &&
+          telefoneForm.get('codigoArea')?.touched
+        ">
+        {{getErrorMessage('codigoArea', telefoneForm.get('codigoArea')?.errors)}}
+
+        @if (telefoneForm.get('codigoArea')?.hasError('apiError')) {
+            <span> {{ telefoneForm.get('codigoArea')?.getError('apiError') }}</span>
+        }
+      </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Número</mat-label>
-    <input matInput formControlName="numero">
+    <input matInput formControlName="numero" onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="9">
+    <mat-error
+        *ngIf="
+          telefoneForm.get('numero') &&
+          telefoneForm.get('numero')?.invalid &&
+          telefoneForm.get('numero')?.touched
+        ">
+        {{getErrorMessage('numero', telefoneForm.get('numero')?.errors)}}
+
+        @if (telefoneForm.get('numero')?.hasError('apiError')) {
+            <span> {{ telefoneForm.get('numero')?.getError('apiError') }}</span>
+        }
+      </mat-error>
   </mat-form-field>
 </mat-dialog-content>
 

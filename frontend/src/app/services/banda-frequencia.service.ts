@@ -24,6 +24,18 @@ export class BandaFrequenciaService {
     return this.httpClient.get<IPaginator<BandaFrequencia>>(this.baseUrl, {params});
   }
 
+  findByNome(nome?:string, page?: number, pageSize?: number): Observable<IPaginator<BandaFrequencia>> {
+    let params = {};
+  
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<BandaFrequencia>>(`${this.baseUrl}/search/nome/${nome}`, {params});
+  }
+
   findById(id: String): Observable<BandaFrequencia> {
     return this.httpClient.get<BandaFrequencia>(`${this.baseUrl}/${id}`);
   }

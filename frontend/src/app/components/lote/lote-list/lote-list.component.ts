@@ -14,6 +14,8 @@ import { Lote } from '../../../models/lote.model';
 import { Roteador } from '../../../models/roteador.model';
 import { LoteService } from '../../../services/lote.service';
 import { RoteadorService } from '../../../services/roteador.service';
+import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-lote-list',
@@ -27,6 +29,8 @@ import { RoteadorService } from '../../../services/roteador.service';
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
   ],
   templateUrl: './lote-list.component.html',
   styleUrl: './lote-list.component.css',
@@ -41,6 +45,8 @@ export class LoteListComponent {
   showSearch = false;
   filterValue = '';
   lotesFiltrados: Lote[] = [];
+  tipoFiltro: string = 'codigo';
+  filtro: string = '';
 
   constructor(
     private loteService: LoteService, 
@@ -54,7 +60,7 @@ export class LoteListComponent {
   }
 
   carregarLotes(): void {
-    this.loteService.findAll().subscribe((data) => {
+    this.loteService.findAll(this.page, this.pageSize).subscribe((data) => {
       this.lotes = data.resultado;
       this.applyCurrentFilter();
       this.totalRecords = data.total;
@@ -80,8 +86,8 @@ export class LoteListComponent {
       this.totalRecords = filtered.length;  
     }
   
-    applyFilter(event: Event): void {
-      this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    applyFilter(event?: Event): void {
+      this.filterValue = this.filtro?.trim().toLowerCase() || '';
     this.page = 0;
     this.applyCurrentFilter();
     }

@@ -13,6 +13,9 @@ import { ClienteService } from '../../../services/cliente.service';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { CpfPipe } from '../../../pipe/cpf.pipe';
 
 @Component({
   selector: 'app-cliente-list',
@@ -29,6 +32,9 @@ import { MatInputModule } from '@angular/material/input';
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
+    CpfPipe,
   ],
   templateUrl: './cliente-list.component.html',
   styleUrl: './cliente-list.component.css',
@@ -42,6 +48,8 @@ export class ClienteListComponent {
   showSearch = false;
   filterValue = '';
   clientesFiltrados: Cliente[] = [];
+  tipoFiltro: string = 'nome';
+  filtro: string = '';
 
   constructor(private clienteService: ClienteService, private router: Router) {}
 
@@ -50,36 +58,32 @@ export class ClienteListComponent {
   }
 
   carregarClientes(): void {
-    this.clienteService.findAll().subscribe((data) => {
-      this.clientes = data.resultado;
-      this.applyCurrentFilter();
+    this.clienteService.findAll(this.page, this.pageSize).subscribe((data) => {
+      this.clientesFiltrados = data.resultado;
       this.totalRecords = data.total;
     });
   }
 
-  applyCurrentFilter(): void {
-    const normalizedFilter = this.filterValue.trim().toLowerCase();
-    
-    const filtered = this.clientes.filter(
-      (data) => 
-        data.usuario.nome.toString().toLowerCase().includes(normalizedFilter) ||
-        data.usuario.cpf.toString().toLowerCase().includes(normalizedFilter) ||
-        data.usuario.email.toString().toLowerCase().includes(normalizedFilter) ||
-        data.usuario.dataNascimento.toString().toLowerCase().includes(normalizedFilter)
-    );
-  
-    this.clientesFiltrados = filtered.slice(
-      this.page * this.pageSize,
-      (this.page + 1) * this.pageSize
-    );
-  
-    this.totalRecords = filtered.length;  
-  }
-
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-  this.page = 0;
-  this.applyCurrentFilter();
+  applyFilter(event?: Event): void {
+    this.filterValue = this.filtro?.trim().toLowerCase() || '';
+    this.page = 0;
+    if (this.filterValue !== '' && this.tipoFiltro === 'nome') {
+      this.clienteService.findByNome(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (item) => {
+          this.clientesFiltrados = item.resultado;
+          this.totalRecords = item.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por nome' + JSON.stringify(error));
+        }
+      })
+    } else {
+      this.clienteService.findAll(this.page, this.pageSize).subscribe((item) => {
+        this.clientes = item.resultado;
+        this.totalRecords = item.total;
+        this.carregarClientes();
+      })
+    }
   }
 
   toggleSearch():void {
@@ -91,7 +95,7 @@ export class ClienteListComponent {
     this.pageSize = event.pageSize;
 
     if (this.filterValue) {
-      this.applyCurrentFilter();
+      this.applyFilter();
     } else {
       this.carregarClientes();
     }

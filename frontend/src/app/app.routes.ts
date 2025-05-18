@@ -55,6 +55,8 @@ import { PaginaRoteadoresComponent } from './components/template/user-template/p
 import { HomeAdminComponent } from './components/template/admin-template/home-admin/home-admin.component';
 import { PerfilAdminComponent } from './components/template/admin-template/perfil-admin/perfil-admin.component';
 import { ProdutoAdminComponent } from './components/template/admin-template/produto-admin/produto-admin.component';
+import { CarrinhoComponent } from './components/carrinho/carrinho.component';
+import { CartComponent } from './components/cart/cart.component';
 
 export const routes: Routes = [
   {
@@ -65,6 +67,8 @@ export const routes: Routes = [
       {path: '', pathMatch: 'full', redirectTo: ''},
       {path: '', component: HomeUserComponent},
       {path: 'pagina-produto', component: PaginaProdutoComponent},
+      {path: 'carrinho', component: CarrinhoComponent},
+      {path: 'cart', component: CartComponent},
       
       {path: 'login', component: LoginUserComponent},
       {path: 'cadastrar', component: RegistrarUserComponent},

@@ -1,4 +1,4 @@
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -12,11 +12,12 @@ import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Estado } from '../../../models/estado.model';
 import { EstadoService } from '../../../services/estado.service';
+import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-estado-list',
   imports: [
-    NgIf,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
@@ -26,6 +27,8 @@ import { EstadoService } from '../../../services/estado.service';
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
   ],
   templateUrl: './estado-list.component.html',
   styleUrl: './estado-list.component.css',
@@ -39,6 +42,8 @@ export class EstadoListComponent {
   showSearch = false;
   filterValue = '';
   estadosFiltrados: Estado[] = [];
+  tipoFiltro: string = 'nome';
+  filtro: string = '';
 
   constructor(private estadoService: EstadoService, private router: Router) {}
 
@@ -47,35 +52,33 @@ export class EstadoListComponent {
   }
 
   carregarEstados(): void {
-    this.estadoService.findAll().subscribe(data => {
-      this.estados = data.resultado;
-      this.applyCurrentFilter();
+    this.estadoService.findAll(this.page, this.pageSize).subscribe(data => {
+      this.estadosFiltrados = data.resultado;
       this.totalRecords = data.total;
     });
     
   }
 
-  applyCurrentFilter(): void {
-    const normalizedFilter = this.filterValue.trim().toLowerCase();
-    
-    const filtered = this.estados.filter(
-      (data) => 
-        data.nome.toString().toLowerCase().includes(normalizedFilter) ||
-        data.sigla.toString().toLowerCase().includes(normalizedFilter)
-    );
-  
-    this.estadosFiltrados = filtered.slice(
-      this.page * this.pageSize,
-      (this.page + 1) * this.pageSize
-    );
-  
-    this.totalRecords = filtered.length;  
-  }
-
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  applyFilter(event?: Event): void {
+    this.filterValue = this.filtro?.trim().toLowerCase() || '';
     this.page = 0;
-    this.applyCurrentFilter();
+    if (this.filterValue !== '' && this.tipoFiltro === 'nome') {
+      this.estadoService.findByNome(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (item) => {
+          this.estadosFiltrados = item.resultado;
+          this.totalRecords = item.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por nome' + JSON.stringify(error));
+        }
+      })
+    } else {
+      this.estadoService.findAll(this.page, this.pageSize).subscribe((item) => {
+        this.estados = item.resultado;
+        this.totalRecords = item.total;
+        this.carregarEstados();
+      })
+    }
   }
 
   toggleSearch():void {
@@ -87,7 +90,7 @@ export class EstadoListComponent {
     this.pageSize = event.pageSize;
 
     if (this.filterValue) {
-      this.applyCurrentFilter();
+      this.applyFilter();
     } else {
       this.carregarEstados();
     }

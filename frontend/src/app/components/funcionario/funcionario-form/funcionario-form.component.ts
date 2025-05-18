@@ -23,11 +23,13 @@ import { Endereco } from '../../../models/endereco.model';
 import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-funcionario-form',
   providers: [provideNativeDateAdapter(), {
-      provide: MAT_DATE_LOCALE, useValue: 'pt-BR'}
+      provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+      provideNgxMask(),
     ],
   imports: [
     NgIf,
@@ -43,6 +45,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatCardModule,
     MatSelectModule,
     RouterLink,
+    NgxMaskDirective,
   ],
   templateUrl: './funcionario-form.component.html',
   styleUrl: './funcionario-form.component.css',
@@ -50,6 +53,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class FuncionarioFormComponent {
   formGroup!: FormGroup;
   cidades: Cidade[] = [];
+  maxDate: Date;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -62,13 +66,14 @@ export class FuncionarioFormComponent {
     this.formGroup = this.formBuilder.group({
       id: [null],
       nome: ['', [Validators.required]],
-      cpf: ['', [Validators.required]],
+      cpf: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
       dataNascimento: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
       telefones: [this.formBuilder.array([]), Validators.required],
       enderecos: [this.formBuilder.array([]), Validators.required],
     });
+    this.maxDate = new Date();
   }
 
   ngOnInit(): void {
@@ -86,7 +91,7 @@ export class FuncionarioFormComponent {
     this.formGroup = this.formBuilder.group({
       id: [(funcionario && funcionario.id) ? funcionario.id : null],
       nome: [(usuario && usuario.nome) ? usuario.nome : null, Validators.required],
-      cpf: [(usuario && usuario.cpf) ? usuario.cpf : null, Validators.required],
+      cpf: [(usuario && usuario.cpf) ? usuario.cpf : null, [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
       dataNascimento: [(usuario && usuario.dataNascimento) ? usuario.dataNascimento : null, Validators.required],
       email: [(usuario && usuario.email) ? usuario.email : null, [Validators.required, Validators.email]],
       senha: [(usuario && usuario.senha) ? usuario.senha : null, [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
@@ -238,6 +243,8 @@ export class FuncionarioFormComponent {
   
       cpf: {
         required: 'O cpf deve ser informado.',
+        minlength: 'O cpf deve ter 11 caracteres.',
+        maxlength: 'O cpf deve ter 11 caracteres.',
         apiError: ' '
       },
   

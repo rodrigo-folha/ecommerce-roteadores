@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Roteador } from '../../../../models/roteador.model';
 import { RoteadorService } from '../../../../services/roteador.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CarrinhoService } from '../../../../services/carrinho.service';
 
 interface Product {
   id: string
@@ -24,14 +26,15 @@ interface Product {
 }
 
 type Card = {
-  title: string;
+  idRoteador: number;
+  titulo: string;
   preco: number;
   protocoloSeguranca: string;
   bandaFrequencia: string;
   quantidadeAntena: number;
   rating: number;
   reviews: number;
-  imageUrl: string;
+  imagemUrl: string;
 };
 
 @Component({
@@ -43,46 +46,46 @@ type Card = {
 export class PaginaRoteadoresComponent implements OnInit {
 
   roteadores: Roteador[] = [];
-    cards = signal<Card[]>([]);
-    constructor(
-      private roteadorService: RoteadorService,
-    ) {
-      this.filteredProducts = [...this.allProducts]
-  
-      // Definir os valores mínimo e máximo com base nos produtos
-      this.updatePriceRange()
-     }
-  
-    ngOnInit(): void {
-      this.carregarRoteadores();
-      this.roteadorService.findAll().subscribe((data) => {
-        this.roteadores = data.resultado;
+  cards = signal<Card[]>([]);
+  constructor(
+    private roteadorService: RoteadorService,
+    private snackBar: MatSnackBar,
+    private carrinhoService: CarrinhoService,
+  ) {
+    this.filteredProducts = [...this.allProducts]
+
+    // Definir os valores mínimo e máximo com base nos produtos
+    this.updatePriceRange()
+  }
+
+  ngOnInit(): void {
+    this.carregarRoteadores();
+  }
+
+  carregarRoteadores() {
+    this.roteadorService.findAll().subscribe((data) => {
+      this.roteadores = data.resultado;
+      this.carregarCards();
+    })
+  }
+
+  carregarCards() {
+    const cards: Card[] = [];
+    this.roteadores.forEach((roteador) => {
+      cards.push({
+        idRoteador: roteador.id,
+        titulo: roteador.nome,
+        preco: roteador.preco,
+        bandaFrequencia: roteador.bandaFrequencia.nome,
+        protocoloSeguranca: roteador.protocoloSeguranca.nome,
+        quantidadeAntena: roteador.quantidadeAntena.quantidade,
+        rating: 4.8,
+        reviews: 100,
+        imagemUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString())
       })
-    }
-  
-    carregarRoteadores() {
-      this.roteadorService.findAll().subscribe((data) => {
-        this.roteadores = data.resultado;
-        this.carregarCards();
-      })
-    }
-  
-    carregarCards() {
-      const cards: Card[] = [];
-      this.roteadores.forEach((roteador) => {
-        cards.push({
-          title: roteador.nome,
-          preco: roteador.preco,
-          bandaFrequencia: roteador.bandaFrequencia.nome,
-          protocoloSeguranca: roteador.protocoloSeguranca.nome,
-          quantidadeAntena: roteador.quantidadeAntena.quantidade,
-          rating: 4.8,
-          reviews: 100,
-          imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString())
-        })
-      })
-      this.cards.set(cards);
-    }
+    })
+    this.cards.set(cards);
+  }
 
   // Filtros
   priceRange = { min: 0, max: 100000 }
@@ -475,8 +478,22 @@ export class PaginaRoteadoresComponent implements OnInit {
     console.log(product.inWishlist ? "Adicionado à lista de desejos:" : "Removido da lista de desejos:", product)
   }
 
-  addToCart(product: any) {
-    console.log("Adicionado ao carrinho:", product)
+  adicionarAoCarrinho(card: Card) {
+    this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi adicionado ao carrinho.')
+    this.carrinhoService.adicionar({
+      id: card.idRoteador,
+      nome: card.titulo,
+      preco: card.preco,
+      quantidade: 1
+    })
+  }
+
+  showSnackbarTopPosition(content: any) {
+    this.snackBar.open(content, 'fechar', {
+      duration: 3000,
+      verticalPosition: "top",
+      horizontalPosition: "center"
+    });
   }
 
   isInWishlist(product: any): boolean {

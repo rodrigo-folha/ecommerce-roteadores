@@ -187,8 +187,8 @@
         <div class="products-grid">
           <div *ngFor="let card of cards()" class="product-card">
             <!-- Imagem do produto -->
-            <a [routerLink]="['/product', card.title]" class="product-image-link">
-              <img [src]="card.imageUrl" [alt]="card.title" class="product-image">
+            <a [routerLink]="['/product', card.titulo]" class="product-image-link">
+              <img [src]="card.imagemUrl" [alt]="card.titulo" class="product-image">
               <!-- <div *ngIf="product.badge" class="product-badge">
                 {{ product.badge }}
               </div> -->
@@ -198,7 +198,7 @@
             <div class="product-details">
               <!-- Nome e ícone de coração -->
               <div class="product-header">
-                <h3 class="product-name">{{ card.title }}</h3>
+                <h3 class="product-name">{{ card.titulo }}</h3>
                 <button (click)="toggleWishlist(card)" class="wishlist-toggle">
                   <svg *ngIf="!isInWishlist(card)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="wishlist-icon">
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
@@ -248,7 +248,7 @@
                   </div>
                 </div>
                 
-                <button (click)="addToCart(card)" class="add-to-cart-button">
+                <button (click)="adicionarAoCarrinho(card)" class="add-to-cart-button">
                   Adicionar ao Carrinho
                 </button>
               </div>

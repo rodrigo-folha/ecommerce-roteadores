@@ -12,6 +12,8 @@ import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { QuantidadeAntena } from '../../../models/quantidade-antena.model';
 import { QuantidadeAntenaService } from '../../../services/quantidade-antena.service';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-quantidadeantena-list',
@@ -25,6 +27,8 @@ import { QuantidadeAntenaService } from '../../../services/quantidade-antena.ser
     CommonModule,
     MatPaginatorModule,
     RouterLink,
+    MatSelectModule,
+    FormsModule,
   ],
   templateUrl: './quantidadeantena-list.component.html',
   styleUrl: './quantidadeantena-list.component.css',
@@ -38,6 +42,8 @@ export class QuantidadeantenaListComponent {
   showSearch = false;
   filterValue = '';
   quantidadeAntenasFiltrados: QuantidadeAntena[] = [];
+  tipoFiltro: string = 'quantidade';
+  filtro: string = '';
 
   constructor(private quantidadeAntenaService: QuantidadeAntenaService, private router: Router) {}
 
@@ -46,34 +52,32 @@ export class QuantidadeantenaListComponent {
   }
 
   carregarQuantidadeAntenas(): void {
-    this.quantidadeAntenaService.findAll().subscribe((data) => {
-      this.quantidadeAntenas = data.resultado;
-      this.applyCurrentFilter();
+    this.quantidadeAntenaService.findAll(this.page, this.pageSize).subscribe((data) => {
+      this.quantidadeAntenasFiltrados = data.resultado;
       this.totalRecords = data.total
     });
   }
-
-  applyCurrentFilter(): void {
-      const normalizedFilter = this.filterValue.trim().toLowerCase();
   
-      const filtered = this.quantidadeAntenas.filter((data) =>
-        data.quantidade.toString().toLowerCase().includes(normalizedFilter)
-      );
-  
-      this.quantidadeAntenasFiltrados = filtered.slice(
-        this.page * this.pageSize,
-        (this.page + 1) * this.pageSize
-      );
-  
-      this.totalRecords = filtered.length;
-    }
-  
-    applyFilter(event: Event): void {
-      this.filterValue = (event.target as HTMLInputElement).value
-        .trim()
-        .toLowerCase();
+    applyFilter(event?: Event): void {
+      this.filterValue = this.filtro.trim().toLowerCase() || '';
       this.page = 0;
-      this.applyCurrentFilter();
+      if (this.filterValue !== '' && this.tipoFiltro === 'quantidade') {
+      this.quantidadeAntenaService.findByQuantidade(this.filterValue, this.page, this.pageSize).subscribe({
+        next: (item) => {
+          this.quantidadeAntenasFiltrados = item.resultado;
+          this.totalRecords = item.total;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar por quantidade' + JSON.stringify(error));
+        }
+      })
+    } else {
+      this.quantidadeAntenaService.findAll(this.page, this.pageSize).subscribe((item) => {
+        this.quantidadeAntenas = item.resultado;
+        this.totalRecords = item.total;
+        this.carregarQuantidadeAntenas();
+      })
+    }
     }
   
     toggleSearch(): void {
@@ -85,7 +89,7 @@ export class QuantidadeantenaListComponent {
       this.pageSize = event.pageSize;
   
       if (this.filterValue) {
-        this.applyCurrentFilter();
+        this.applyFilter();
       } else {
         this.carregarQuantidadeAntenas();
       }

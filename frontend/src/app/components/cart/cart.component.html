@@ -1,0 +1,404 @@
+<div class="checkout-container">
+  <!-- Checkout Progress -->
+  <div class="checkout-progress">
+    <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+      <div class="step-number">1</div>
+      <div class="step-label">Carrinho</div>
+    </div>
+    <div class="step-line" [class.active]="currentStep > 1"></div>
+    <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+      <div class="step-number">2</div>
+      <div class="step-label">Endereço</div>
+    </div>
+    <div class="step-line" [class.active]="currentStep > 2"></div>
+    <div class="step" [class.active]="currentStep >= 3">
+      <div class="step-number">3</div>
+      <div class="step-label">Pagamento</div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="checkout-content">
+    <!-- Step 1: Cart -->
+    <div *ngIf="currentStep === 1" class="checkout-step cart-step">
+      <h1>Meu Carrinho</h1>
+      
+      <!-- Empty Cart Message -->
+      <div *ngIf="isCartEmpty" class="empty-cart">
+        <div class="empty-cart-icon">
+          <i class="material-icons">shopping_cart</i>
+        </div>
+        <h2>Seu carrinho está vazio</h2>
+        <p>Parece que você ainda não adicionou nenhum produto ao seu carrinho.</p>
+        <button class="btn-primary" routerLink="/products">Continuar Comprando</button>
+      </div>
+      
+      <!-- Cart Items -->
+      <div *ngIf="!isCartEmpty" class="cart-items">
+        <div class="cart-header">
+          <div class="product-info">Produto</div>
+          <div class="product-price">Preço</div>
+          <div class="product-quantity">Quantidade</div>
+          <div class="product-subtotal">Subtotal</div>
+          <div class="product-remove"></div>
+        </div>
+        
+        <div *ngFor="let item of cartItems" class="cart-item">
+          <div class="product-info">
+            <img [src]="item.image" [alt]="item.name">
+            <div class="product-details">
+              <h3>{{ item.name }}</h3>
+              <p *ngIf="item.originalPrice" class="original-price">
+                De: R$ {{ item.originalPrice.toFixed(2) }}
+              </p>
+            </div>
+          </div>
+          
+          <div class="product-price">
+            R$ {{ item.price.toFixed(2) }}
+          </div>
+          
+          <div class="product-quantity">
+            <!-- <div class="quantity-control">
+              <button (click)="updateQuantity(item, item.quantity - 1)" 
+                      [disabled]="item.quantity <= 1">-</button>
+              <input type="number" [value]="item.quantity" min="1" 
+                     (change)="updateQuantity(item, +$event.target.value)">
+              <button (click)="updateQuantity(item, item.quantity + 1)">+</button>
+            </div> -->
+          </div>
+          
+          <div class="product-subtotal">
+            R$ {{ (item.price * item.quantity).toFixed(2) }}
+          </div>
+          
+          <div class="product-remove">
+            <button class="remove-btn" (click)="removeItem(item.id)">
+              <i class="material-icons">delete</i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Cart Actions -->
+      <div *ngIf="!isCartEmpty" class="cart-actions">
+        <div class="coupon-section">
+          <input type="text" [(ngModel)]="couponCode" placeholder="Código do cupom">
+          <button class="btn-secondary" (click)="applyCoupon()">Aplicar</button>
+        </div>
+        
+        <button class="btn-outline" routerLink="/products">Continuar Comprando</button>
+      </div>
+    </div>
+    
+    <!-- Step 2: Address -->
+    <div *ngIf="currentStep === 2" class="checkout-step address-step">
+      <h1>Endereço de Entrega</h1>
+      
+      <form [formGroup]="addressForm" class="address-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fullName">Nome Completo</label>
+            <input type="text" id="fullName" formControlName="fullName">
+            <div *ngIf="hasError(addressForm, 'fullName')" class="error-message">
+              Nome completo é obrigatório
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" formControlName="email">
+            <div *ngIf="hasError(addressForm, 'email')" class="error-message">
+              E-mail válido é obrigatório
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="phone">Telefone</label>
+            <input type="tel" id="phone" formControlName="phone">
+            <div *ngIf="hasError(addressForm, 'phone')" class="error-message">
+              Telefone é obrigatório
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group address-street">
+            <label for="address">Endereço</label>
+            <input type="text" id="address" formControlName="address">
+            <div *ngIf="hasError(addressForm, 'address')" class="error-message">
+              Endereço é obrigatório
+            </div>
+          </div>
+          
+          <div class="form-group address-number">
+            <label for="number">Número</label>
+            <input type="text" id="number" formControlName="number">
+            <div *ngIf="hasError(addressForm, 'number')" class="error-message">
+              Número é obrigatório
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="complement">Complemento</label>
+            <input type="text" id="complement" formControlName="complement">
+          </div>
+          
+          <div class="form-group">
+            <label for="neighborhood">Bairro</label>
+            <input type="text" id="neighborhood" formControlName="neighborhood">
+            <div *ngIf="hasError(addressForm, 'neighborhood')" class="error-message">
+              Bairro é obrigatório
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">Cidade</label>
+            <input type="text" id="city" formControlName="city">
+            <div *ngIf="hasError(addressForm, 'city')" class="error-message">
+              Cidade é obrigatória
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="state">Estado</label>
+            <select id="state" formControlName="state">
+              <option value="">Selecione</option>
+              <option value="AC">Acre</option>
+              <option value="AL">Alagoas</option>
+              <option value="AP">Amapá</option>
+              <option value="AM">Amazonas</option>
+              <option value="BA">Bahia</option>
+              <option value="CE">Ceará</option>
+              <option value="DF">Distrito Federal</option>
+              <option value="ES">Espírito Santo</option>
+              <option value="GO">Goiás</option>
+              <option value="MA">Maranhão</option>
+              <option value="MT">Mato Grosso</option>
+              <option value="MS">Mato Grosso do Sul</option>
+              <option value="MG">Minas Gerais</option>
+              <option value="PA">Pará</option>
+              <option value="PB">Paraíba</option>
+              <option value="PR">Paraná</option>
+              <option value="PE">Pernambuco</option>
+              <option value="PI">Piauí</option>
+              <option value="RJ">Rio de Janeiro</option>
+              <option value="RN">Rio Grande do Norte</option>
+              <option value="RS">Rio Grande do Sul</option>
+              <option value="RO">Rondônia</option>
+              <option value="RR">Roraima</option>
+              <option value="SC">Santa Catarina</option>
+              <option value="SP">São Paulo</option>
+              <option value="SE">Sergipe</option>
+              <option value="TO">Tocantins</option>
+            </select>
+            <div *ngIf="hasError(addressForm, 'state')" class="error-message">
+              Estado é obrigatório
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="zipCode">CEP</label>
+            <input type="text" id="zipCode" formControlName="zipCode">
+            <div *ngIf="hasError(addressForm, 'zipCode')" class="error-message">
+              CEP é obrigatório
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="saveAddress" formControlName="saveAddress">
+            <label for="saveAddress">Salvar este endereço para futuras compras</label>
+          </div>
+        </div>
+      </form>
+      
+      <!-- Shipping Methods -->
+      <div class="shipping-methods">
+        <h2>Método de Envio</h2>
+        
+        <div class="shipping-options">
+          <div *ngFor="let method of shippingMethods" 
+               class="shipping-option" 
+               [class.selected]="selectedShippingMethod.id === method.id"
+               (click)="changeShippingMethod(method.id)">
+            <div class="shipping-option-radio">
+              <div class="radio-inner" *ngIf="selectedShippingMethod.id === method.id"></div>
+            </div>
+            <div class="shipping-option-details">
+              <h3>{{ method.name }}</h3>
+              <p>{{ method.estimatedDays }}</p>
+            </div>
+            <div class="shipping-option-price">
+              {{ method.price === 0 ? 'Grátis' : 'R$ ' + method.price.toFixed(2) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Step 3: Payment -->
+    <div *ngIf="currentStep === 3" class="checkout-step payment-step">
+      <h1>Pagamento</h1>
+      
+      <!-- Payment Methods -->
+      <div class="payment-methods">
+        <h2>Método de Pagamento</h2>
+        
+        <div class="payment-options">
+          <div *ngFor="let method of paymentMethods" 
+               class="payment-option" 
+               [class.selected]="selectedPaymentMethod === method.id"
+               (click)="selectedPaymentMethod = method.id">
+            <div class="payment-option-radio">
+              <div class="radio-inner" *ngIf="selectedPaymentMethod === method.id"></div>
+            </div>
+            <div class="payment-option-icon">
+              <i class="material-icons">{{ method.icon }}</i>
+            </div>
+            <div class="payment-option-name">
+              {{ method.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Credit Card Form -->
+      <div *ngIf="selectedPaymentMethod === 'credit_card'" class="credit-card-form">
+        <form [formGroup]="paymentForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cardNumber">Número do Cartão</label>
+              <input type="text" id="cardNumber" formControlName="cardNumber" placeholder="0000 0000 0000 0000">
+              <div *ngIf="hasError(paymentForm, 'cardNumber')" class="error-message">
+                Número do cartão é obrigatório
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cardName">Nome no Cartão</label>
+              <input type="text" id="cardName" formControlName="cardName" placeholder="Como aparece no cartão">
+              <div *ngIf="hasError(paymentForm, 'cardName')" class="error-message">
+                Nome no cartão é obrigatório
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expiryDate">Data de Validade</label>
+              <input type="text" id="expiryDate" formControlName="expiryDate" placeholder="MM/AA">
+              <div *ngIf="hasError(paymentForm, 'expiryDate')" class="error-message">
+                Data de validade é obrigatória
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="cvv">CVV</label>
+              <input type="text" id="cvv" formControlName="cvv" placeholder="123">
+              <div *ngIf="hasError(paymentForm, 'cvv')" class="error-message">
+                CVV é obrigatório
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="installments">Parcelas</label>
+              <select id="installments" formControlName="installments">
+                <option *ngFor="let option of installmentOptions" [value]="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <!-- PIX Payment -->
+      <div *ngIf="selectedPaymentMethod === 'pix'" class="pix-payment">
+        <div class="pix-info">
+          <p>Ao finalizar o pedido, você receberá um QR Code para pagamento via PIX.</p>
+          <p>O pagamento deve ser realizado em até 30 minutos.</p>
+          <p>Após a confirmação do pagamento, seu pedido será processado automaticamente.</p>
+        </div>
+      </div>
+      
+      <!-- Boleto Payment -->
+      <div *ngIf="selectedPaymentMethod === 'boleto'" class="boleto-payment">
+        <div class="boleto-info">
+          <p>Ao finalizar o pedido, você receberá um boleto bancário para pagamento.</p>
+          <p>O boleto tem vencimento em 3 dias úteis.</p>
+          <p>Após a confirmação do pagamento, seu pedido será processado em até 3 dias úteis.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Order Summary -->
+  <div class="order-summary">
+    <h2>Resumo do Pedido</h2>
+    
+    <div class="summary-items">
+      <div class="summary-item">
+        <span>Subtotal</span>
+        <span>R$ {{ subtotal.toFixed(2) }}</span>
+      </div>
+      
+      <div *ngIf="discount > 0" class="summary-item discount">
+        <span>
+          Desconto
+          <span *ngIf="appliedCoupon" class="coupon-tag">
+            {{ appliedCoupon }}
+            <button class="remove-coupon" (click)="removeCoupon()">×</button>
+          </span>
+        </span>
+        <span>-R$ {{ discount.toFixed(2) }}</span>
+      </div>
+      
+      <div class="summary-item">
+        <span>Frete</span>
+        <span>{{ shipping === 0 ? 'Grátis' : 'R$ ' + shipping.toFixed(2) }}</span>
+      </div>
+      
+      <div class="summary-item">
+        <span>Impostos</span>
+        <span>R$ {{ tax.toFixed(2) }}</span>
+      </div>
+      
+      <div class="summary-divider"></div>
+      
+      <div class="summary-item total">
+        <span>Total</span>
+        <span>R$ {{ total.toFixed(2) }}</span>
+      </div>
+      
+      <div *ngIf="currentStep === 3" class="secure-payment">
+        <i class="material-icons">lock</i>
+        <span>Pagamento 100% seguro</span>
+      </div>
+    </div>
+    
+    <!-- Navigation Buttons -->
+    <div class="summary-actions">
+      <button *ngIf="currentStep > 1" 
+              class="btn-outline" 
+              (click)="previousStep()">
+        Voltar
+      </button>
+      
+      <button class="btn-primary" (click)="nextStep()">
+        {{ currentStep < 3 ? 'Continuar' : 'Finalizar Compra' }}
+      </button>
+    </div>
+  </div>
+</div>
