@@ -5,10 +5,13 @@ import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/cor
 import { RouterLink } from '@angular/router';
 import { Roteador } from '../../../../models/roteador.model';
 import { RoteadorService } from '../../../../services/roteador.service';
+import { CarrinhoService } from '../../../../services/carrinho.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 registerLocaleData(localePt);
 
 type Card = {
-  title: string;
+  id: number;
+  titulo: string;
   preco: number;
   rating: number;
   reviews: number;
@@ -18,10 +21,9 @@ type Card = {
 @Component({
   selector: 'app-roteadores-cards',
   providers: [provideNativeDateAdapter(), {
-    provide: MAT_DATE_LOCALE, useValue: 'pt-BR'
-  },
-  { provide: LOCALE_ID, useValue: 'pt-BR' }
-  ],
+      provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+      { provide: LOCALE_ID, useValue: 'pt-BR'}
+    ],
   imports: [CommonModule, RouterLink],
   templateUrl: './roteadores-cards.component.html',
   styleUrl: './roteadores-cards.component.css'
@@ -32,6 +34,8 @@ export class RoteadoresCardsComponent {
   cards = signal<Card[]>([]);
   constructor(
     private roteadorService: RoteadorService,
+    private carrinhoService: CarrinhoService,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -49,10 +53,11 @@ export class RoteadoresCardsComponent {
     const cards: Card[] = [];
     this.roteadores.forEach((roteador) => {
       cards.push({
-        title: roteador.nome,
+        id: roteador.id,
+        titulo: roteador.nome,
         preco: roteador.preco,
         rating: 4.8,
-        reviews: 40,
+        reviews: 100,
         imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString())
       })
     })
@@ -119,5 +124,24 @@ export class RoteadoresCardsComponent {
     product.inWishlist = !product.inWishlist
     console.log(product.inWishlist ? "Added to wishlist:" : "Removed from wishlist:", product)
     // Implement wishlist functionality
+  }
+
+  adicionarAoCarrinho(card: Card) {
+    this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi adicionado ao carrinho.')
+    this.carrinhoService.adicionar({
+      id: card.id,
+      nome: card.titulo,
+      preco: card.preco,
+      quantidade: 1,
+      imageUrl: card.imageUrl
+    })
+  }
+
+  showSnackbarTopPosition(content: any) {
+    this.snackBar.open(content, 'fechar', {
+      duration: 3000,
+      verticalPosition: "top",
+      horizontalPosition: "center"
+    });
   }
 }

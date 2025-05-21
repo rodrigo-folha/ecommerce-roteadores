@@ -20,7 +20,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 registerLocaleData(localePt);
 
-
 @Component({
   selector: 'app-roteador-list',
   providers: [provideNativeDateAdapter(), {

@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { Usuario } from '../../../../models/usuario.model';
 import { AuthService } from '../../../../services/auth.service';
 import { Subscription } from 'rxjs';
+import { CarrinhoService } from '../../../../services/carrinho.service';
 
 @Component({
   selector: 'app-header-user',
@@ -19,7 +20,8 @@ export class HeaderUserComponent implements OnInit, OnDestroy {
   usuarioLogado: Usuario | null = null;
   private subscription = new Subscription();
 
-  constructor(private authService: AuthService
+  constructor(private authService: AuthService,
+    public carrinhoService: CarrinhoService,
   ) {}
 
   ngOnDestroy(): void {
@@ -52,6 +54,10 @@ export class HeaderUserComponent implements OnInit, OnDestroy {
     } else {
       document.body.classList.remove("dark")
     }
+  }
+
+  contabilizarCarrinho() {
+
   }
 
 

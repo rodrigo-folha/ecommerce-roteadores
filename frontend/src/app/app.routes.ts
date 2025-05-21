@@ -66,7 +66,8 @@ export const routes: Routes = [
     children: [
       {path: '', pathMatch: 'full', redirectTo: ''},
       {path: '', component: HomeUserComponent},
-      {path: 'pagina-produto', component: PaginaProdutoComponent},
+      {path: 'pagina-roteador/:id', component: PaginaProdutoComponent, resolve: {roteador: roteadorResolver}},
+      
       {path: 'carrinho', component: CarrinhoComponent},
       {path: 'cart', component: CartComponent},
       

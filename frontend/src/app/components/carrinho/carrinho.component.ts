@@ -5,19 +5,24 @@ import { CarrinhoService } from '../../services/carrinho.service';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { RoteadorService } from '../../services/roteador.service';
+import { Roteador } from '../../models/roteador.model';
 
 @Component({
   selector: 'app-carrinho',
-  imports: [CommonModule, MatButtonModule, MatCardModule],
+  imports: [CommonModule, MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './carrinho.component.html',
   styleUrl: './carrinho.component.css'
 })
 export class CarrinhoComponent {
   carrinhoItens:ItemCarrinho[] = [];
+  roteador: Roteador = new Roteador();
 
   constructor(
     private carrinhoService: CarrinhoService,
     private router: Router,
+    private roteadorService: RoteadorService,
   ) {
   }
 
@@ -27,15 +32,48 @@ export class CarrinhoComponent {
     })
   }
 
-  removerItem(item: ItemCarrinho) {
-    this.carrinhoService.remover(item);
-  }
+  // removerItem(item: ItemCarrinho) {
+  //   this.carrinhoService.remover(item);
+  // }
 
-  calcularTotal() {
-    return this.carrinhoItens.reduce((total, item) => total + item.quantidade * item.preco, 0);
-  }
+  // calcularTotal() {
+  //   return this.carrinhoItens.reduce((total, item) => total + item.quantidade * item.preco, 0);
+  // }
 
   finalizarCompra() {
     
+  }
+
+  aumentarQuantidade(item: any) {
+    item.quantidade++;
+  }
+
+  diminuirQuantidade(item: any) {
+    if (item.quantidade > 1) {
+      item.quantidade--;
+    } else {
+      this.removerItem(item);
+    }
+  }
+
+  removerItem(item: any) {
+    const index = this.carrinhoItens.indexOf(item);
+    if (index >= 0) {
+      this.carrinhoItens.splice(index, 1);
+    }
+  }
+
+  calcularTotal() {
+    return this.carrinhoItens.reduce((total, item) => total + item.preco * item.quantidade, 0);
+  }
+
+  imagemProdutos(item: ItemCarrinho) {
+    this.roteadorService.findById(item.id.toString()).subscribe((roteadorItem) => {
+      this.roteador = roteadorItem;
+    })
+
+    console.log('Esse é o roteador: ', this.roteador);
+    this.roteadorService.getUrlImage(this.roteador.listaImagem[0].toString());
+    console.log('Essa é a img: ', this.roteador.listaImagem[0].toString())
   }
 }

@@ -101,6 +101,9 @@ insert into roteador (nome, descricao, preco, id_sinalWireless, id_sistemaOperac
 insert into roteador (nome, descricao, preco, id_sinalWireless, id_sistemaOperacional, id_bandaFrequencia, id_protocoloSeguranca, id_quantidadeAntena, id_fornecedor) values ('Roteador Wireless N TL-WR949N', 'O Roteador Wireless N TL-WR949N oferece velocidade de até 450Mbps, ideal para streaming, jogos online e conexões simultâneas. Possui 3 antenas de alto ganho, proporcionando cobertura Wi-Fi estável.M&E', 289.98, 1, 3, 4, 7, 3, 1);
 
 insert into imagem_roteador (id_roteador, listaImagem) values (1, '4nt-ac8.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (1, '4nt-ac8-2.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (1, '4nt-ac8-3.jpg');
+insert into imagem_roteador (id_roteador, listaImagem) values (1, '4nt-ac8-4.jpg');
 insert into imagem_roteador (id_roteador, listaImagem) values (2, 'ciscox300.jpg');
 insert into imagem_roteador (id_roteador, listaImagem) values (3, 'archerc6.jpg');
 insert into imagem_roteador (id_roteador, listaImagem) values (4, 'sonicwall-nsa-4700.jpg');

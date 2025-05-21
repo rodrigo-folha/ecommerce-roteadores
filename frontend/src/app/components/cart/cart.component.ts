@@ -2,6 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { ItemCarrinho } from '../../models/item-carrinho';
+import { CarrinhoService } from '../../services/carrinho.service';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 interface CartItem {
   id: number
@@ -27,11 +31,14 @@ interface PaymentMethod {
 
 @Component({
   selector: 'app-cart',
-  imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule, MatIconModule, MatButtonModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
 export class CartComponent implements OnInit {
+
+  carrinhoItens: ItemCarrinho[] = [];
+
   // Current step (1: Cart, 2: Address, 3: Payment)
   currentStep = 1
 
@@ -45,8 +52,8 @@ export class CartComponent implements OnInit {
 
   // Shipping methods
   shippingMethods: ShippingMethod[] = [
-    { id: 1, name: "Padrão", price: 12.9, estimatedDays: "3-5 dias úteis" },
-    { id: 2, name: "Expresso", price: 25.9, estimatedDays: "1-2 dias úteis" },
+    { id: 1, name: "Padrão", price: 0, estimatedDays: "3-5 dias úteis" },
+    { id: 2, name: "Expresso", price: 0, estimatedDays: "1-2 dias úteis" },
     { id: 3, name: "Retirada na loja", price: 0, estimatedDays: "Disponível em 24h" },
   ]
   selectedShippingMethod: ShippingMethod = this.shippingMethods[0]
@@ -73,6 +80,7 @@ export class CartComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private carrinhoService: CarrinhoService,
   ) {
     // Initialize forms
     this.addressForm = this.fb.group({
@@ -102,6 +110,32 @@ export class CartComponent implements OnInit {
     // Load cart items (mock data for demonstration)
     this.loadCartItems()
     this.calculateOrderSummary()
+    this.carrinhoService.carrinho$.subscribe(itens => {
+      this.carrinhoItens = itens;
+    })
+  }
+
+  aumentarQuantidade(item: any) {
+    item.quantidade++;
+  }
+
+  diminuirQuantidade(item: any) {
+    if (item.quantidade > 1) {
+      item.quantidade--;
+    } else {
+      this.removerItem(item);
+    }
+  }
+
+  removerItem(item: any) {
+    const index = this.carrinhoItens.indexOf(item);
+    if (index >= 0) {
+      this.carrinhoItens.splice(index, 1);
+    }
+  }
+
+  calcularTotal() {
+    return this.carrinhoItens.reduce((total, item) => total + item.preco * item.quantidade, 0);
   }
 
   // Load cart items (mock data)
@@ -261,4 +295,5 @@ export class CartComponent implements OnInit {
     const control = formGroup.get(controlName)
     return control ? control.invalid && (control.dirty || control.touched) : false
   }
+
 }

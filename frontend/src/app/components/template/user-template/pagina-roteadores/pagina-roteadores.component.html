@@ -187,7 +187,7 @@
         <div class="products-grid">
           <div *ngFor="let card of cards()" class="product-card">
             <!-- Imagem do produto -->
-            <a [routerLink]="['/product', card.titulo]" class="product-image-link">
+            <a [routerLink]="['/pagina-roteador', card.idRoteador]" class="product-image-link">
               <img [src]="card.imagemUrl" [alt]="card.titulo" class="product-image">
               <!-- <div *ngIf="product.badge" class="product-badge">
                 {{ product.badge }}

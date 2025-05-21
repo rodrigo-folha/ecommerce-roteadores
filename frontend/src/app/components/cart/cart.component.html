@@ -22,7 +22,7 @@
     <!-- Step 1: Cart -->
     <div *ngIf="currentStep === 1" class="checkout-step cart-step">
       <h1>Meu Carrinho</h1>
-      
+
       <!-- Empty Cart Message -->
       <div *ngIf="isCartEmpty" class="empty-cart">
         <div class="empty-cart-icon">
@@ -30,71 +30,66 @@
         </div>
         <h2>Seu carrinho está vazio</h2>
         <p>Parece que você ainda não adicionou nenhum produto ao seu carrinho.</p>
-        <button class="btn-primary" routerLink="/products">Continuar Comprando</button>
+        <button class="btn-primary" routerLink="/roteadores">Continuar Comprando</button>
       </div>
-      
+
       <!-- Cart Items -->
       <div *ngIf="!isCartEmpty" class="cart-items">
-        <div class="cart-header">
-          <div class="product-info">Produto</div>
-          <div class="product-price">Preço</div>
-          <div class="product-quantity">Quantidade</div>
-          <div class="product-subtotal">Subtotal</div>
-          <div class="product-remove"></div>
-        </div>
-        
-        <div *ngFor="let item of cartItems" class="cart-item">
-          <div class="product-info">
-            <img [src]="item.image" [alt]="item.name">
-            <div class="product-details">
-              <h3>{{ item.name }}</h3>
-              <p *ngIf="item.originalPrice" class="original-price">
-                De: R$ {{ item.originalPrice.toFixed(2) }}
-              </p>
+        <div class="carrinho-card">
+          <div *ngFor="let item of carrinhoItens" class="cart-item">
+            <div class="product-info">
+              <img [src]="item.imageUrl" [alt]="item.nome">
+              <div class="produto-nome-delete">
+                <div class="product-details">
+                  <h3>{{ item.nome }}</h3>
+                </div>
+                <div class="product-remove">
+                  <button class="remove-btn" (click)="removeItem(item.id)">
+                    <i class="material-icons">delete</i> REMOVER
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="produto-preco-quantidade">
+              <div class="product-subtotal">
+                R$ {{ (item.preco * item.quantidade).toFixed(2) }}
+              </div>
+  
+              <div class="coluna-quantidade">
+                <button mat-icon-button (click)="diminuirQuantidade(item)">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <span>{{ item.quantidade }}</span>
+                <button mat-icon-button (click)="aumentarQuantidade(item)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+
             </div>
           </div>
-          
-          <div class="product-price">
-            R$ {{ item.price.toFixed(2) }}
-          </div>
-          
-          <div class="product-quantity">
-            <!-- <div class="quantity-control">
-              <button (click)="updateQuantity(item, item.quantity - 1)" 
-                      [disabled]="item.quantity <= 1">-</button>
-              <input type="number" [value]="item.quantity" min="1" 
-                     (change)="updateQuantity(item, +$event.target.value)">
-              <button (click)="updateQuantity(item, item.quantity + 1)">+</button>
-            </div> -->
-          </div>
-          
-          <div class="product-subtotal">
-            R$ {{ (item.price * item.quantity).toFixed(2) }}
-          </div>
-          
-          <div class="product-remove">
-            <button class="remove-btn" (click)="removeItem(item.id)">
-              <i class="material-icons">delete</i>
-            </button>
-          </div>
+
         </div>
       </div>
+
       
+
       <!-- Cart Actions -->
       <div *ngIf="!isCartEmpty" class="cart-actions">
         <div class="coupon-section">
           <input type="text" [(ngModel)]="couponCode" placeholder="Código do cupom">
           <button class="btn-secondary" (click)="applyCoupon()">Aplicar</button>
         </div>
-        
-        <button class="btn-outline" routerLink="/products">Continuar Comprando</button>
+
+        <button class="btn-outline" routerLink="/roteadores">Continuar Comprando</button>
       </div>
     </div>
-    
+
     <!-- Step 2: Address -->
     <div *ngIf="currentStep === 2" class="checkout-step address-step">
       <h1>Endereço de Entrega</h1>
-      
+
       <form [formGroup]="addressForm" class="address-form">
         <div class="form-row">
           <div class="form-group">
@@ -105,7 +100,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group">
             <label for="email">E-mail</label>
@@ -114,7 +109,7 @@
               E-mail válido é obrigatório
             </div>
           </div>
-          
+
           <div class="form-group">
             <label for="phone">Telefone</label>
             <input type="tel" id="phone" formControlName="phone">
@@ -123,7 +118,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group address-street">
             <label for="address">Endereço</label>
@@ -132,7 +127,7 @@
               Endereço é obrigatório
             </div>
           </div>
-          
+
           <div class="form-group address-number">
             <label for="number">Número</label>
             <input type="text" id="number" formControlName="number">
@@ -141,13 +136,13 @@
             </div>
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group">
             <label for="complement">Complemento</label>
             <input type="text" id="complement" formControlName="complement">
           </div>
-          
+
           <div class="form-group">
             <label for="neighborhood">Bairro</label>
             <input type="text" id="neighborhood" formControlName="neighborhood">
@@ -156,7 +151,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group">
             <label for="city">Cidade</label>
@@ -165,7 +160,7 @@
               Cidade é obrigatória
             </div>
           </div>
-          
+
           <div class="form-group">
             <label for="state">Estado</label>
             <select id="state" formControlName="state">
@@ -202,7 +197,7 @@
               Estado é obrigatório
             </div>
           </div>
-          
+
           <div class="form-group">
             <label for="zipCode">CEP</label>
             <input type="text" id="zipCode" formControlName="zipCode">
@@ -211,7 +206,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group checkbox-group">
             <input type="checkbox" id="saveAddress" formControlName="saveAddress">
@@ -219,16 +214,14 @@
           </div>
         </div>
       </form>
-      
+
       <!-- Shipping Methods -->
       <div class="shipping-methods">
         <h2>Método de Envio</h2>
-        
+
         <div class="shipping-options">
-          <div *ngFor="let method of shippingMethods" 
-               class="shipping-option" 
-               [class.selected]="selectedShippingMethod.id === method.id"
-               (click)="changeShippingMethod(method.id)">
+          <div *ngFor="let method of shippingMethods" class="shipping-option"
+            [class.selected]="selectedShippingMethod.id === method.id" (click)="changeShippingMethod(method.id)">
             <div class="shipping-option-radio">
               <div class="radio-inner" *ngIf="selectedShippingMethod.id === method.id"></div>
             </div>
@@ -243,20 +236,18 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Step 3: Payment -->
     <div *ngIf="currentStep === 3" class="checkout-step payment-step">
       <h1>Pagamento</h1>
-      
+
       <!-- Payment Methods -->
       <div class="payment-methods">
         <h2>Método de Pagamento</h2>
-        
+
         <div class="payment-options">
-          <div *ngFor="let method of paymentMethods" 
-               class="payment-option" 
-               [class.selected]="selectedPaymentMethod === method.id"
-               (click)="selectedPaymentMethod = method.id">
+          <div *ngFor="let method of paymentMethods" class="payment-option"
+            [class.selected]="selectedPaymentMethod === method.id" (click)="selectedPaymentMethod = method.id">
             <div class="payment-option-radio">
               <div class="radio-inner" *ngIf="selectedPaymentMethod === method.id"></div>
             </div>
@@ -269,7 +260,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Credit Card Form -->
       <div *ngIf="selectedPaymentMethod === 'credit_card'" class="credit-card-form">
         <form [formGroup]="paymentForm">
@@ -282,7 +273,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-group">
               <label for="cardName">Nome no Cartão</label>
@@ -292,7 +283,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-group">
               <label for="expiryDate">Data de Validade</label>
@@ -301,7 +292,7 @@
                 Data de validade é obrigatória
               </div>
             </div>
-            
+
             <div class="form-group">
               <label for="cvv">CVV</label>
               <input type="text" id="cvv" formControlName="cvv" placeholder="123">
@@ -310,7 +301,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-group">
               <label for="installments">Parcelas</label>
@@ -323,7 +314,7 @@
           </div>
         </form>
       </div>
-      
+
       <!-- PIX Payment -->
       <div *ngIf="selectedPaymentMethod === 'pix'" class="pix-payment">
         <div class="pix-info">
@@ -332,7 +323,7 @@
           <p>Após a confirmação do pagamento, seu pedido será processado automaticamente.</p>
         </div>
       </div>
-      
+
       <!-- Boleto Payment -->
       <div *ngIf="selectedPaymentMethod === 'boleto'" class="boleto-payment">
         <div class="boleto-info">
@@ -343,17 +334,17 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Order Summary -->
   <div class="order-summary">
     <h2>Resumo do Pedido</h2>
-    
+
     <div class="summary-items">
       <div class="summary-item">
         <span>Subtotal</span>
-        <span>R$ {{ subtotal.toFixed(2) }}</span>
+        <span>R$ {{ calcularTotal() }}</span>
       </div>
-      
+
       <div *ngIf="discount > 0" class="summary-item discount">
         <span>
           Desconto
@@ -364,41 +355,33 @@
         </span>
         <span>-R$ {{ discount.toFixed(2) }}</span>
       </div>
-      
+
       <div class="summary-item">
         <span>Frete</span>
         <span>{{ shipping === 0 ? 'Grátis' : 'R$ ' + shipping.toFixed(2) }}</span>
       </div>
-      
-      <div class="summary-item">
-        <span>Impostos</span>
-        <span>R$ {{ tax.toFixed(2) }}</span>
-      </div>
-      
+
       <div class="summary-divider"></div>
-      
+
       <div class="summary-item total">
         <span>Total</span>
-        <span>R$ {{ total.toFixed(2) }}</span>
+        <span>R$ {{ calcularTotal() }}</span>
       </div>
-      
+
       <div *ngIf="currentStep === 3" class="secure-payment">
         <i class="material-icons">lock</i>
         <span>Pagamento 100% seguro</span>
       </div>
     </div>
-    
+
     <!-- Navigation Buttons -->
     <div class="summary-actions">
-      <button *ngIf="currentStep > 1" 
-              class="btn-outline" 
-              (click)="previousStep()">
+      <button *ngIf="currentStep > 1" class="btn-outline" (click)="previousStep()">
         Voltar
       </button>
-      
+
       <button class="btn-primary" (click)="nextStep()">
-        {{ currentStep < 3 ? 'Continuar' : 'Finalizar Compra' }}
-      </button>
+        {{ currentStep < 3 ? 'Continuar' : 'Finalizar Compra' }} </button>
     </div>
   </div>
 </div>

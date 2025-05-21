@@ -484,7 +484,8 @@ export class PaginaRoteadoresComponent implements OnInit {
       id: card.idRoteador,
       nome: card.titulo,
       preco: card.preco,
-      quantidade: 1
+      quantidade: 1,
+      imageUrl: card.imagemUrl
     })
   }
 
