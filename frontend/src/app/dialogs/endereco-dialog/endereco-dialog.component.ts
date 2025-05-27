@@ -8,6 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Cidade } from '../../models/cidade.model';
 import { CidadeService } from '../../services/cidade.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Endereco } from '../../models/endereco.model';
+import { ActivatedRoute } from '@angular/router';
+import { Cliente } from '../../models/cliente.model';
 
 @Component({
   selector: 'app-endereco-dialog',
@@ -18,7 +22,8 @@ import { CidadeService } from '../../services/cidade.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatSelectModule
+    MatSelectModule,
+    MatToolbarModule,
   ],
   templateUrl: './endereco-dialog.component.html',
   styleUrl: './endereco-dialog.component.css'
@@ -31,15 +36,18 @@ export class EnderecoDialogComponent {
     this.cidadeService.findAll().subscribe((data) => {
       this.cidades = data.resultado;
     });
+    this.initializeForm();
   }
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<EnderecoDialogComponent>,
+    private activatedRoute: ActivatedRoute,
     private cidadeService: CidadeService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.enderecoForm = this.fb.group({
+      id: [data?.id || '', Validators.required],
       logradouro: [data?.logradouro || '', Validators.required],
       bairro: [data?.bairro || '', Validators.required],
       numero: [data?.numero || '', Validators.required],
@@ -48,6 +56,20 @@ export class EnderecoDialogComponent {
       cidade: [data?.cidade || '', Validators.required]
     });
   }
+
+  initializeForm(): void {
+      const endereco: Endereco = this.activatedRoute.snapshot.data['endereco'];
+
+      this.enderecoForm = this.fb.group({
+        id: [(endereco && endereco.id) ? endereco.id : null],
+        logradouro: [(endereco && endereco.logradouro) ? endereco.logradouro : null, [Validators.required]],
+        bairro: [(endereco && endereco.bairro) ? endereco.bairro : null, [Validators.required]],
+        numero: [(endereco && endereco.numero) ? endereco.numero : null, [Validators.required]],
+        complemento: [(endereco && endereco.complemento) ? endereco.complemento : null],
+        cep: [(endereco && endereco.cep) ? endereco.cep : null, [Validators.required]],
+        cidade: [(endereco && endereco.cidade) ? endereco.cidade : null, [Validators.required]],
+      });
+    }
 
   compareCidades(c1: any, c2: any): boolean {
     return c1 && c2 ? c1.id === c2.id : c1 === c2;

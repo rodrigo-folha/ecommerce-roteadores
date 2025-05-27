@@ -479,26 +479,26 @@ export class RoteadorFormComponent {
   private uploadImages(roteadorId: number) {
     console.log("Esse é o meu selectFiles: " + this.selectedFiles);
     console.log("Esse é o meu selectFiles.length: " + this.selectedFiles.length);
-  if (this.selectedFiles && this.selectedFiles.length > 0) {
-    // Array de observables para os uploads
-    const uploads = this.selectedFiles.map(file =>
-      this.roteadorService.uploadImage(roteadorId, file.name, file)
-    );
+    if (this.selectedFiles && this.selectedFiles.length > 0) {
+      // Array de observables para os uploads
+      const uploads = this.selectedFiles.map(file =>
+        this.roteadorService.uploadImage(roteadorId, file.name, file)
+      );
 
-    // Usamos forkJoin para aguardar todos os uploads
-    forkJoin(uploads).subscribe({
-      next: () => {
-        this.router.navigateByUrl('admin/roteadores');
-      },
-      error: err => {
-        console.log('Erro ao fazer upload das imagens', err);
-        // aqui você pode tratar erro para vários arquivos
-      }
-    });
-  } else {
-    this.router.navigateByUrl('admin/roteadores');
+      // Usamos forkJoin para aguardar todos os uploads
+      forkJoin(uploads).subscribe({
+        next: () => {
+          this.router.navigateByUrl('admin/roteadores');
+        },
+        error: err => {
+          console.log('Erro ao fazer upload das imagens', err);
+          // aqui você pode tratar erro para vários arquivos
+        }
+      });
+    } else {
+      this.router.navigateByUrl('admin/roteadores');
+    }
   }
-}
 
 
   // Abre o seletor de arquivo quando o botão de upload é clicado

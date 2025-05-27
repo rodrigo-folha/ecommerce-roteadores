@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LocalStorageService } from './local-storage.service';
+import { ClienteService } from './cliente.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private localStorageService: LocalStorageService,
-    private jwtHelper: JwtHelperService
+    private jwtHelper: JwtHelperService,
+    private clienteService: ClienteService
   ) { 
     this.initUsuarioLogado();
   }
@@ -66,6 +68,28 @@ export class AuthService {
     }
 
     return this.http.post(`${this.baseUrl}`, params, {observe: 'response'}).pipe(
+      tap((res: any) => {
+        const authToken = res.headers.get('Authorization') ?? '';
+        if (authToken) {
+          this.setToken(authToken);
+          const usuarioLogado = res.body;
+
+          if (usuarioLogado) {
+            this.setUsuarioLogado(usuarioLogado);
+            this.usuarioLogadoSubject.next(usuarioLogado);
+          }
+        }
+      })
+    )
+  }
+
+  loginUserKeycloak(login: string, senha: string): Observable<any> {
+    const params = {
+      email: login,
+      senha: senha
+    }
+
+    return this.http.post(`${this.baseUrl}/keycloak`, params, {observe: 'response'}).pipe(
       tap((res: any) => {
         const authToken = res.headers.get('Authorization') ?? '';
         if (authToken) {

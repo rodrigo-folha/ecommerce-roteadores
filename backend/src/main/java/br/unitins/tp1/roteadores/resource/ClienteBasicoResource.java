@@ -73,121 +73,132 @@ public class ClienteBasicoResource {
         LOG.info("Execucao do metodo getMinhasInformacoes");
         String email = jsonWebToken.getSubject();
         email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
+        System.out.println("Esse é o email: " + email);
         return Response.ok(ClienteResponseDTO.valueOf(clienteService.getMinhasInformacoess(email))).build();
     }
 
     @PUT
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update")
     public Response update(@Valid ClienteUpdateRequestDTO cliente) {
         LOG.info("Execucao do metodo update");
         String email = jsonWebToken.getSubject();
-
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         clienteService.update(email, cliente);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update/senha")
     public Response updateSenha(@Valid SenhaPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateSenha");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
 
         clienteService.updateSenha(email, dto);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update/nome")
     public Response updateNome(@Valid NomePatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateNome");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
 
         clienteService.updateNome(email, dto);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update/cpf")
     public Response updateCpf(@Valid CpfPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateCpf");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
 
         clienteService.updateCpf(email, dto);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update/datanascimento")
     public Response updateDataNascimento(@Valid DataNascimentoPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateDataNascimento");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
 
         clienteService.updateDataNascimento(email, dto);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update/email")
     public Response updateEmail(@Valid EmailPatchRequestDTO dto) {
         LOG.info("Execucao do metodo updateEmail");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
 
         clienteService.updateEmail(email, dto);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update/enderecos/{idEndereco}")
     public Response updateEnderecoEspecifico(@PathParam("idEndereco") Long idEndereco, @Valid EnderecoRequestDTO endereco) {
         LOG.info("Execucao do metodo updateEnderecoEspecifico. Id do endereco: " + idEndereco);
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         clienteService.updateEnderecoEspecifico(email, idEndereco, endereco);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update/enderecos")
     public Response updateEndereco(@Valid List<EnderecoRequestDTO> endereco) {
         LOG.info("Execucao do metodo updateEndereco.");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         clienteService.updateEndereco(email, endereco);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update/telefones/{idTelefone}")
     public Response updateTelefoneEspecifico(@PathParam("idTelefone") Long idTelefone, @Valid TelefoneRequestDTO telefone) {
         LOG.info("Execucao do metodo updateTelefoneEspecifico. Id do telefone: " + idTelefone);
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         clienteService.updateTelefoneEspecifico(email, idTelefone, telefone);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/update/telefones")
     public Response updateTelefone(@Valid List<TelefoneRequestDTO> telefone) {
         LOG.info("Execucao do metodo updateTelefone.");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         clienteService.updateTelefone(email, telefone);
         return Response.noContent().build();
     }
 
     @GET
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/desejos")
     public Response getListaDesejos() {
         LOG.info("Execucao do metodo getListaDesejos");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         return Response.ok(clienteService.getListaDesejos(email)
             .stream()
             .map(ListaDesejoResponseDTO::valueOf)
@@ -195,20 +206,22 @@ public class ClienteBasicoResource {
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/desejos/adicionar/{idProduto}")
     public Response adicionarProdutoListaDesejo(@PathParam("idProduto") Long idProduto) {
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         LOG.info("Execucao do metodo adicionarProdutoListaDesejo");
         clienteService.adicionarProdutoListaDesejo(email, idProduto);
         return Response.noContent().build();
     }
 
     @PATCH
-    // @RolesAllowed({"User"})
+    @RolesAllowed({"User"})
     @Path("/desejos/remover/{idProduto}")
     public Response removerProdutoListaDesejo(@PathParam("idProduto") Long idProduto) {
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         LOG.info("Execucao do metodo removerProdutoListaDesejo");
         clienteService.removerProdutoListaDesejo(email, idProduto);
         return Response.noContent().build();
@@ -221,6 +234,7 @@ public class ClienteBasicoResource {
     public Response uploadImage(@MultipartForm ImageForm form) {
         LOG.info("Execucao do metodo uploadImage.");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         try {
             String nomeImagem = clienteFileService.save(form.getNomeImagem(), form.getImagem());
 

@@ -3,3 +3,7 @@ mat-form-field {
     grid-template-columns: 2fr 1fr;
     padding: 0.5rem;   
 }
+
+mat-toolbar {
+    padding: 1rem 1rem 0 2.5rem;
+}

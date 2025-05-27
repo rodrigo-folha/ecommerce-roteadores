@@ -6,6 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -13,12 +15,23 @@ import jakarta.json.JsonObject;
 @ApplicationScoped
 public class KeycloakAdminServiceImpl implements KeycloakAdminService{
 
-    private static final String KEYCLOAK_URL = "http://localhost:8180";
-    private static final String REALM = "quarkus";
-    private static final String CLIENT_ID = "backend-service";
-    private static final String CLIENT_SECRET = "secret";
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = "admin";
+    @ConfigProperty(name = "keycloak.url")
+    String KEYCLOAK_URL;
+
+    @ConfigProperty(name = "keycloak.realm")
+    String REALM;
+
+    @ConfigProperty(name = "keycloak.client-id")
+    String CLIENT_ID;
+
+    @ConfigProperty(name = "keycloak.client-secret")
+    String CLIENT_SECRET;
+
+    @ConfigProperty(name = "keycloak.username")
+    String USERNAME;
+
+    @ConfigProperty(name = "keycloak.password")
+    String PASSWORD;
 
     @Override
     public String obterAdminToken() {
@@ -26,6 +39,31 @@ public class KeycloakAdminServiceImpl implements KeycloakAdminService{
             HttpClient client = HttpClient.newHttpClient();
             String body = "username=" + USERNAME +
                           "&password=" + PASSWORD +
+                          "&grant_type=password" +
+                          "&client_id=" + CLIENT_ID +
+                          "&client_secret=" + CLIENT_SECRET;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(KEYCLOAK_URL + "/realms/" + REALM + "/protocol/openid-connect/token"))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            JsonObject json = Json.createReader(new StringReader(response.body())).readObject();
+
+            return json.getString("access_token");
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao obter token do Keycloak", e);
+        }
+    }
+
+    @Override
+    public String obterToken(String login, String senha) {
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            String body = "username=" + login +
+                          "&password=" + senha +
                           "&grant_type=password" +
                           "&client_id=" + CLIENT_ID +
                           "&client_secret=" + CLIENT_SECRET;

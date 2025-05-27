@@ -8,6 +8,7 @@ import br.unitins.tp1.roteadores.dto.usuario.UsuarioResponseDTO;
 import br.unitins.tp1.roteadores.model.usuario.Perfil;
 import br.unitins.tp1.roteadores.model.usuario.Usuario;
 import br.unitins.tp1.roteadores.service.jwt.JwtService;
+import br.unitins.tp1.roteadores.service.keycloak.KeycloakAdminService;
 import br.unitins.tp1.roteadores.service.usuario.HashService;
 import br.unitins.tp1.roteadores.service.usuario.UsuarioService;
 import jakarta.inject.Inject;
@@ -35,6 +36,9 @@ public class AuthResource {
 
     @Inject
     JwtService jwtService;
+
+    @Inject
+    KeycloakAdminService keycloakAdminService;
 
     @POST
     // @Produces(MediaType.TEXT_PLAIN)
@@ -64,7 +68,7 @@ public class AuthResource {
         return Response.ok(usuarioDTO)
             .header("Authorization", jwtService.generateJwt(UsuarioResponseDTO.valueOf(usuario)))
             .build();
-        
+
     }
 
     @POST
@@ -97,6 +101,19 @@ public class AuthResource {
             .header("Authorization", jwtService.generateJwt(UsuarioResponseDTO.valueOf(usuario)))
             .build();
         
+    }
+
+    @POST
+    @Path("keycloak")
+    public Response loginUsuarioKeycloak(@Valid AuthRequestDTO authDTO) {
+        LOG.info("Logando no sistema via keycloak");
+
+        Usuario usuario = usuarioService.findByEmail(authDTO.email());
+        UsuarioBasicoResponseDTO usuarioDTO = UsuarioBasicoResponseDTO.valueOf(usuario);
+
+        return Response.ok(usuarioDTO)
+            .header("Authorization", keycloakAdminService.obterToken(authDTO.email(), authDTO.senha()))
+            .build();
     }
   
 }

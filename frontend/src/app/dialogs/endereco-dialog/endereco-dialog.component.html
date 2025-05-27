@@ -1,4 +1,12 @@
-<h1 mat-dialog-title>Adicionar Endereço</h1>
+<!-- <h1 mat-dialog-title>Adicionar Endereço</h1> -->
+<mat-toolbar color="primary">
+  <div class="toolbar-title" *ngIf="enderecoForm.get('id')?.value">
+    Atualização de Endereço
+  </div>
+  <div class="toolbar-title" *ngIf="!enderecoForm.get('id')?.value">
+    Cadastro de Endereço
+  </div>
+</mat-toolbar>
 <div mat-dialog-content>
   <form [formGroup]="enderecoForm">
     <mat-form-field appearance="outline">

@@ -57,6 +57,8 @@ import { PerfilAdminComponent } from './components/template/admin-template/perfi
 import { ProdutoAdminComponent } from './components/template/admin-template/produto-admin/produto-admin.component';
 import { CarrinhoComponent } from './components/carrinho/carrinho.component';
 import { CartComponent } from './components/cart/cart.component';
+import { PerfilUsuarioComponent } from './components/template/user-template/perfil-usuario/perfil-usuario.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -68,13 +70,14 @@ export const routes: Routes = [
       {path: '', component: HomeUserComponent},
       {path: 'pagina-roteador/:id', component: PaginaProdutoComponent, resolve: {roteador: roteadorResolver}},
       
-      {path: 'carrinho', component: CarrinhoComponent},
-      {path: 'cart', component: CartComponent},
+      {path: 'cart', component: CarrinhoComponent},
+      {path: 'carrinho', component: CartComponent},
       
       {path: 'login', component: LoginUserComponent},
       {path: 'cadastrar', component: RegistrarUserComponent},
       {path: 'roteadores', component: PaginaRoteadoresComponent},
       
+      {path: 'minha-conta', component: PerfilUsuarioComponent, canActivate: [authGuard]},
       // {path: 'login', component: LoginComponent},
       // {path: 'cadastrar', component: CadastroComponent},
     ]
@@ -145,8 +148,6 @@ export const routes: Routes = [
         {path: 'cupons/new', component: CupomFormComponent},
         {path: 'cupons/edit/:id', component: CupomFormComponent, resolve: {cupom: cupomResolver}},
 
-
-        
       ]
     },
 

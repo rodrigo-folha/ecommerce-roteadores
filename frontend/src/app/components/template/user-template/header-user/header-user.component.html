@@ -28,6 +28,35 @@
     
     <div class="header-actions">
       <!-- 4. User profile picture -->
+
+      <!-- 5. Login button -->
+    <ng-template #loginButton>
+      <span class="header-link">Olá, 
+        <a routerLink="/login" class="header-link-primary">Entre</a>
+        <span> ou</span>
+        <br/>
+        <a routerLink="/cadastrar" class="header-link-primary">Cadastre-se</a>
+      </span>
+    </ng-template>
+
+    <div class="header-profile" *ngIf="usuarioLogado; else loginButton">  
+      <div class="profile-container" >
+        <img src="../login/person.svg" alt="Perfil do usuário" class="profile-image" />
+      </div>
+      <button mat-button class="header-link" [matMenuTriggerFor]="menu">Olá, {{usuarioLogado.nome}}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
+          <path d="m6 9 6 6 6-6"></path>
+        </svg>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/minha-conta">Minha Conta</button>
+        <button mat-menu-item (click)="deslogar()">Sair</button>
+      </mat-menu>
+      <!-- <span class="header-link">Olá, {{usuarioLogado.nome}}</span>
+      <button (click)="deslogar()" class="login-button">
+       Sair Temporario
+     </button> -->
+    </div>
       
       <!-- 6. Theme toggle -->
       <button (click)="toggleTheme()" class="theme-button" [attr.aria-label]="isDarkMode ? 'Modo claro' : 'Modo escuro'">
@@ -65,25 +94,7 @@
       </button>
     </div>
 
-    <!-- 5. Login button -->
-    <ng-template #loginButton>
-      <span class="header-link">Olá, 
-        <a routerLink="/login" class="header-link-primary">Entre</a>
-        <span> ou</span>
-        <br/>
-        <a routerLink="/cadastrar" class="header-link-primary">Cadastre-se</a>
-      </span>
-    </ng-template>
-
-    <div class="header-profile" *ngIf="usuarioLogado; else loginButton">  
-      <div class="profile-container" >
-        <img src="../login/person.svg" alt="Perfil do usuário" class="profile-image" />
-      </div>
-      <span class="header-link">Olá, {{usuarioLogado.nome}}</span>
-      <button (click)="deslogar()" class="login-button">
-       Sair Temporario
-     </button>
-    </div>
+    
   </div>
   
   <!-- Sidebar Menu -->

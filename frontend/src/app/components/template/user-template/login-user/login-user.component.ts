@@ -54,7 +54,7 @@ export class LoginUserComponent {
     const email = this.loginForm.get('email')!.value;
     const senha = this.loginForm.get('senha')!.value;
 
-      this.authService.loginUser(email, senha).subscribe({
+      this.authService.loginUserKeycloak(email, senha).subscribe({
         next: (resp) => {
           this.router.navigateByUrl('')
         },
