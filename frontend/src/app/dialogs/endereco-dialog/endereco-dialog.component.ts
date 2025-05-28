@@ -58,16 +58,15 @@ export class EnderecoDialogComponent {
   }
 
   initializeForm(): void {
-      const endereco: Endereco = this.activatedRoute.snapshot.data['endereco'];
-
+    
       this.enderecoForm = this.fb.group({
-        id: [(endereco && endereco.id) ? endereco.id : null],
-        logradouro: [(endereco && endereco.logradouro) ? endereco.logradouro : null, [Validators.required]],
-        bairro: [(endereco && endereco.bairro) ? endereco.bairro : null, [Validators.required]],
-        numero: [(endereco && endereco.numero) ? endereco.numero : null, [Validators.required]],
-        complemento: [(endereco && endereco.complemento) ? endereco.complemento : null],
-        cep: [(endereco && endereco.cep) ? endereco.cep : null, [Validators.required]],
-        cidade: [(endereco && endereco.cidade) ? endereco.cidade : null, [Validators.required]],
+        id: [(this.data && this.data.id) ? this.data.id : null],
+        logradouro: [(this.data && this.data.logradouro) ? this.data.logradouro : null, [Validators.required]],
+        bairro: [(this.data && this.data.bairro) ? this.data.bairro : null, [Validators.required]],
+        numero: [(this.data && this.data.numero) ? this.data.numero : null, [Validators.required]],
+        complemento: [(this.data && this.data.complemento) ? this.data.complemento : null],
+        cep: [(this.data && this.data.cep) ? this.data.cep : null, [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+        cidade: [(this.data && this.data.cidade) ? this.data.cidade : null, [Validators.required]],
       });
     }
 
@@ -120,6 +119,8 @@ export class EnderecoDialogComponent {
 
     cep: {
       required: 'O cep deve ser informado.',
+      minlength: 'O Cep deve possuir 8 dígitos',
+      maxlength: 'O Cep deve possuir 8 dígitos',
       apiError: ' '
     },
 

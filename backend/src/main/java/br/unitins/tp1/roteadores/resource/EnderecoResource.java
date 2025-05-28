@@ -75,6 +75,14 @@ public class EnderecoResource {
                 .build();
     }
 
+    @POST
+    public Response createByUser(@Valid EnderecoRequestDTO dto) {
+        LOG.info("Execucao do metodo createByUser");
+        return Response.status(Status.CREATED)
+                .entity(EnderecoResponseDTO.valueOf(enderecoService.create(dto)))
+                .build();
+    }
+
     @PUT
     // @RolesAllowed({"Adm"})
     @Path("/{id}")

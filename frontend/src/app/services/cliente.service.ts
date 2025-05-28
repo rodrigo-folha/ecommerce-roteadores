@@ -128,7 +128,6 @@ export class ClienteService {
 
   updateBasico(usuario: Usuario): Observable<Cliente> {
     const headers = this.getHeaders();
-    console.log("Esse é o meu headers: ", headers)
     const data = {
       nome: usuario.nome,
       cpf: usuario.cpf,

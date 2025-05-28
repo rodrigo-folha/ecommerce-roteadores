@@ -71,7 +71,7 @@
             <label for="nome">Nome Completo</label>
             <mat-form-field appearance="outline" class="full-width">
             <!-- <mat-label>Nome</mat-label> -->
-            <input id="nome" matInput type="text" formControlName="nome" />
+            <input id="nome" matInput type="text" formControlName="nome" autocomplete="name" />
             <mat-error
               *ngIf="
                 formGroup.get('nome') &&
@@ -91,7 +91,7 @@
             <label for="cpf">CPF</label>
             <mat-form-field appearance="outline" class="full-width">
             <!-- <mat-label>CPF</mat-label> -->
-            <input matInput type="text" formControlName="cpf" onkeypress="return /^[0-9]+$/.test(event.key)"/>
+            <input matInput id="cpf" type="text" formControlName="cpf" onkeypress="return /^[0-9]+$/.test(event.key)"/>
             <mat-error
               *ngIf="
                 formGroup.get('cpf') &&
@@ -112,7 +112,7 @@
           <div class="form-group">
             <label for="email">E-mail</label>
             <mat-form-field appearance="outline" class="full-width">
-            <input matInput type="email" formControlName="email" required />
+            <input matInput id="email" type="email" formControlName="email" autocomplete="email" required />
             <mat-error
               *ngIf="
                 formGroup.get('email') &&
@@ -214,16 +214,19 @@
       
       <!-- Address List -->
       <div class="address-list">
-        <div *ngFor="let endereco of listaEndereco; let i = index" class="address-card">
+        <div *ngIf="cliente">
+          <ng-container *ngIf="cliente!.usuario!.enderecos!.length > 0; else semEnderecos">
+        <div *ngFor="let endereco of cliente.usuario?.enderecos; let i = index" class="address-card">
           <div class="address-header">
             <h3>Endereço {{ i + 1 }}</h3>
-            <span *ngIf="listaEndereco[0] == endereco" class="primary-badge">Principal</span>
+            <span *ngIf="cliente.usuario.enderecos[0] == endereco" class="primary-badge">Principal</span>
           </div>
           
           <div class="address-details">
-            <p>{{ endereco.logradouro }}, {{ endereco.numero }}</p>
-            <p *ngIf="endereco.complemento">{{ endereco.complemento }}</p>
-            <p>{{ endereco.bairro }} - {{ endereco.cidade.nome }}</p>
+            <p>Logradouro: {{ endereco.logradouro }}, {{ endereco.numero }}</p>
+            <p *ngIf="endereco.complemento">Complemento: {{ endereco.complemento }}</p>
+            <p>Bairro: {{ endereco.bairro }}</p>
+            <p>Cidade: {{ endereco.cidade.nome }}/{{endereco.cidade.estado.sigla}}</p>
             <p>CEP: {{ endereco.cep }}</p>
           </div>
           
@@ -236,109 +239,18 @@
               <i class="material-icons">star</i>
               Tornar Principal
             </button> -->
-            <button class="btn-text delete" (click)="deleteAddress(endereco.id)">
+            <button class="btn-text delete" (click)="excluirEndereco(endereco.id)">
               <i class="material-icons">delete</i>
               Excluir
             </button>
           </div>
         </div>
+          </ng-container>
+          <ng-template #semEnderecos>
+    <p style="margin-top: 1rem;">Nenhum endereço cadastrado.</p>
+  </ng-template>
       </div>
       
-      <!-- Address Form -->
-      <div *ngIf="showAddressForm" class="address-form">
-        <h3>{{ editingAddressId ? 'Editar' : 'Adicionar' }} Endereço</h3>
-        <form [formGroup]="addressForm">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="addressName">Nome do Endereço</label>
-              <input type="text" id="addressName" formControlName="name" placeholder="Ex: Casa, Trabalho">
-              <div *ngIf="hasError(addressForm, 'name')" class="error-message">
-                Nome é obrigatório
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group address-street">
-              <label for="addressStreet">Endereço</label>
-              <input type="text" id="addressStreet" formControlName="address">
-              <div *ngIf="hasError(addressForm, 'address')" class="error-message">
-                Endereço é obrigatório
-              </div>
-            </div>
-            
-            <div class="form-group address-number">
-              <label for="addressNumber">Número</label>
-              <input type="text" id="addressNumber" formControlName="number">
-              <div *ngIf="hasError(addressForm, 'number')" class="error-message">
-                Número é obrigatório
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="complement">Complemento</label>
-              <input type="text" id="complement" formControlName="complement" placeholder="Apto, Bloco, etc.">
-            </div>
-            
-            <div class="form-group">
-              <label for="neighborhood">Bairro</label>
-              <input type="text" id="neighborhood" formControlName="neighborhood">
-              <div *ngIf="hasError(addressForm, 'neighborhood')" class="error-message">
-                Bairro é obrigatório
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="city">Cidade</label>
-              <input type="text" id="city" formControlName="city">
-              <div *ngIf="hasError(addressForm, 'city')" class="error-message">
-                Cidade é obrigatória
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="state">Estado</label>
-              <select id="state" formControlName="state">
-                <option value="">Selecione</option>
-                <option value="SP">São Paulo</option>
-                <option value="RJ">Rio de Janeiro</option>
-                <option value="MG">Minas Gerais</option>
-                <!-- Add more states as needed -->
-              </select>
-              <div *ngIf="hasError(addressForm, 'state')" class="error-message">
-                Estado é obrigatório
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="zipCode">CEP</label>
-              <input type="text" id="zipCode" formControlName="zipCode" placeholder="00000-000">
-              <div *ngIf="hasError(addressForm, 'zipCode')" class="error-message">
-                CEP é obrigatório
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group checkbox-group">
-              <input type="checkbox" id="isPrimaryAddress" formControlName="isPrimary">
-              <label for="isPrimaryAddress">Definir como endereço principal</label>
-            </div>
-          </div>
-          
-          <div class="form-actions">
-            <button type="button" class="btn-primary" (click)="saveAddress()">
-              {{ editingAddressId ? 'Atualizar' : 'Salvar' }} Endereço
-            </button>
-            <button type="button" class="btn-outline" (click)="showAddressForm = false">
-              Cancelar
-            </button>
-          </div>
-        </form>
       </div>
     </div>
     
@@ -431,7 +343,7 @@
           <div class="form-row">
             <div class="form-group checkbox-group">
               <input type="checkbox" id="isPrimaryCard" formControlName="isPrimary">
-              <label for="isPrimaryCard">Definir como cartão principal</label>
+              <label>Definir como cartão principal</label>
             </div>
           </div>
           

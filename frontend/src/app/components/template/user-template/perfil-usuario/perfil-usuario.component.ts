@@ -93,7 +93,7 @@ export class PerfilUsuarioComponent {
   formGroup: FormGroup;
   maxDate: Date;
   cidades: Cidade[] = [];
-  listaEndereco: Endereco[] = [];
+  cliente: Cliente = new Cliente();
 
   // Data arrays
   addresses: Address[] = []
@@ -193,6 +193,7 @@ export class PerfilUsuarioComponent {
       const clienteConvertido = JSON.parse(usuarioLocalStorage);
       this.clienteService.findById(clienteConvertido.id).subscribe((item) => {
         cliente = item;
+        this.cliente = item;
 
         const usuario = cliente?.id ? cliente.usuario : null;
 
@@ -215,7 +216,6 @@ export class PerfilUsuarioComponent {
           this.adicionarEndereco(endereco);
         })
 
-        this.listaEndereco = cliente.usuario.enderecos;
       })
     }
   }
@@ -577,18 +577,46 @@ export class PerfilUsuarioComponent {
   //   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
   // }
 
-  adicionarEnderecoDialog(endereco?: any, index?: number): void {
+  adicionarEnderecoDialog(endereco?: Endereco): void {
     const dialogRef = this.dialog.open(EnderecoDialogComponent, {
       width: '600px',
-      disableClose: true
+      data: endereco || {},
     });
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const enderecoForm = this.fb.group(result);
-
+        this.salvarEndereco(result);
       }
     });
+  }
+
+  salvarEndereco(endereco: Endereco) {
+    const clienteAtualizado = {... this.cliente};
+    const index = clienteAtualizado.usuario.enderecos.findIndex(e => e.id === endereco.id);
+
+    if (index > -1) {
+      clienteAtualizado.usuario.enderecos[index] = endereco;
+    } else {
+      clienteAtualizado.usuario.enderecos.push(endereco);
+    }
+
+    this.clienteService.updateBasico(clienteAtualizado.usuario).subscribe(response => {
+      this.cliente = response;
+      this.initializeForm();
+    })
+  }
+
+  excluirEndereco(idEndereco: number) {
+    const confirmacao = confirm('Tem certeza que deseja excluir este endereço?');
+    if (!confirmacao) return;
+
+    const clienteAtualizado = { ...this.cliente };
+    clienteAtualizado.usuario.enderecos = clienteAtualizado.usuario.enderecos.filter(e => e.id !== idEndereco);
+
+    this.clienteService.updateBasico(clienteAtualizado.usuario).subscribe(response => {
+      this.cliente = response;
+      this.initializeForm();
+    })
   }
 
   private uploadImage(clienteId: number) {
