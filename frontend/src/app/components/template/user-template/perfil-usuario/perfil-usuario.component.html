@@ -12,31 +12,19 @@
 
   <!-- Tab Navigation -->
   <div class="tab-navigation">
-    <button 
-      class="tab-button" 
-      [class.active]="activeTab === 1"
-      (click)="setActiveTab(1)">
+    <button class="tab-button" [class.active]="activeTab === 1" (click)="setActiveTab(1)">
       <i class="material-icons">person</i>
       Informações Pessoais
     </button>
-    <button 
-      class="tab-button" 
-      [class.active]="activeTab === 2"
-      (click)="setActiveTab(2)">
+    <button class="tab-button" [class.active]="activeTab === 2" (click)="setActiveTab(2)">
       <i class="material-icons">location_on</i>
       Endereços
     </button>
-    <button 
-      class="tab-button" 
-      [class.active]="activeTab === 3"
-      (click)="setActiveTab(3)">
+    <button class="tab-button" [class.active]="activeTab === 3" (click)="setActiveTab(3)">
       <i class="material-icons">credit_card</i>
       Cartões
     </button>
-    <button 
-      class="tab-button" 
-      [class.active]="activeTab === 4"
-      (click)="setActiveTab(4)">
+    <button class="tab-button" [class.active]="activeTab === 4" (click)="setActiveTab(4)">
       <i class="material-icons">favorite</i>
       Lista de Desejos
     </button>
@@ -44,18 +32,19 @@
 
   <!-- Tab Content -->
   <div class="tab-content">
-    
+
     <!-- Tab 1: Personal Information -->
     <div *ngIf="activeTab === 1" class="tab-panel personal-info">
       <h2>Informações Pessoais</h2>
-      
+
       <!-- Profile Image Upload -->
       <div class="image-upload-section">
         <div class="current-image">
           <img [src]="imagePreview || userProfile.profileImage" [alt]="userProfile.name">
         </div>
         <div class="upload-controls">
-          <input type="file" id="profileImage" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+          <input type="file" id="profileImage" accept="image/*" (change)="onFileSelected($event)"
+            style="display: none;">
           <button class="btn-secondary" onclick="document.getElementById('profileImage').click()">
             <i class="material-icons">photo_camera</i>
             Alterar Foto
@@ -63,95 +52,93 @@
           <p class="upload-hint">JPG, JPEG e PNG. Máximo 10MB.</p>
         </div>
       </div>
-      
+
       <!-- Personal Info Form -->
       <form [formGroup]="formGroup" class="personal-form">
         <div class="form-row">
           <div class="form-group">
             <label for="nome">Nome Completo</label>
             <mat-form-field appearance="outline" class="full-width">
-            <!-- <mat-label>Nome</mat-label> -->
-            <input id="nome" matInput type="text" formControlName="nome" autocomplete="name" />
-            <mat-error
-              *ngIf="
+              <!-- <mat-label>Nome</mat-label> -->
+              <input id="nome" matInput type="text" formControlName="nome" autocomplete="name" />
+              <mat-error *ngIf="
                 formGroup.get('nome') &&
                 formGroup.get('nome')?.invalid &&
                 formGroup.get('nome')?.touched
               ">
-              {{getErrorMessage('nome', formGroup.get('nome')?.errors)}}
+                {{getErrorMessage('nome', formGroup.get('nome')?.errors)}}
 
-              @if (formGroup.get('nome')?.hasError('apiError')) {
-                  <span> {{ formGroup.get('nome')?.getError('apiError') }}</span>
-              }
-            </mat-error>
-          </mat-form-field>
+                @if (formGroup.get('nome')?.hasError('apiError')) {
+                <span> {{ formGroup.get('nome')?.getError('apiError') }}</span>
+                }
+              </mat-error>
+            </mat-form-field>
           </div>
-          
+
           <div class="form-group">
             <label for="cpf">CPF</label>
             <mat-form-field appearance="outline" class="full-width">
-            <!-- <mat-label>CPF</mat-label> -->
-            <input matInput id="cpf" type="text" formControlName="cpf" onkeypress="return /^[0-9]+$/.test(event.key)"/>
-            <mat-error
-              *ngIf="
+              <!-- <mat-label>CPF</mat-label> -->
+              <input matInput id="cpf" type="text" formControlName="cpf"
+                onkeypress="return /^[0-9]+$/.test(event.key)" />
+              <mat-error *ngIf="
                 formGroup.get('cpf') &&
                 formGroup.get('cpf')?.invalid &&
                 formGroup.get('cpf')?.touched
               ">
-              {{getErrorMessage('cpf', formGroup.get('cpf')?.errors)}}
+                {{getErrorMessage('cpf', formGroup.get('cpf')?.errors)}}
 
-              @if (formGroup.get('cpf')?.hasError('apiError')) {
-                  <span> {{ formGroup.get('cpf')?.getError('apiError') }}</span>
-              }
-            </mat-error>
-          </mat-form-field>
+                @if (formGroup.get('cpf')?.hasError('apiError')) {
+                <span> {{ formGroup.get('cpf')?.getError('apiError') }}</span>
+                }
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group">
             <label for="email">E-mail</label>
             <mat-form-field appearance="outline" class="full-width">
-            <input matInput id="email" type="email" formControlName="email" autocomplete="email" required />
-            <mat-error
-              *ngIf="
+              <input matInput id="email" type="email" formControlName="email" autocomplete="email" required />
+              <mat-error *ngIf="
                 formGroup.get('email') &&
                 formGroup.get('email')?.hasError('required') &&
                 formGroup.get('email')?.touched
               ">
-              {{getErrorMessage('email', formGroup.get('email')?.errors)}}
+                {{getErrorMessage('email', formGroup.get('email')?.errors)}}
 
-              @if (formGroup.get('email')?.hasError('apiError')) {
-                  <span> {{ formGroup.get('email')?.getError('apiError') }}</span>
-              }
-            </mat-error>
-          </mat-form-field>
+                @if (formGroup.get('email')?.hasError('apiError')) {
+                <span> {{ formGroup.get('email')?.getError('apiError') }}</span>
+                }
+              </mat-error>
+            </mat-form-field>
           </div>
-          
+
           <div class="form-group">
             <label for="dataNascimento">Data de Nascimento</label>
             <mat-form-field appearance="outline" class="full-width">
-            <!-- <mat-label>Data de Nascimento</mat-label> -->
-            <input id="dataNascimento" matInput [matDatepicker]="picker" formControlName="dataNascimento" [max]="maxDate" />
-            <mat-hint>Clique no calendário para escolher a data</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error
-              *ngIf="
+              <!-- <mat-label>Data de Nascimento</mat-label> -->
+              <input id="dataNascimento" matInput [matDatepicker]="picker" formControlName="dataNascimento"
+                [max]="maxDate" />
+              <mat-hint>Clique no calendário para escolher a data</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="
                 formGroup.get('dataNascimento') &&
                 formGroup.get('dataNascimento')?.invalid &&
                 formGroup.get('dataNascimento')?.touched
               ">
-              {{getErrorMessage('dataNascimento', formGroup.get('dataNascimento')?.errors)}}
+                {{getErrorMessage('dataNascimento', formGroup.get('dataNascimento')?.errors)}}
 
-              @if (formGroup.get('dataNascimento')?.hasError('apiError')) {
-                  <span> {{ formGroup.get('dataNascimento')?.getError('apiError') }}</span>
-              }
-            </mat-error>
-          </mat-form-field>
+                @if (formGroup.get('dataNascimento')?.hasError('apiError')) {
+                <span> {{ formGroup.get('dataNascimento')?.getError('apiError') }}</span>
+                }
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
-        
+
         <div class="form-actions">
           <button type="button" class="btn-primary" (click)="salvar()">
             Salvar Alterações
@@ -161,7 +148,7 @@
           </button>
         </div>
       </form>
-      
+
       <!-- Password Change Form -->
       <div *ngIf="showPasswordForm" class="password-form">
         <h3>Alterar Senha</h3>
@@ -173,7 +160,7 @@
               Senha atual é obrigatória
             </div>
           </div>
-          
+
           <div class="form-group">
             <label for="newPassword">Nova Senha</label>
             <input type="password" id="newPassword" formControlName="newPassword">
@@ -181,7 +168,7 @@
               Nova senha deve ter pelo menos 6 caracteres
             </div>
           </div>
-          
+
           <div class="form-group">
             <label for="confirmPassword">Confirmar Nova Senha</label>
             <input type="password" id="confirmPassword" formControlName="confirmPassword">
@@ -189,7 +176,7 @@
               Confirmação de senha é obrigatória
             </div>
           </div>
-          
+
           <div class="form-actions">
             <button type="button" class="btn-primary" (click)="changePassword()">
               Alterar Senha
@@ -201,7 +188,7 @@
         </form>
       </div>
     </div>
-    
+
     <!-- Tab 2: Addresses -->
     <div *ngIf="activeTab === 2" class="tab-panel addresses">
       <div class="section-header">
@@ -211,93 +198,98 @@
           Adicionar Endereço
         </button>
       </div>
-      
+
       <!-- Address List -->
       <div class="address-list">
         <div *ngIf="cliente">
           <ng-container *ngIf="cliente!.usuario!.enderecos!.length > 0; else semEnderecos">
-        <div *ngFor="let endereco of cliente.usuario?.enderecos; let i = index" class="address-card">
-          <div class="address-header">
-            <h3>Endereço {{ i + 1 }}</h3>
-            <span *ngIf="cliente.usuario.enderecos[0] == endereco" class="primary-badge">Principal</span>
-          </div>
-          
-          <div class="address-details">
-            <p>Logradouro: {{ endereco.logradouro }}, {{ endereco.numero }}</p>
-            <p *ngIf="endereco.complemento">Complemento: {{ endereco.complemento }}</p>
-            <p>Bairro: {{ endereco.bairro }}</p>
-            <p>Cidade: {{ endereco.cidade.nome }}/{{endereco.cidade.estado.sigla}}</p>
-            <p>CEP: {{ endereco.cep }}</p>
-          </div>
-          
-          <div class="address-actions">
-            <button class="btn-text" (click)="adicionarEnderecoDialog(endereco)">
-              <i class="material-icons">edit</i>
-              Editar
-            </button>
-            <!-- <button *ngIf="!address.isPrimary" class="btn-text" (click)="setPrimaryAddress(address.id)">
+            <div *ngFor="let endereco of cliente.usuario?.enderecos; let i = index" class="address-card">
+              <div class="address-header">
+                <h3>Endereço {{ i + 1 }}</h3>
+                <span *ngIf="cliente.usuario.enderecos[0] == endereco" class="primary-badge">Principal</span>
+              </div>
+
+              <div class="address-details">
+                <p>Logradouro: {{ endereco.logradouro }}, {{ endereco.numero }}</p>
+                <p *ngIf="endereco.complemento">Complemento: {{ endereco.complemento }}</p>
+                <p>Bairro: {{ endereco.bairro }}</p>
+                <p>Cidade: {{ endereco.cidade.nome }}/{{endereco.cidade.estado.sigla}}</p>
+                <p>CEP: {{ endereco.cep }}</p>
+              </div>
+
+              <div class="address-actions">
+                <button class="btn-text" (click)="adicionarEnderecoDialog(endereco)">
+                  <i class="material-icons">edit</i>
+                  Editar
+                </button>
+                <!-- <button *ngIf="!address.isPrimary" class="btn-text" (click)="setPrimaryAddress(address.id)">
               <i class="material-icons">star</i>
               Tornar Principal
             </button> -->
-            <button class="btn-text delete" (click)="excluirEndereco(endereco.id)">
-              <i class="material-icons">delete</i>
-              Excluir
-            </button>
-          </div>
-        </div>
+                <button class="btn-text delete" (click)="excluirEndereco(endereco.id)">
+                  <i class="material-icons">delete</i>
+                  Excluir
+                </button>
+              </div>
+            </div>
           </ng-container>
           <ng-template #semEnderecos>
-    <p style="margin-top: 1rem;">Nenhum endereço cadastrado.</p>
-  </ng-template>
-      </div>
-      
+            <p style="margin-top: 1rem;">Nenhum endereço cadastrado.</p>
+          </ng-template>
+        </div>
+
       </div>
     </div>
-    
+
     <!-- Tab 3: Credit Cards -->
     <div *ngIf="activeTab === 3" class="tab-panel cards">
       <div class="section-header">
         <h2>Meus Cartões</h2>
-        <button class="btn-primary" (click)="addCard()">
+        <button class="btn-primary" (click)="adicionarCartaoDialog()">
           <i class="material-icons">add</i>
           Adicionar Cartão
         </button>
       </div>
-      
+
       <!-- Card List -->
       <div class="card-list">
-        <div *ngFor="let card of creditCards" class="credit-card" [class.primary]="card.isPrimary">
-          <div class="card-header">
-            <div class="card-brand">
-              <i class="material-icons">credit_card</i>
-              <span>{{ card.brand }}</span>
+        <div *ngIf="cliente">
+        <ng-container *ngIf="cliente!.cartao!.length > 0; else semCartoes">
+          <div *ngFor="let cartao of cliente?.cartao; let i = index" class="credit-card">
+            <div class="card-header">
+              <div class="card-brand">
+                <i class="material-icons">credit_card</i>
+                <span>VISA</span>
+              </div>
+              <h3>Cartão {{ i + 1 }}</h3>
+              <span *ngIf="cliente.cartao[0] == cartao" class="primary-badge">Principal</span>
             </div>
-            <span *ngIf="card.isPrimary" class="primary-badge">Principal</span>
+
+            <div class="card-details">
+              <h3>{{ cartao.titular }}</h3>
+              <p class="card-number">{{ cartao.numero }}</p>
+              <p class="card-expiry">Válido até: {{ cartao.dataValidade }}</p>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn-text" (click)="adicionarCartaoDialog(cartao)">
+                <i class="material-icons">edit</i>
+                Editar
+              </button>
+              <button class="btn-text delete" (click)="deleteCard(cartao.id)">
+                <i class="material-icons">delete</i>
+                Excluir
+              </button>
+            </div>
           </div>
-          
-          <div class="card-details">
-            <h3>{{ card.name }}</h3>
-            <p class="card-number">{{ card.number }}</p>
-            <p class="card-expiry">Válido até: {{ card.expiryDate }}</p>
-          </div>
-          
-          <div class="card-actions">
-            <button class="btn-text" (click)="editCard(card)">
-              <i class="material-icons">edit</i>
-              Editar
-            </button>
-            <button *ngIf="!card.isPrimary" class="btn-text" (click)="setPrimaryCard(card.id)">
-              <i class="material-icons">star</i>
-              Tornar Principal
-            </button>
-            <button class="btn-text delete" (click)="deleteCard(card.id)">
-              <i class="material-icons">delete</i>
-              Excluir
-            </button>
-          </div>
+        </ng-container>
         </div>
+        <ng-template #semCartoes>
+          <p style="margin-top: 1rem;">Nenhum cartao cadastrado.</p>
+        </ng-template>
+
       </div>
-      
+
       <!-- Card Form -->
       <div *ngIf="showCardForm" class="card-form">
         <h3>{{ editingCardId ? 'Editar' : 'Adicionar' }} Cartão</h3>
@@ -311,7 +303,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-group">
               <label for="cardNumber">Número do Cartão</label>
@@ -321,7 +313,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-group">
               <label for="expiryDate">Data de Validade</label>
@@ -330,7 +322,7 @@
                 Data de validade é obrigatória
               </div>
             </div>
-            
+
             <div class="form-group">
               <label for="cvv">CVV</label>
               <input type="text" id="cvv" formControlName="cvv" placeholder="123">
@@ -339,14 +331,14 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-group checkbox-group">
               <input type="checkbox" id="isPrimaryCard" formControlName="isPrimary">
               <label>Definir como cartão principal</label>
             </div>
           </div>
-          
+
           <div class="form-actions">
             <button type="button" class="btn-primary" (click)="saveCard()">
               {{ editingCardId ? 'Atualizar' : 'Salvar' }} Cartão
@@ -358,11 +350,11 @@
         </form>
       </div>
     </div>
-    
+
     <!-- Tab 4: Wishlist -->
     <div *ngIf="activeTab === 4" class="tab-panel wishlist">
       <h2>Minha Lista de Desejos</h2>
-      
+
       <div *ngIf="wishlistItems.length === 0" class="empty-wishlist">
         <div class="empty-icon">
           <i class="material-icons">favorite_border</i>
@@ -371,7 +363,7 @@
         <p>Adicione produtos que você gostaria de comprar mais tarde.</p>
         <button class="btn-primary" routerLink="/products">Explorar Produtos</button>
       </div>
-      
+
       <div *ngIf="wishlistItems.length > 0" class="wishlist-grid">
         <div *ngFor="let item of wishlistItems" class="wishlist-item">
           <div class="item-image">
@@ -379,17 +371,17 @@
             <div *ngIf="item.onSale" class="sale-badge">Promoção</div>
             <div *ngIf="!item.inStock" class="out-of-stock-badge">Fora de Estoque</div>
           </div>
-          
+
           <div class="item-details">
             <h3>{{ item.name }}</h3>
-            
+
             <div class="item-price">
               <span class="current-price">R$ {{ item.price.toFixed(2) }}</span>
               <span *ngIf="item.originalPrice" class="original-price">
                 R$ {{ item.originalPrice.toFixed(2) }}
               </span>
             </div>
-            
+
             <div class="item-status">
               <span *ngIf="item.inStock" class="in-stock">
                 <i class="material-icons">check_circle</i>
@@ -401,16 +393,13 @@
               </span>
             </div>
           </div>
-          
+
           <div class="item-actions">
-            <button 
-              class="btn-primary" 
-              [disabled]="!item.inStock"
-              (click)="addToCart(item)">
+            <button class="btn-primary" [disabled]="!item.inStock" (click)="addToCart(item)">
               <i class="material-icons">shopping_cart</i>
               {{ item.inStock ? 'Adicionar ao Carrinho' : 'Indisponível' }}
             </button>
-            
+
             <button class="btn-outline" (click)="removeFromWishlist(item.id)">
               <i class="material-icons">delete</i>
               Remover

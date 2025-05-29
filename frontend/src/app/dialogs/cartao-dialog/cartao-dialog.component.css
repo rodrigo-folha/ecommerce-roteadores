@@ -1,0 +1,45 @@
+mat-toolbar {
+  font-size: 20px;
+  font-weight: 600;
+  justify-content: center;
+}
+
+.toolbar-title {
+  text-align: center;
+}
+
+form {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.half-width {
+  flex: 1;
+  min-width: 200px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-content {
+  max-height: 70vh;
+  overflow: auto;
+  padding-bottom: 0;
+}
+
+mat-dialog-actions {
+  padding: 16px;
+}
+
+mat-dialog-actions button {
+  margin-left: 8px;
+}

@@ -32,6 +32,19 @@ export class TelefoneDialogComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.initializeForm();
+  }
+
+  initializeForm(): void {
+    this.telefoneForm = this.fb.group({
+      id: [(this.data && this.data.id) ? this.data.id : null],
+      codigoArea: [(this.data && this.data.codigoArea) ? this.data.codigoArea : null, [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
+      numero: [(this.data && this.data.numero) ? this.data.numero : null, [Validators.required, Validators.minLength(8), Validators.maxLength(9)]],
+
+    })
+  }
+
   salvar() {
     this.telefoneForm.markAllAsTouched();
 

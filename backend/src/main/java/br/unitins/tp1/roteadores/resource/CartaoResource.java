@@ -9,6 +9,7 @@ import br.unitins.tp1.roteadores.dto.pagamento.CartaoRequestDTO;
 import br.unitins.tp1.roteadores.dto.pagamento.CartaoResponseDTO;
 import br.unitins.tp1.roteadores.model.pagamento.Cartao;
 import br.unitins.tp1.roteadores.service.CartaoService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -37,28 +38,31 @@ public class CartaoResource {
     public JsonWebToken jsonWebToken;
 
     @GET
-    // @RolesAllowed("User")
+    @RolesAllowed("User")
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo findById. Id: " + id);
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         return Response.ok(CartaoResponseDTO.valueOf(cartaoService.findById(email, id))).build();
     }
 
     @GET
-    // @RolesAllowed("User")
+    @RolesAllowed("User")
     public Response findByCliente() {
         LOG.info("Execucao do metodo findByCliente");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         List<Cartao> cartoes = cartaoService.findByCliente(email);
         return Response.ok(cartoes.stream().map(CartaoResponseDTO::valueOf).toList()).build();
     }
 
     @POST
-    // @RolesAllowed("User")
+    @RolesAllowed("User")
     public Response create(@Valid CartaoRequestDTO dto) {
         LOG.info("Execucao do metodo create");
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         return Response.status(Status.CREATED)
             .entity(CartaoResponseDTO.valueOf(cartaoService.create(email, dto)))
             .build();
@@ -66,20 +70,22 @@ public class CartaoResource {
 
     @PUT
     @Path("/{id}")
-    // @RolesAllowed("User")
+    @RolesAllowed("User")
     public Response update(@PathParam("id") Long id, @Valid CartaoRequestDTO dto) {
         LOG.info("Execucao do metodo update. Id: " + id);
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         cartaoService.update(email, id, dto);
         return Response.noContent().build();
     }
 
     @DELETE
     @Path("/{id}")
-    // @RolesAllowed("User")
+    @RolesAllowed("User")
     public Response delete(@PathParam("id") Long id) {
         LOG.info("Execucao do metodo delete. Id: " + id);
         String email = jsonWebToken.getSubject();
+        email = jsonWebToken.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
         cartaoService.delete(email, id);
         return Response.noContent().build();
     }

@@ -19,6 +19,9 @@ import { CidadeService } from '../../../../services/cidade.service';
 import { MatSelectModule } from '@angular/material/select';
 import { EnderecoDialogComponent } from '../../../../dialogs/endereco-dialog/endereco-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Cartao } from '../../../../models/cartao.model';
+import { CartaoDialogComponent } from '../../../../dialogs/cartao-dialog/cartao-dialog.component';
+import { CartaoService } from '../../../../services/cartao.service';
 
 interface UserProfile {
   id: number
@@ -121,6 +124,7 @@ export class PerfilUsuarioComponent {
     private clienteService: ClienteService,
     private snackBar: MatSnackBar,
     private cidadeService: CidadeService,
+    private cartaoService: CartaoService,
     private dialog: MatDialog,
   ) {
 
@@ -173,10 +177,7 @@ export class PerfilUsuarioComponent {
     this.maxDate = new Date();
   }
 
-
-
   ngOnInit(): void {
-    this.loadAddresses()
     this.loadCreditCards()
     this.loadWishlistItems()
     this.initializeForm();
@@ -316,93 +317,6 @@ export class PerfilUsuarioComponent {
       this.showPasswordForm = false
       this.passwordForm.reset()
     }
-  }
-
-  // Address methods
-  loadAddresses(): void {
-    this.addresses = [
-      {
-        id: 1,
-        name: "Casa",
-        address: "Rua das Flores, 123",
-        number: "123",
-        complement: "Apto 45",
-        neighborhood: "Centro",
-        city: "São Paulo",
-        state: "SP",
-        zipCode: "01234-567",
-        isPrimary: true,
-      },
-      {
-        id: 2,
-        name: "Trabalho",
-        address: "Av. Paulista, 1000",
-        number: "1000",
-        neighborhood: "Bela Vista",
-        city: "São Paulo",
-        state: "SP",
-        zipCode: "01310-100",
-        isPrimary: false,
-      },
-    ]
-  }
-
-  addAddress(): void {
-    this.showAddressForm = true
-    this.editingAddressId = null
-    this.addressForm.reset()
-  }
-
-  editAddress(address: Address): void {
-    this.showAddressForm = true
-    this.editingAddressId = address.id
-    this.addressForm.patchValue(address)
-  }
-
-  saveAddress(): void {
-    if (this.addressForm.valid) {
-      const addressData = this.addressForm.value
-
-      if (this.editingAddressId) {
-        // Update existing address
-        const index = this.addresses.findIndex((a) => a.id === this.editingAddressId)
-        if (index !== -1) {
-          this.addresses[index] = { ...this.addresses[index], ...addressData }
-        }
-      } else {
-        // Add new address
-        const newAddress: Address = {
-          id: Date.now(),
-          ...addressData,
-        }
-        this.addresses.push(newAddress)
-      }
-
-      // Set as primary if selected
-      if (addressData.isPrimary) {
-        this.addresses.forEach((addr) => {
-          addr.isPrimary = addr.id === (this.editingAddressId || Date.now())
-        })
-      }
-
-      this.showAddressForm = false
-      this.addressForm.reset()
-      alert("Endereço salvo com sucesso!")
-    }
-  }
-
-  deleteAddress(id: number): void {
-    if (confirm("Tem certeza que deseja excluir este endereço?")) {
-      this.addresses = this.addresses.filter((addr) => addr.id !== id)
-      alert("Endereço excluído com sucesso!")
-    }
-  }
-
-  setPrimaryAddress(id: number): void {
-    this.addresses.forEach((addr) => {
-      addr.isPrimary = addr.id === id
-    })
-    alert("Endereço principal atualizado!")
   }
 
   // Credit Card methods
@@ -589,6 +503,39 @@ export class PerfilUsuarioComponent {
       }
     });
   }
+
+  adicionarCartaoDialog(cartao?: Cartao): void {
+    const dialogRef = this.dialog.open(CartaoDialogComponent, {
+      width: '600px',
+      data: cartao || {},
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.salvarCartao(result);
+      }
+    });
+  }
+
+  salvarCartao(cartao: Cartao) {
+    const operacao = cartao.id == null 
+    ? this.cartaoService.insert(cartao)
+    : this.cartaoService.update(cartao)
+
+    operacao.subscribe({
+      next: () => {
+        this.router.navigateByUrl('minha-conta');
+        this.showNotification('Cartão salvo com sucesso!', 'success');
+
+      },
+      error: (errorResponse) => {
+        console.log('Erro ao gravar' + JSON.stringify(errorResponse));
+        this.tratarErros(errorResponse)
+      }
+    })
+  }
+
+      
 
   salvarEndereco(endereco: Endereco) {
     const clienteAtualizado = {... this.cliente};
