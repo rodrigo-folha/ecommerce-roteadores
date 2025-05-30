@@ -1,11 +1,12 @@
-import { CommonModule, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, NgIf, registerLocaleData } from '@angular/common';
+import { Component, LOCALE_ID, signal } from '@angular/core';
+import localePt from '@angular/common/locales/pt';
 import { Form, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Cliente } from '../../../../models/cliente.model';
 import { Telefone } from '../../../../models/telefone.model';
 import { Endereco } from '../../../../models/endereco.model';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import { ClienteService } from '../../../../services/cliente.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -22,6 +23,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Cartao } from '../../../../models/cartao.model';
 import { CartaoDialogComponent } from '../../../../dialogs/cartao-dialog/cartao-dialog.component';
 import { CartaoService } from '../../../../services/cartao.service';
+import { RoteadorService } from '../../../../services/roteador.service';
+import { Roteador } from '../../../../models/roteador.model';
+import { CarrinhoService } from '../../../../services/carrinho.service';
+import { TelefoneDialogComponent } from '../../../../dialogs/telefone-dialog/telefone-dialog.component';
+registerLocaleData(localePt);
 
 interface UserProfile {
   id: number
@@ -64,12 +70,22 @@ interface WishlistItem {
   onSale: boolean
 }
 
+type Card = {
+  id: number;
+  titulo: string;
+  preco: number;
+  rating: number;
+  reviews: number;
+  imageUrl: string;
+};
+
 @Component({
   selector: 'app-perfil-usuario',
   providers: [provideNativeDateAdapter(), {
         provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+        { provide: LOCALE_ID, useValue: 'pt-BR'}
       ],
-  imports: [NgIf, CommonModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule],
+  imports: [NgIf, CommonModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule, RouterLink],
   templateUrl: './perfil-usuario.component.html',
   styleUrl: './perfil-usuario.component.css'
 })
@@ -97,6 +113,8 @@ export class PerfilUsuarioComponent {
   maxDate: Date;
   cidades: Cidade[] = [];
   cliente: Cliente = new Cliente();
+  cards = signal<Card[]>([]);
+  roteadoresListaDesejo: Roteador[] = [];
 
   // Data arrays
   addresses: Address[] = []
@@ -111,8 +129,9 @@ export class PerfilUsuarioComponent {
   editingCardId: number | null = null
 
   // File upload
-  selectedFile: File | null = null
-  imagePreview: string | null = null
+  fileName: string = '';
+  selectedFile: File | null = null; 
+  imagePreview: string | ArrayBuffer | null = null;
 
   private subscription = new Subscription();
 
@@ -125,6 +144,9 @@ export class PerfilUsuarioComponent {
     private snackBar: MatSnackBar,
     private cidadeService: CidadeService,
     private cartaoService: CartaoService,
+    private roteadorService: RoteadorService,
+    private carrinhoService: CarrinhoService,
+
     private dialog: MatDialog,
   ) {
 
@@ -186,6 +208,7 @@ export class PerfilUsuarioComponent {
     });
   }
 
+
   initializeForm(): void {
     let cliente: Cliente = new Cliente();
 
@@ -218,6 +241,27 @@ export class PerfilUsuarioComponent {
         })
 
       })
+
+      this.clienteService.buscarListaDesejo().subscribe({
+        next: (listaDesejo) => {
+          const observables = listaDesejo.map(item =>
+            this.roteadorService.findById(item.idProduto)
+          );
+
+          forkJoin(observables).subscribe({
+            next: (roteadores) => {
+              this.roteadoresListaDesejo = roteadores;
+              this.carregarCards();
+            },
+            error: (err) => {
+              console.error('Erro ao buscar detalhes dos roteadores:', err);
+            }
+          });
+        },
+        error: (err) => {
+          console.error('Erro ao buscar lista de desejos:', err);
+        }
+      });
     }
   }
 
@@ -257,6 +301,21 @@ export class PerfilUsuarioComponent {
     this.telefones.removeAt(index);
   }
 
+  carregarCards() {
+    const cards: Card[] = [];
+    this.roteadoresListaDesejo.forEach((roteador) => {
+      cards.push({
+        id: roteador.id,
+        titulo: roteador.nome,
+        preco: roteador.preco,
+        rating: 4.8,
+        reviews: 100,
+        imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString())
+      })
+    })
+    this.cards.set(cards);
+  }
+
   // Tab navigation
   setActiveTab(tab: number): void {
     this.activeTab = tab
@@ -285,22 +344,6 @@ export class PerfilUsuarioComponent {
         this.imagePreview = e.target?.result as string
       }
       reader.readAsDataURL(file)
-    }
-  }
-
-  savePersonalInfo(): void {
-    if (this.personalInfoForm.valid) {
-      // Update user profile with form data
-      Object.assign(this.userProfile, this.personalInfoForm.value)
-
-      // Update profile image if new one was selected
-      if (this.imagePreview) {
-        this.userProfile.profileImage = this.imagePreview
-        this.imagePreview = null
-        this.selectedFile = null
-      }
-
-      alert("Informações pessoais atualizadas com sucesso!")
     }
   }
 
@@ -504,6 +547,19 @@ export class PerfilUsuarioComponent {
     });
   }
 
+  adicionarTelefoneDialog(telefone?: Telefone): void {
+    const dialogRef = this.dialog.open(TelefoneDialogComponent, {
+      width: '600px',
+      data: telefone || {},
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.salvarTelefone(result);
+      }
+    });
+  }
+
   adicionarCartaoDialog(cartao?: Cartao): void {
     const dialogRef = this.dialog.open(CartaoDialogComponent, {
       width: '600px',
@@ -526,6 +582,7 @@ export class PerfilUsuarioComponent {
       next: () => {
         this.router.navigateByUrl('minha-conta');
         this.showNotification('Cartão salvo com sucesso!', 'success');
+        this.initializeForm();
 
       },
       error: (errorResponse) => {
@@ -535,7 +592,15 @@ export class PerfilUsuarioComponent {
     })
   }
 
-      
+  excluirCartao(cartao: Cartao) {
+    const confirmacao = confirm('Tem certeza que deseja excluir este cartão?');
+    if (!confirmacao) return;
+
+    this.cartaoService.delete(cartao).subscribe(() => {
+      this.showNotification('Cartão excluído com sucesso!', 'success');
+      this.initializeForm();
+    })
+  }
 
   salvarEndereco(endereco: Endereco) {
     const clienteAtualizado = {... this.cliente};
@@ -566,6 +631,35 @@ export class PerfilUsuarioComponent {
     })
   }
 
+  salvarTelefone(telefone: Telefone) {
+    const clienteAtualizado = {... this.cliente};
+    const index = clienteAtualizado.usuario.telefones.findIndex(e => e.id === telefone.id);
+
+    if (index > -1) {
+      clienteAtualizado.usuario.telefones[index] = telefone;
+    } else {
+      clienteAtualizado.usuario.telefones.push(telefone);
+    }
+
+    this.clienteService.updateBasico(clienteAtualizado.usuario).subscribe(response => {
+      this.cliente = response;
+      this.initializeForm();
+    })
+  }
+
+  excluirTelefone(idTelefone: number) {
+    const confirmacao = confirm('Tem certeza que deseja excluir este telefone?');
+    if (!confirmacao) return;
+
+    const clienteAtualizado = { ...this.cliente };
+    clienteAtualizado.usuario.telefones = clienteAtualizado.usuario.telefones.filter(e => e.id !== idTelefone);
+
+    this.clienteService.updateBasico(clienteAtualizado.usuario).subscribe(response => {
+      this.cliente = response;
+      this.initializeForm();
+    })
+  }
+
   private uploadImage(clienteId: number) {
     if (this.selectedFile) {
       this.clienteService.uploadImage(clienteId, this.selectedFile.name, this.selectedFile)
@@ -589,15 +683,11 @@ export class PerfilUsuarioComponent {
     if (this.formGroup.valid) {
       const cliente = this.formGroup.value;
 
-      const usuario = cliente?.id ? cliente.usuario : null;
-
-      console.log("Esse é o formGroup: ", this.formGroup.value);
-
       const operacao = this.clienteService.updateBasico(cliente)
 
       operacao.subscribe({
-        next: (clienteAtualizado) => {
-          this.uploadImage(clienteAtualizado.id);
+        next: () => {
+          this.uploadImage(cliente.id);
           this.router.navigateByUrl('/minha-conta');
           this.showNotification('Perfil atualizado com sucesso!', 'success');
 
@@ -679,6 +769,33 @@ export class PerfilUsuarioComponent {
       verticalPosition: 'bottom',
       horizontalPosition: 'center',
       panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
+    });
+  }
+
+  adicionarAoCarrinho(card: Card) {
+    this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi adicionado ao carrinho.')
+    this.carrinhoService.adicionar({
+      id: card.id,
+      nome: card.titulo,
+      preco: card.preco,
+      quantidade: 1,
+      imageUrl: card.imageUrl
+    })
+  }
+
+  removerDaListaDesejo(card: Card) {
+    console.log("Esse é o id do roteador: ", card.id)
+    this.clienteService.removerItemListaDesejo(card.id).subscribe(() => {
+      this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi removido da lista de desejo.')
+      this.initializeForm();
+    })
+  }
+
+  showSnackbarTopPosition(content: any) {
+    this.snackBar.open(content, 'fechar', {
+      duration: 3000,
+      verticalPosition: "top",
+      horizontalPosition: "center"
     });
   }
 

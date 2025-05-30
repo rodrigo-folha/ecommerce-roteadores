@@ -40,7 +40,7 @@
       <!-- Profile Image Upload -->
       <div class="image-upload-section">
         <div class="current-image">
-          <img [src]="imagePreview || userProfile.profileImage" [alt]="userProfile.name">
+          <img [src]="imagePreview || cliente.nomeImagem">
         </div>
         <div class="upload-controls">
           <input type="file" id="profileImage" accept="image/*" (change)="onFileSelected($event)"
@@ -149,6 +149,47 @@
         </div>
       </form>
 
+      <!-- Telefones Section -->
+      <div class="section-header">
+        <h2>Meus Telefones</h2>
+        <button class="btn-primary" (click)="adicionarTelefoneDialog()">
+          <i class="material-icons">add</i>
+          Adicionar Telefone
+        </button>
+      </div>
+      <div class="address-list">
+        <div *ngIf="cliente">
+          <ng-container *ngIf="cliente?.usuario?.telefones?.length && cliente.usuario.telefones.length > 0; else semTelefones">
+            <div *ngFor="let telefone of cliente.usuario?.telefones; let i = index" class="address-card">
+              <div class="address-header">
+                <h3>Telefone {{ i + 1 }}</h3>
+                <span *ngIf="cliente.usuario.telefones[0] == telefone" class="primary-badge">Principal</span>
+              </div>
+
+              <div class="address-details">
+                <p>({{ telefone.codigoArea }}) {{ telefone.numero }}</p>
+              </div>
+
+              <div class="address-actions">
+                <button class="btn-text" (click)="adicionarTelefoneDialog(telefone)">
+                  <i class="material-icons">edit</i>
+                  Editar
+                </button>
+                <button class="btn-text delete" (click)="excluirTelefone(telefone.id)">
+                  <i class="material-icons">delete</i>
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #semTelefones>
+            <p style="margin-top: 1rem;">Nenhum telefone cadastrado.</p>
+          </ng-template>
+        </div>
+
+      </div>
+
+
       <!-- Password Change Form -->
       <div *ngIf="showPasswordForm" class="password-form">
         <h3>Alterar Senha</h3>
@@ -222,10 +263,6 @@
                   <i class="material-icons">edit</i>
                   Editar
                 </button>
-                <!-- <button *ngIf="!address.isPrimary" class="btn-text" (click)="setPrimaryAddress(address.id)">
-              <i class="material-icons">star</i>
-              Tornar Principal
-            </button> -->
                 <button class="btn-text delete" (click)="excluirEndereco(endereco.id)">
                   <i class="material-icons">delete</i>
                   Excluir
@@ -254,35 +291,35 @@
       <!-- Card List -->
       <div class="card-list">
         <div *ngIf="cliente">
-        <ng-container *ngIf="cliente!.cartao!.length > 0; else semCartoes">
-          <div *ngFor="let cartao of cliente?.cartao; let i = index" class="credit-card">
-            <div class="card-header">
-              <div class="card-brand">
-                <i class="material-icons">credit_card</i>
-                <span>VISA</span>
+          <ng-container *ngIf="cliente!.cartao!.length > 0; else semCartoes">
+            <div *ngFor="let cartao of cliente?.cartao; let i = index" class="credit-card">
+              <div class="card-header">
+                <div class="card-brand">
+                  <i class="material-icons">credit_card</i>
+                  <span>VISA</span>
+                </div>
+                <h3>Cartão {{ i + 1 }}</h3>
+                <span *ngIf="cliente.cartao[0] == cartao" class="primary-badge">Principal</span>
               </div>
-              <h3>Cartão {{ i + 1 }}</h3>
-              <span *ngIf="cliente.cartao[0] == cartao" class="primary-badge">Principal</span>
-            </div>
 
-            <div class="card-details">
-              <h3>{{ cartao.titular }}</h3>
-              <p class="card-number">{{ cartao.numero }}</p>
-              <p class="card-expiry">Válido até: {{ cartao.dataValidade }}</p>
-            </div>
+              <div class="card-details">
+                <h3>{{ cartao.titular }}</h3>
+                <p class="card-number">{{ cartao.numero }}</p>
+                <p class="card-expiry">Válido até: {{ cartao.dataValidade }}</p>
+              </div>
 
-            <div class="card-actions">
-              <button class="btn-text" (click)="adicionarCartaoDialog(cartao)">
-                <i class="material-icons">edit</i>
-                Editar
-              </button>
-              <button class="btn-text delete" (click)="deleteCard(cartao.id)">
-                <i class="material-icons">delete</i>
-                Excluir
-              </button>
+              <div class="card-actions">
+                <button class="btn-text" (click)="adicionarCartaoDialog(cartao)">
+                  <i class="material-icons">edit</i>
+                  Editar
+                </button>
+                <button class="btn-text delete" (click)="excluirCartao(cartao)">
+                  <i class="material-icons">delete</i>
+                  Excluir
+                </button>
+              </div>
             </div>
-          </div>
-        </ng-container>
+          </ng-container>
         </div>
         <ng-template #semCartoes>
           <p style="margin-top: 1rem;">Nenhum cartao cadastrado.</p>
@@ -355,55 +392,60 @@
     <div *ngIf="activeTab === 4" class="tab-panel wishlist">
       <h2>Minha Lista de Desejos</h2>
 
-      <div *ngIf="wishlistItems.length === 0" class="empty-wishlist">
+      <div *ngIf="roteadoresListaDesejo.length === 0" class="empty-wishlist">
         <div class="empty-icon">
           <i class="material-icons">favorite_border</i>
         </div>
         <h3>Sua lista de desejos está vazia</h3>
         <p>Adicione produtos que você gostaria de comprar mais tarde.</p>
-        <button class="btn-primary" routerLink="/products">Explorar Produtos</button>
+        <button class="btn-primary" routerLink="/roteadores">Explorar Produtos</button>
       </div>
 
-      <div *ngIf="wishlistItems.length > 0" class="wishlist-grid">
-        <div *ngFor="let item of wishlistItems" class="wishlist-item">
-          <div class="item-image">
-            <img [src]="item.image" [alt]="item.name">
-            <div *ngIf="item.onSale" class="sale-badge">Promoção</div>
-            <div *ngIf="!item.inStock" class="out-of-stock-badge">Fora de Estoque</div>
-          </div>
+      <div class="products-grid">
+        <div *ngFor="let card of cards()" class="product-card">
+          <!-- Imagem do produto -->
+          <a [routerLink]="['/pagina-roteador', card.id]" class="product-image-link">
+            <img [src]="card.imageUrl" [alt]="card.titulo" class="product-image">
+          </a>
 
-          <div class="item-details">
-            <h3>{{ item.name }}</h3>
-
-            <div class="item-price">
-              <span class="current-price">R$ {{ item.price.toFixed(2) }}</span>
-              <span *ngIf="item.originalPrice" class="original-price">
-                R$ {{ item.originalPrice.toFixed(2) }}
-              </span>
+          <!-- Informações do produto -->
+          <div class="product-details">
+            <!-- Nome e ícone de coração -->
+            <div class="product-header">
+              <h3 class="product-name">{{ card.titulo }}</h3>
             </div>
 
-            <div class="item-status">
-              <span *ngIf="item.inStock" class="in-stock">
-                <i class="material-icons">check_circle</i>
-                Em estoque
-              </span>
-              <span *ngIf="!item.inStock" class="out-of-stock">
-                <i class="material-icons">cancel</i>
-                Fora de estoque
-              </span>
+            <div class="product-content">
+              <!-- Preço -->
+              <div class="product-price-container">
+                <div class="product-price-sale">
+                  <span class="sale-price">{{ card.preco | currency:'BRL':'symbol'}}</span>
+                </div>
+              </div>
+
+              <!-- Avaliações -->
+              <div class="product-rating">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="star-icon">
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                  </polygon>
+                </svg>
+                <span class="rating-value">{{ card.rating }}</span>
+                <span class="review-count">({{ card.reviews }} reviews)</span>
+              </div>
+
+              <button (click)="adicionarAoCarrinho(card)" class="add-to-cart-button">
+                Adicionar ao Carrinho
+              </button>
+
+              <div class="botao-wishlist">
+                <button (click)="removerDaListaDesejo(card)" class="add-to-cart-button">
+                  Remover da lista de desejos
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div class="item-actions">
-            <button class="btn-primary" [disabled]="!item.inStock" (click)="addToCart(item)">
-              <i class="material-icons">shopping_cart</i>
-              {{ item.inStock ? 'Adicionar ao Carrinho' : 'Indisponível' }}
-            </button>
-
-            <button class="btn-outline" (click)="removeFromWishlist(item.id)">
-              <i class="material-icons">delete</i>
-              Remover
-            </button>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { Component, LOCALE_ID } from '@angular/core';
 import { ItemCarrinho } from '../../models/item-carrinho';
 import { CarrinhoService } from '../../services/carrinho.service';
 import { Router } from '@angular/router';
@@ -8,9 +9,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { RoteadorService } from '../../services/roteador.service';
 import { Roteador } from '../../models/roteador.model';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+registerLocaleData(localePt);
 
 @Component({
   selector: 'app-carrinho',
+  providers: [provideNativeDateAdapter(), {
+          provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+          { provide: LOCALE_ID, useValue: 'pt-BR'}
+        ],
   imports: [CommonModule, MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './carrinho.component.html',
   styleUrl: './carrinho.component.css'

@@ -6,4 +6,5 @@ export class Cliente {
   dataCadastro!: Date;
   usuario!: Usuario;
   cartao!: Cartao[];
+  nomeImagem!: string;
 }

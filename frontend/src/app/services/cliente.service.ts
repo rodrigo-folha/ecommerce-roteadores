@@ -149,6 +149,21 @@ export class ClienteService {
     return this.httpClient.put<Cliente>(`${this.baseUrlClientesBasicos}/update`, data, { headers });
   }
 
+  buscarListaDesejo(): Observable<any[]> {
+    const headers = this.getHeaders();
+    return this.httpClient.get<any[]>(`${this.baseUrlClientesBasicos}/desejos`, { headers })
+  }
+
+  adicionarItemListaDesejo(idProduto: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this.httpClient.patch<any>(`${this.baseUrlClientesBasicos}/desejos/adicionar/${idProduto}`, {}, { headers })
+  }
+
+  removerItemListaDesejo(idProduto: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this.httpClient.patch<any>(`${this.baseUrlClientesBasicos}/desejos/remover/${idProduto}`, {}, { headers })
+  }
+
   delete(cliente: Cliente): Observable<Cliente> {
     return this.httpClient.delete<Cliente>(`${this.baseUrl}/${cliente.id}`);
   }
@@ -158,11 +173,12 @@ export class ClienteService {
   }
 
   uploadImage(id: number, nomeImagem: string, imagem: File): Observable<any> {
+    const headers = this.getHeaders();
     const formData: FormData = new FormData();
     formData.append('nomeImagem', imagem.name);
     formData.append('imagem', imagem, imagem.name);
     
-    return this.httpClient.patch<Cliente>(`${this.baseUrlClientesBasicos}/imagem/upload`, formData);
+    return this.httpClient.patch<Cliente>(`${this.baseUrlClientesBasicos}/imagem/upload`, formData, { headers});
   }
 
 }

@@ -4,6 +4,6 @@ export class Cartao {
   cpfCartao!: string;
   numero!: string;
   dataValidade!: Date;
-  cvc!: number;
+  cvc!: string;
   modalidade!: string;
 }

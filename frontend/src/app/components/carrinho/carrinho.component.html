@@ -18,12 +18,12 @@
       </div>
 
       <div class="coluna-preco">
-        <span>{{ item.preco * item.quantidade | currency }}</span>
+        <span>{{ item.preco * item.quantidade | currency:'BRL':'symbol' }}</span>
       </div>
     </div>
 
     <div class="total-container">
-      <p class="total-carrinho">Total do Carrinho: {{ calcularTotal() | currency }}</p>
+      <p class="total-carrinho">Total do Carrinho: {{ calcularTotal() | currency:'BRL':'symbol' }}</p>
       <button mat-raised-button color="primary" (click)="finalizarCompra()">
         Finalizar Compra
       </button>

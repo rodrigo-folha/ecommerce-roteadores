@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Cartao } from '../models/cartao.model';
 import { Router } from '@angular/router';
 
@@ -24,9 +24,9 @@ export class CartaoService {
       return new HttpHeaders().set('Authorization', `Bearer ${token}`);
     }
 
-  findAll(): Observable<Cartao> {
+  findAll(): Observable<Cartao[]> {
     const headers = this.getHeaders();
-    return this.httpClient.get<Cartao>(this.baseUrl, { headers });
+    return this.httpClient.get<Cartao[]>(this.baseUrl, { headers });
   }
 
   findById(id: String): Observable<Cartao> {
