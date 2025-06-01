@@ -116,7 +116,6 @@ export class RoteadorService {
 
   uploadImage(id: number, nomeImagem: string, imagem: File): Observable<any> {
     const formData: FormData = new FormData();
-    console.log("Chegou aqui na parte de upload de imagem")
     formData.append('nomeImagem', imagem.name);
     formData.append('imagem', imagem, imagem.name);
     

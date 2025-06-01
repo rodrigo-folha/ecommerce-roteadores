@@ -38,13 +38,15 @@
         <div class="carrinho-card">
           <div *ngFor="let item of carrinhoItens" class="cart-item">
             <div class="product-info">
-              <img [src]="item.imageUrl" [alt]="item.nome">
+              <a [routerLink]="['/pagina-roteador', item.id]" class="link-imagem">
+                <img [src]="item.imageUrl" [alt]="item.nome" />
+              </a>
               <div class="produto-nome-delete">
                 <div class="product-details">
                   <h3>{{ item.nome }}</h3>
                 </div>
                 <div class="product-remove">
-                  <button class="remove-btn" (click)="removeItem(item.id)">
+                  <button class="remove-btn" (click)="removerItem(item)">
                     <i class="material-icons">delete</i> REMOVER
                   </button>
                 </div>
@@ -90,7 +92,7 @@
     <div *ngIf="currentStep === 2" class="checkout-step address-step">
       <h1>Endereço de Entrega</h1>
 
-      <form [formGroup]="addressForm" class="address-form">
+      <!-- <form [formGroup]="addressForm" class="address-form">
         <div class="form-row">
           <div class="form-group">
             <label for="fullName">Nome Completo</label>
@@ -213,8 +215,28 @@
             <label for="saveAddress">Salvar este endereço para futuras compras</label>
           </div>
         </div>
-      </form>
+      </form> -->
 
+      <div *ngFor="let endereco of enderecos; let i = index" class="endereco-opcao">
+        <label class="endereco-radio">
+          <input
+            type="radio"
+            name="enderecoSelecionado"
+            [value]="endereco.id"
+            [(ngModel)]="enderecoSelecionadoId" 
+          />
+        </label>
+        <div class="endereco-detalhes">
+          <h3>Endereço {{i + 1}}</h3>
+          <p>Logradouro: {{ endereco.logradouro }}, {{ endereco.numero }}</p>
+          <p *ngIf="endereco.complemento">Complemento: {{ endereco.complemento }}</p>
+          <p>Bairro: {{ endereco.bairro }}</p>
+          <p>Cidade: {{ endereco.cidade.nome }}/{{endereco.cidade.estado.sigla}}</p>
+          <p>CEP: {{ endereco.cep }}</p>
+        </div>
+      </div>
+
+      <button type="button" (click)="abrirModalEndereco()" class="botao-endereco">+ Cadastrar novo endereço</button>
       <!-- Shipping Methods -->
       <div class="shipping-methods">
         <h2>Método de Envio</h2>
@@ -230,7 +252,7 @@
               <p>{{ method.estimatedDays }}</p>
             </div>
             <div class="shipping-option-price">
-              {{ method.price === 0 ? 'Grátis' : 'R$ ' + method.price.toFixed(2) }}
+              {{ method.price === 0 ? 'Grátis' : 'R$ ' + method.price | currency:'BRL':'symbol'}}
             </div>
           </div>
         </div>
@@ -353,12 +375,12 @@
             <button class="remove-coupon" (click)="removeCoupon()">×</button>
           </span>
         </span>
-        <span>-R$ {{ discount.toFixed(2) }}</span>
+        <span>-R$ {{ discount | currency:'BRL':'symbol'}}</span>
       </div>
 
       <div class="summary-item">
         <span>Frete</span>
-        <span>{{ shipping === 0 ? 'Grátis' : 'R$ ' + shipping.toFixed(2) }}</span>
+        <span>{{ shipping === 0 ? 'Grátis' : 'R$ ' + shipping | currency:'BRL':'symbol'}}</span>
       </div>
 
       <div class="summary-divider"></div>

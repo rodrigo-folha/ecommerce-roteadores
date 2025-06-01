@@ -56,7 +56,7 @@ public class ClienteFileServiceImpl implements FileService{
             e.printStackTrace();
         }
 
-        return novoNomeArquivo;
+        return novoNomeArquivo + "." + extensao;
     }
 
     private void verificarTipoArquivo(String mimeType) throws IOException {

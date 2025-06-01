@@ -6,6 +6,7 @@ import { Roteador } from '../../../../models/roteador.model';
 import { RoteadorService } from '../../../../services/roteador.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CarrinhoService } from '../../../../services/carrinho.service';
+import { ClienteService } from '../../../../services/cliente.service';
 
 interface Product {
   id: string
@@ -47,10 +48,12 @@ export class PaginaRoteadoresComponent implements OnInit {
 
   roteadores: Roteador[] = [];
   cards = signal<Card[]>([]);
+  listaDesejo: number[] = [];
   constructor(
     private roteadorService: RoteadorService,
     private snackBar: MatSnackBar,
     private carrinhoService: CarrinhoService,
+    private clienteService: ClienteService,
   ) {
     this.filteredProducts = [...this.allProducts]
 
@@ -60,6 +63,7 @@ export class PaginaRoteadoresComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarRoteadores();
+    this.carregarListaDesejos();
   }
 
   carregarRoteadores() {
@@ -489,15 +493,35 @@ export class PaginaRoteadoresComponent implements OnInit {
     })
   }
 
+  carregarListaDesejos() {
+    this.clienteService.buscarListaDesejo().subscribe((lista) => {
+      this.listaDesejo = lista.map(item => item.idProduto);
+    })
+  }
+
+  isInWishlist(card: Card): boolean {
+    return this.listaDesejo.includes(card.idRoteador);
+  }
+
+  adicionarItemListaDesejo(card: Card) {
+    if (this.isInWishlist(card)) {
+      this.clienteService.removerItemListaDesejo(card.idRoteador).subscribe(() => {
+        this.listaDesejo = this.listaDesejo.filter(item => item !== card.idRoteador);
+        this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi removido da lista de desejos.')
+      });
+    } else {
+      this.clienteService.adicionarItemListaDesejo(card.idRoteador).subscribe(() => {
+        this.listaDesejo.push(card.idRoteador);
+        this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi adicionado a lista de desejos.')
+      })
+    }
+  }
+
   showSnackbarTopPosition(content: any) {
     this.snackBar.open(content, 'fechar', {
       duration: 3000,
       verticalPosition: "top",
       horizontalPosition: "center"
     });
-  }
-
-  isInWishlist(product: any): boolean {
-    return product.inWishlist
   }
 }

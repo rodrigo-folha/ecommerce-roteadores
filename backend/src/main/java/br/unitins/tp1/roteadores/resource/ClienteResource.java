@@ -77,6 +77,15 @@ public class ClienteResource {
     }
 
     @GET
+    @Path("/search/usuario/{email}")
+    public Response findByUsuario(@PathParam("email") String email) {
+        LOG.info("Execucao do metodo findByUsuario. Usuario: " + email);
+        return Response.ok(ClienteResponseDTO.valueOf(
+                clienteService.findByUsuario(email)))
+                .build();
+    }
+
+    @GET
     // @RolesAllowed({"Adm"})
     @Path("/search/cpf/{cpf}")
     public Response findByCpf(@PathParam("cpf") String cpf) {

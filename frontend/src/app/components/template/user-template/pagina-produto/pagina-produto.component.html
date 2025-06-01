@@ -82,39 +82,13 @@
           <!-- Disponibilidade -->
           <div class="product-availability">
             <span class="availability-label">Disponibilidade:</span>
-            <span class="availability-status in-stock">{{ product.availability }}</span>
+            <span class="availability-status in-stock">{{ estoque }}</span>
           </div>
 
           <!-- Descrição curta -->
           <p class="product-short-description">
             {{ roteador.descricao }}
           </p>
-
-          <!-- Seleção de tamanho -->
-          <!-- <div class="product-sizes">
-            <span class="option-label">Tamanho:</span>
-            <div class="size-options">
-              <button *ngFor="let size of product.sizes" class="size-button" [class.active]="size === selectedSize"
-                (click)="selectSize(size)">
-                {{ size }}
-              </button>
-            </div>
-          </div> -->
-
-          <!-- Seleção de cor -->
-          <!-- <div class="product-colors">
-            <span class="option-label">Cor:</span>
-            <div class="color-options">
-              <button *ngFor="let color of product.colors" class="color-button" [class.active]="color === selectedColor"
-                (click)="selectColor(color)" [style.background-color]="color === 'Branco' ? '#ffffff' : 
-                                            color === 'Preto' ? '#000000' : 
-                                            color === 'Cinza' ? '#888888' : 
-                                            color === 'Azul Marinho' ? '#000080' : ''">
-                <span class="sr-only">{{ color }}</span>
-              </button>
-            </div>
-            <span class="selected-color">{{ selectedColor }}</span>
-          </div> -->
 
           <!-- Quantidade e botões de ação -->
           <div class="product-actions">
@@ -126,7 +100,7 @@
                   <path d="M5 12h14"></path>
                 </svg>
               </button>
-              <input type="number" [(ngModel)]="quantity" min="1" class="quantity-input">
+              <input type="number" [(ngModel)]="quantidadeAdicionar" min="1" class="quantity-input">
               <button class="quantity-button" (click)="increaseQuantity()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -138,7 +112,7 @@
             </div>
 
             <div class="action-buttons">
-              <button class="add-to-cart-button" (click)="adicionarAoCarrinhoApartirRoteador(roteador)">
+              <button class="add-to-cart-button" (click)="adicionarAoCarrinhoApartirRoteador(roteador, quantidadeAdicionar)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                   class="button-icon">
@@ -149,22 +123,22 @@
                 Adicionar ao Carrinho
               </button>
 
-              <button class="wishlist-button" (click)="toggleWishlist()">
-                <svg *ngIf="!inWishlist" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+              <button class="wishlist-button" (click)="adicionarAoListaDesejoApartirRoteador(roteador)">
+                <svg *ngIf="!isInWishlistRoteador(roteador)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                   class="button-icon">
                   <path
                     d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
                   </path>
                 </svg>
-                <svg *ngIf="inWishlist" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                <svg *ngIf="isInWishlistRoteador(roteador)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                   fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                   stroke-linejoin="round" class="button-icon">
                   <path
                     d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
                   </path>
                 </svg>
-                {{ inWishlist ? 'Remover da Lista de Desejos' : 'Adicionar à Lista de Desejos' }}
+                {{ isInWishlistRoteador(roteador) ? 'Remover da Lista de Desejos' : 'Adicionar à Lista de Desejos' }}
               </button>
             </div>
           </div>
@@ -408,13 +382,12 @@
           <div class="product-details">
             <div class="product-header">
               <h3 class="product-name">{{ roteador.titulo }}</h3>
-              <button class="wishlist-toggle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="wishlist-icon">
-                  <path
-                    d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
-                  </path>
+              <button (click)="adicionarItemListaDesejo(roteador)" class="wishlist-toggle">
+                <svg *ngIf="!isInWishlist(roteador)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="wishlist-icon">
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                </svg>
+                <svg *ngIf="isInWishlist(roteador)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="wishlist-icon wishlist-icon-filled">
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
                 </svg>
               </button>
             </div>

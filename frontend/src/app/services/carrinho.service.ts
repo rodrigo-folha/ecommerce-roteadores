@@ -33,9 +33,41 @@ export class CarrinhoService {
     this.atualizarArmazenamentoLocal();
   }
 
+  adicionarTelaRoteador(roteador: ItemCarrinho): void {
+    const carrinhoAtual = this.carrinhoSubject.value;
+    const itemExistente = carrinhoAtual.find(item => item.id === roteador.id);
+
+    if (itemExistente) {
+      itemExistente.quantidade += roteador.quantidade;
+    } else {
+      carrinhoAtual.push({
+        ...roteador
+      })
+    }
+
+    this.carrinhoSubject.next(carrinhoAtual);
+    this.atualizarArmazenamentoLocal();
+  }
+
   atualizarArmazenamentoLocal() {
     this.localStorageService.setItem('carrinho', this.carrinhoSubject.value);
   }
+
+  diminuirQuantidade(item: ItemCarrinho) {
+  const carrinhoAtual = this.carrinhoSubject.value;
+  const itemExistente = carrinhoAtual.find(i => i.id === item.id);
+
+  if (itemExistente) {
+    if (itemExistente.quantidade > 1) {
+      itemExistente.quantidade -= 1;
+    } else {
+      this.remover(item);
+      return;
+    }
+    this.carrinhoSubject.next(carrinhoAtual);
+    this.atualizarArmazenamentoLocal();
+  }
+}
 
 
   remover(item: ItemCarrinho) {

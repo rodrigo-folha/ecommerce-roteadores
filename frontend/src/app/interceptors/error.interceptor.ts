@@ -1,27 +1,22 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, Observable, throwError } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { catchError, throwError } from 'rxjs';
 
-export class ErrorInterceptor implements HttpInterceptor {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+export const errorInterceptor: HttpInterceptorFn = (request, next) => {
+  const router = inject(Router);
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe(
-      catchError((error: HttpErrorResponse) => {
-        const listOfErrors = new Array(401, 403);
-        if (listOfErrors.indexOf(error.status) > -1) {
-          this.authService.removeToken();
-          this.authService.removeUsuarioLogado;
-
-          this.router.navigate(['/']);
+  return next(request).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401 || error.status === 403) {
+        const isAdmin = router.url.includes('/admin');
+        if (isAdmin) {
+          router.navigate(['/admin/login']);
+        } else {
+          router.navigate(['/login']);
         }
-
-        return throwError(() => error);
-      })
-    )
-  }
-}
+      }
+      return throwError(() => error);
+    })
+  );
+};

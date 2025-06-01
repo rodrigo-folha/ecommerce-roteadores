@@ -1,11 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ItemCarrinho } from '../../models/item-carrinho';
 import { CarrinhoService } from '../../services/carrinho.service';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Endereco } from '../../models/endereco.model';
+import { Cliente } from '../../models/cliente.model';
+import { ClienteService } from '../../services/cliente.service';
+registerLocaleData(localePt);
 
 interface CartItem {
   id: number
@@ -31,6 +38,10 @@ interface PaymentMethod {
 
 @Component({
   selector: 'app-cart',
+  providers: [provideNativeDateAdapter(), {
+            provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+            { provide: LOCALE_ID, useValue: 'pt-BR'}
+          ],
   imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule, MatIconModule, MatButtonModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
@@ -38,6 +49,9 @@ interface PaymentMethod {
 export class CartComponent implements OnInit {
 
   carrinhoItens: ItemCarrinho[] = [];
+  enderecos: Endereco[] = [];
+  cliente: Cliente = new Cliente();
+  enderecoSelecionadoId: number | null = null;
 
   // Current step (1: Cart, 2: Address, 3: Payment)
   currentStep = 1
@@ -81,6 +95,8 @@ export class CartComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private carrinhoService: CarrinhoService,
+    private snackBar: MatSnackBar,
+    private clienteService: ClienteService,
   ) {
     // Initialize forms
     this.addressForm = this.fb.group({
@@ -113,25 +129,42 @@ export class CartComponent implements OnInit {
     this.carrinhoService.carrinho$.subscribe(itens => {
       this.carrinhoItens = itens;
     })
+    this.inicializar();
+  }
+
+  inicializar(): void {
+    const usuarioLocalStorage = localStorage.getItem('usuario_logado');
+    if (usuarioLocalStorage) {
+      const clienteConvertido = JSON.parse(usuarioLocalStorage);
+      this.clienteService.findById(clienteConvertido.id).subscribe((item) => {
+        this.cliente = item;
+        this.carregarEnderecos();
+      })
+    }
+  }
+
+  abrirModalEndereco() {
+    // abre seu modal
+  }
+
+  carregarEnderecos() {
+    this.enderecos = this.cliente.usuario.enderecos;
   }
 
   aumentarQuantidade(item: any) {
-    item.quantidade++;
+    this.carrinhoService.adicionar(item);
   }
 
   diminuirQuantidade(item: any) {
-    if (item.quantidade > 1) {
-      item.quantidade--;
-    } else {
-      this.removerItem(item);
+    if (item.quantidade == 1) {
+      this.showSnackbarTopPosition('Roteador removido do carrinho com sucesso!')
     }
+    this.carrinhoService.diminuirQuantidade(item);
   }
 
   removerItem(item: any) {
-    const index = this.carrinhoItens.indexOf(item);
-    if (index >= 0) {
-      this.carrinhoItens.splice(index, 1);
-    }
+    this.carrinhoService.remover(item);
+    this.showSnackbarTopPosition('Roteador removido do carrinho com sucesso!')
   }
 
   calcularTotal() {
@@ -232,15 +265,14 @@ export class CartComponent implements OnInit {
   nextStep(): void {
     if (this.currentStep === 1) {
       // Validate cart has items
-      if (this.cartItems.length === 0) {
+      if (this.carrinhoItens.length === 0) {
         alert("Seu carrinho está vazio")
         return
       }
       this.currentStep = 2
     } else if (this.currentStep === 2) {
       // Validate address form
-      if (this.addressForm.invalid) {
-        this.addressForm.markAllAsTouched()
+      if (this.enderecoSelecionadoId == null) {
         return
       }
       this.currentStep = 3
@@ -294,6 +326,14 @@ export class CartComponent implements OnInit {
   hasError(formGroup: FormGroup, controlName: string): boolean {
     const control = formGroup.get(controlName)
     return control ? control.invalid && (control.dirty || control.touched) : false
+  }
+
+  showSnackbarTopPosition(content: any) {
+    this.snackBar.open(content, 'fechar', {
+      duration: 3000,
+      verticalPosition: "top",
+      horizontalPosition: "center"
+    });
   }
 
 }

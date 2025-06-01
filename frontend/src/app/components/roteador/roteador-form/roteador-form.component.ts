@@ -477,8 +477,6 @@ export class RoteadorFormComponent {
   }
   
   private uploadImages(roteadorId: number) {
-    console.log("Esse é o meu selectFiles: " + this.selectedFiles);
-    console.log("Esse é o meu selectFiles.length: " + this.selectedFiles.length);
     if (this.selectedFiles && this.selectedFiles.length > 0) {
       // Array de observables para os uploads
       const uploads = this.selectedFiles.map(file =>

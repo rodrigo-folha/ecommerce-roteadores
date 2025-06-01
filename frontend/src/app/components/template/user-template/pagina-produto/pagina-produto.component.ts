@@ -9,6 +9,7 @@ import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/cor
 import { RoteadoresCardsComponent } from "../roteadores-cards/roteadores-cards.component";
 import { CarrinhoService } from '../../../../services/carrinho.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ClienteService } from '../../../../services/cliente.service';
 registerLocaleData(localePt);
 
 interface ProductImage {
@@ -52,6 +53,8 @@ export class PaginaProdutoComponent {
   imagensProduto: ProductImage[] = [];
   produtosRelacionados = signal<Card[]>([]);
   roteadoresSimilares: Roteador[] = [];
+  listaDesejo: number[] = [];
+  quantidadeAdicionar: number = 1;
 
   productId = ""
   quantity = 1
@@ -60,6 +63,7 @@ export class PaginaProdutoComponent {
   inWishlist = false
   activeTab = "description"
   activeImageIndex = 0
+  estoque: number | null = null;
 
   // Dados do produto (em um app real, estes dados viriam de um serviço)
   product = {
@@ -180,6 +184,7 @@ export class PaginaProdutoComponent {
         private roteadorService: RoteadorService,
         private carrinhoService: CarrinhoService,
         private snackBar: MatSnackBar,
+        private clienteService: ClienteService,
   ) {
   }
 
@@ -187,17 +192,19 @@ export class PaginaProdutoComponent {
     this.roteador = this.activatedRoute.snapshot.data['roteador'];
     this.carregarImagensDoRoteador();
     this.carregarProdutosRelacionados();
+    this.carregarListaDesejos();
+    this.carregarQuantidadeEstoque();
   }
 
   // Métodos para interação do usuário
   decreaseQuantity(): void {
-    if (this.quantity > 1) {
-      this.quantity--
+    if (this.quantidadeAdicionar > 1) {
+      this.quantidadeAdicionar--
     }
   }
 
   increaseQuantity(): void {
-    this.quantity++
+    this.quantidadeAdicionar++
   }
 
   selectSize(size: string): void {
@@ -233,7 +240,7 @@ export class PaginaProdutoComponent {
     })
   }
 
-  adicionarAoCarrinhoApartirRoteador(roteador: Roteador) {
+  adicionarAoCarrinhoApartirRoteador(roteador: Roteador, quantidade: number) {
     const card: Card = {
       idRoteador: roteador.id,
       titulo: roteador.nome,
@@ -244,21 +251,25 @@ export class PaginaProdutoComponent {
     }
 
     this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi adicionado ao carrinho.')
-    this.carrinhoService.adicionar({
+    this.carrinhoService.adicionarTelaRoteador({
       id: card.idRoteador,
       nome: card.titulo,
       preco: card.preco,
-      quantidade: 1,
+      quantidade: quantidade,
       imageUrl: card.imageUrl
     })
   }
 
-  showSnackbarTopPosition(content: any) {
-    this.snackBar.open(content, 'fechar', {
-      duration: 3000,
-      verticalPosition: "top",
-      horizontalPosition: "center"
-    });
+  adicionarAoListaDesejoApartirRoteador(roteador: Roteador) {
+    const card: Card = {
+      idRoteador: roteador.id,
+      titulo: roteador.nome,
+      preco: roteador.preco,
+      rating: 4.5,
+      reviews: 128,
+      imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString())
+    }
+    this.adicionarItemListaDesejo(card);
   }
 
   setActiveTab(tab: string): void {
@@ -323,5 +334,47 @@ export class PaginaProdutoComponent {
     this.produtosRelacionados.set(cards);
   }
 
+  carregarListaDesejos() {
+    this.clienteService.buscarListaDesejo().subscribe((lista) => {
+      this.listaDesejo = lista.map(item => item.idProduto);
+    })
+  }
+
+  isInWishlist(card: Card): boolean {
+    return this.listaDesejo.includes(card.idRoteador);
+  }
+
+  isInWishlistRoteador(roteador: Roteador): boolean {
+    return this.listaDesejo.includes(roteador.id);
+  }
+
+  adicionarItemListaDesejo(card: Card) {
+    if (this.isInWishlist(card)) {
+      this.clienteService.removerItemListaDesejo(card.idRoteador).subscribe(() => {
+        this.listaDesejo = this.listaDesejo.filter(item => item !== card.idRoteador);
+        this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi removido da lista de desejos.')
+      });
+    } else {
+      this.clienteService.adicionarItemListaDesejo(card.idRoteador).subscribe(() => {
+        this.listaDesejo.push(card.idRoteador);
+        this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi adicionado a lista de desejos.')
+      })
+    }
+  }
+
+  carregarQuantidadeEstoque() {
+    this.roteadorService.countQuantidadeTotalById(this.roteador.id).subscribe((resultado) => {
+      this.estoque = resultado;
+    });
+    console.log("Essa é a quantidade em estoque: ", this.estoque)
+  }
+
+  showSnackbarTopPosition(content: any) {
+    this.snackBar.open(content, 'fechar', {
+      duration: 3000,
+      verticalPosition: "top",
+      horizontalPosition: "center"
+    });
+  }
   
 }

@@ -7,6 +7,7 @@ import { Roteador } from '../../../../models/roteador.model';
 import { RoteadorService } from '../../../../services/roteador.service';
 import { CarrinhoService } from '../../../../services/carrinho.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ClienteService } from '../../../../services/cliente.service';
 registerLocaleData(localePt);
 
 type Card = {
@@ -32,14 +33,18 @@ export class RoteadoresCardsComponent {
 
   roteadores: Roteador[] = [];
   cards = signal<Card[]>([]);
+  listaDesejo: number[] = [];
+
   constructor(
     private roteadorService: RoteadorService,
     private carrinhoService: CarrinhoService,
     private snackBar: MatSnackBar,
+    private clienteService: ClienteService,
   ) { }
 
   ngOnInit(): void {
     this.carregarRoteadores();
+    this.carregarListaDesejos();
   }
 
   carregarRoteadores() {
@@ -63,67 +68,29 @@ export class RoteadoresCardsComponent {
     })
     this.cards.set(cards);
   }
-
-  products = [
-    {
-      name: "Roteador 1",
-      category: "Clothing",
-      price: "29.99",
-      salePrice: null,
-      image: "../login/placeholder.svg",
-      badge: null,
-      rating: 4.5,
-      reviews: 128,
-      inWishlist: false,
-    },
-    {
-      name: "Roteador 2",
-      category: "Accessories",
-      price: "89.99",
-      salePrice: "69.99",
-      image: "../login/placeholder.svg",
-      badge: "Sale",
-      rating: 4.8,
-      reviews: 64,
-      inWishlist: true,
-    },
-    {
-      name: "Roteador 3",
-      category: "Jewelry",
-      price: "49.99",
-      salePrice: null,
-      image: "../login/placeholder.svg",
-      badge: "New",
-      rating: 4.2,
-      reviews: 42,
-      inWishlist: false,
-    },
-    {
-      name: "Roteador 4",
-      category: "Clothing",
-      price: "59.99",
-      salePrice: null,
-      image: "../login/placeholder.svg",
-      badge: null,
-      rating: 4.6,
-      reviews: 96,
-      inWishlist: false,
-    },
-  ]
-
-  addToCart(product: any) {
-    console.log("Added to cart:", product)
-    // Implement cart functionality
+  
+  carregarListaDesejos() {
+    this.clienteService.buscarListaDesejo().subscribe((lista) => {
+      this.listaDesejo = lista.map(item => item.idProduto);
+    })
   }
 
-  isInWishlist(product: any): boolean {
-    return product.inWishlist
+  isInWishlist(card: Card): boolean {
+    return this.listaDesejo.includes(card.id);
   }
 
-  toggleWishlist(product: any) {
-    product.inWishlist = !product.inWishlist
-    console.log(product.inWishlist ? "Added to wishlist:" : "Removed from wishlist:", product)
-    // Implement wishlist functionality
+  adicionarItemListaDesejo(card: Card) {
+    if (this.isInWishlist(card)) {
+      this.clienteService.removerItemListaDesejo(card.id).subscribe(() => {
+        this.listaDesejo = this.listaDesejo.filter(item => item !== card.id);
+        this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi removido da lista de desejos.')
+      });
+    } else {
+      this.clienteService.adicionarItemListaDesejo(card.id).subscribe(() => {
+        this.listaDesejo.push(card.id);
+        this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi adicionado a lista de desejos.')
+      })
+    }
   }
 
   adicionarAoCarrinho(card: Card) {

@@ -200,11 +200,16 @@ export class PerfilUsuarioComponent {
   }
 
   ngOnInit(): void {
-    this.loadCreditCards()
     this.loadWishlistItems()
     this.initializeForm();
     this.cidadeService.findAll().subscribe((data) => {
       this.cidades = data.resultado;
+    });
+    this.activatedRoute.queryParams.subscribe(params => {
+      const aba = +params['aba'];
+      if (aba >= 1 && aba <= 4) {
+        this.setActiveTab(aba);
+      }
     });
   }
 
@@ -218,7 +223,6 @@ export class PerfilUsuarioComponent {
       this.clienteService.findById(clienteConvertido.id).subscribe((item) => {
         cliente = item;
         this.cliente = item;
-
         const usuario = cliente?.id ? cliente.usuario : null;
 
         this.formGroup = this.fb.group({
@@ -239,6 +243,16 @@ export class PerfilUsuarioComponent {
         usuario?.enderecos.forEach(endereco => {
           this.adicionarEndereco(endereco);
         })
+
+        this.clienteService.getUrlImageHeader(this.cliente.nomeImagem).subscribe({
+        next: (blob) => {
+          const objectURL = URL.createObjectURL(blob);
+          this.imagePreview = objectURL;
+        },
+        error: (err) => {
+          console.error('Erro ao carregar imagem:', err);
+        }
+      });
 
       })
 
@@ -262,6 +276,7 @@ export class PerfilUsuarioComponent {
           console.error('Erro ao buscar lista de desejos:', err);
         }
       });
+
     }
   }
 
@@ -359,92 +374,6 @@ export class PerfilUsuarioComponent {
       alert("Senha alterada com sucesso!")
       this.showPasswordForm = false
       this.passwordForm.reset()
-    }
-  }
-
-  // Credit Card methods
-  loadCreditCards(): void {
-    this.creditCards = [
-      {
-        id: 1,
-        name: "Cartão Principal",
-        number: "**** **** **** 1234",
-        expiryDate: "12/25",
-        brand: "Visa",
-        isPrimary: true,
-      },
-      {
-        id: 2,
-        name: "Cartão Reserva",
-        number: "**** **** **** 5678",
-        expiryDate: "08/26",
-        brand: "Mastercard",
-        isPrimary: false,
-      },
-    ]
-  }
-
-  addCard(): void {
-    this.showCardForm = true
-    this.editingCardId = null
-    this.cardForm.reset()
-  }
-
-  editCard(card: CreditCard): void {
-    this.showCardForm = true
-    this.editingCardId = card.id
-    this.cardForm.patchValue({
-      name: card.name,
-      number: card.number.replace(/\*/g, "").replace(/\s/g, ""),
-      expiryDate: card.expiryDate,
-      isPrimary: card.isPrimary,
-    })
-  }
-
-  saveCard(): void {
-    if (this.cardForm.valid) {
-      const cardData = this.cardForm.value
-
-      // Mask card number for display
-      const maskedNumber = this.maskCardNumber(cardData.number)
-      const brand = this.getCardBrand(cardData.number)
-
-      if (this.editingCardId) {
-        // Update existing card
-        const index = this.creditCards.findIndex((c) => c.id === this.editingCardId)
-        if (index !== -1) {
-          this.creditCards[index] = {
-            ...this.creditCards[index],
-            name: cardData.name,
-            number: maskedNumber,
-            expiryDate: cardData.expiryDate,
-            brand: brand,
-            isPrimary: cardData.isPrimary,
-          }
-        }
-      } else {
-        // Add new card
-        const newCard: CreditCard = {
-          id: Date.now(),
-          name: cardData.name,
-          number: maskedNumber,
-          expiryDate: cardData.expiryDate,
-          brand: brand,
-          isPrimary: cardData.isPrimary,
-        }
-        this.creditCards.push(newCard)
-      }
-
-      // Set as primary if selected
-      if (cardData.isPrimary) {
-        this.creditCards.forEach((card) => {
-          card.isPrimary = card.id === (this.editingCardId || Date.now())
-        })
-      }
-
-      this.showCardForm = false
-      this.cardForm.reset()
-      alert("Cartão salvo com sucesso!")
     }
   }
 
@@ -643,6 +572,7 @@ export class PerfilUsuarioComponent {
 
     this.clienteService.updateBasico(clienteAtualizado.usuario).subscribe(response => {
       this.cliente = response;
+      this.showNotification('Telefone atualizado com sucesso!', 'success');      
       this.initializeForm();
     })
   }
@@ -656,6 +586,7 @@ export class PerfilUsuarioComponent {
 
     this.clienteService.updateBasico(clienteAtualizado.usuario).subscribe(response => {
       this.cliente = response;
+      this.showNotification('Telefone excluído com sucesso!', 'success');
       this.initializeForm();
     })
   }
@@ -688,7 +619,9 @@ export class PerfilUsuarioComponent {
       operacao.subscribe({
         next: () => {
           this.uploadImage(cliente.id);
-          this.router.navigateByUrl('/minha-conta');
+          this.router.navigateByUrl('/minha-conta').then(() => {
+            window.location.reload();
+          });
           this.showNotification('Perfil atualizado com sucesso!', 'success');
 
         },
@@ -787,7 +720,9 @@ export class PerfilUsuarioComponent {
     console.log("Esse é o id do roteador: ", card.id)
     this.clienteService.removerItemListaDesejo(card.id).subscribe(() => {
       this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi removido da lista de desejo.')
-      this.initializeForm();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['/minha-conta'], { queryParams: { aba: 4 } });
+      });
     })
   }
 

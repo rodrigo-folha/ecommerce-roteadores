@@ -2,7 +2,7 @@
   <!-- Profile Header -->
   <div class="profile-header">
     <div class="profile-avatar">
-      <img [src]="userProfile.profileImage" [alt]="userProfile.name">
+      <img [src]="imagePreview || userProfile.profileImage" [alt]="userProfile.name">
     </div>
     <div class="profile-info">
       <h1>{{ formGroup.get('nome')?.value }}</h1>
@@ -40,7 +40,7 @@
       <!-- Profile Image Upload -->
       <div class="image-upload-section">
         <div class="current-image">
-          <img [src]="imagePreview || cliente.nomeImagem">
+          <img [src]="imagePreview || userProfile.profileImage">
         </div>
         <div class="upload-controls">
           <input type="file" id="profileImage" accept="image/*" (change)="onFileSelected($event)"
@@ -325,66 +325,6 @@
           <p style="margin-top: 1rem;">Nenhum cartao cadastrado.</p>
         </ng-template>
 
-      </div>
-
-      <!-- Card Form -->
-      <div *ngIf="showCardForm" class="card-form">
-        <h3>{{ editingCardId ? 'Editar' : 'Adicionar' }} Cartão</h3>
-        <form [formGroup]="cardForm">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="cardName">Nome do Cartão</label>
-              <input type="text" id="cardName" formControlName="name" placeholder="Ex: Cartão Principal">
-              <div *ngIf="hasError(cardForm, 'name')" class="error-message">
-                Nome é obrigatório
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="cardNumber">Número do Cartão</label>
-              <input type="text" id="cardNumber" formControlName="number" placeholder="0000 0000 0000 0000">
-              <div *ngIf="hasError(cardForm, 'number')" class="error-message">
-                Número do cartão é obrigatório
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="expiryDate">Data de Validade</label>
-              <input type="text" id="expiryDate" formControlName="expiryDate" placeholder="MM/AA">
-              <div *ngIf="hasError(cardForm, 'expiryDate')" class="error-message">
-                Data de validade é obrigatória
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="cvv">CVV</label>
-              <input type="text" id="cvv" formControlName="cvv" placeholder="123">
-              <div *ngIf="hasError(cardForm, 'cvv')" class="error-message">
-                CVV é obrigatório
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group checkbox-group">
-              <input type="checkbox" id="isPrimaryCard" formControlName="isPrimary">
-              <label>Definir como cartão principal</label>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-primary" (click)="saveCard()">
-              {{ editingCardId ? 'Atualizar' : 'Salvar' }} Cartão
-            </button>
-            <button type="button" class="btn-outline" (click)="showCardForm = false">
-              Cancelar
-            </button>
-          </div>
-        </form>
       </div>
     </div>
 

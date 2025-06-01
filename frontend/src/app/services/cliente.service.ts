@@ -18,16 +18,6 @@ export class ClienteService {
     private router: Router
   ) { }
 
-  private getHeaders(): HttpHeaders {
-    const token1 = localStorage.getItem('jwt_token');
-    const token = token1?.replaceAll('"', '');
-    if (!token) {
-      this.router.navigate(['/login']);
-      throw new Error('Usuário não autenticado')
-    }
-    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  }
-
   findAll(page?: number, pageSize?: number): Observable<IPaginator<Cliente>> {
     let params = {};
 
@@ -43,6 +33,10 @@ export class ClienteService {
 
   findById(id: string): Observable<Cliente> {
     return this.httpClient.get<Cliente>(`${this.baseUrl}/${id}`);
+  }
+
+  findByUsuario(email: string): Observable<Cliente> {
+    return this.httpClient.get<Cliente>(`${this.baseUrl}/search/usuario/${email}`)
   }
 
   findByNome(nome?: string, page?: number, pageSize?: number): Observable<IPaginator<Cliente>> {
@@ -127,7 +121,6 @@ export class ClienteService {
   }
 
   updateBasico(usuario: Usuario): Observable<Cliente> {
-    const headers = this.getHeaders();
     const data = {
       nome: usuario.nome,
       cpf: usuario.cpf,
@@ -146,22 +139,19 @@ export class ClienteService {
       }))
     }
     
-    return this.httpClient.put<Cliente>(`${this.baseUrlClientesBasicos}/update`, data, { headers });
+    return this.httpClient.put<Cliente>(`${this.baseUrlClientesBasicos}/update`, data);
   }
 
   buscarListaDesejo(): Observable<any[]> {
-    const headers = this.getHeaders();
-    return this.httpClient.get<any[]>(`${this.baseUrlClientesBasicos}/desejos`, { headers })
+    return this.httpClient.get<any[]>(`${this.baseUrlClientesBasicos}/desejos`)
   }
 
   adicionarItemListaDesejo(idProduto: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this.httpClient.patch<any>(`${this.baseUrlClientesBasicos}/desejos/adicionar/${idProduto}`, {}, { headers })
+    return this.httpClient.patch<any>(`${this.baseUrlClientesBasicos}/desejos/adicionar/${idProduto}`, {})
   }
 
   removerItemListaDesejo(idProduto: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this.httpClient.patch<any>(`${this.baseUrlClientesBasicos}/desejos/remover/${idProduto}`, {}, { headers })
+    return this.httpClient.patch<any>(`${this.baseUrlClientesBasicos}/desejos/remover/${idProduto}`, {})
   }
 
   delete(cliente: Cliente): Observable<Cliente> {
@@ -171,14 +161,19 @@ export class ClienteService {
   getUrlImage(nomeImagem: string): string {
     return `${this.baseUrlClientesBasicos}/imagem/download/${nomeImagem}`;
   }
+  
+  getUrlImageHeader(nomeImagem: string): Observable<Blob> {
+    return this.httpClient.get<Blob>(`${this.baseUrlClientesBasicos}/imagem/download/${nomeImagem}`, {
+      responseType: 'blob' as 'json'
+    });
+  }
 
   uploadImage(id: number, nomeImagem: string, imagem: File): Observable<any> {
-    const headers = this.getHeaders();
     const formData: FormData = new FormData();
     formData.append('nomeImagem', imagem.name);
     formData.append('imagem', imagem, imagem.name);
     
-    return this.httpClient.patch<Cliente>(`${this.baseUrlClientesBasicos}/imagem/upload`, formData, { headers});
+    return this.httpClient.patch<Cliente>(`${this.baseUrlClientesBasicos}/imagem/upload`, formData);
   }
 
 }
