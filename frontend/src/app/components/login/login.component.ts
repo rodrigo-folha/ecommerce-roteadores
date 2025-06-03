@@ -30,50 +30,56 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  errorMessage: string = '';
-  hide = signal(true);
-  clickEvent(event: MouseEvent | KeyboardEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.hide.set(!this.hide());
-  }
+  loginForm: FormGroup
+  isSubmitting = false
+  showPassword = false
+  loginError: string | null = null
 
-  loginForm!: FormGroup;
-
-  constructor(
-    private formBuilder: FormBuilder,
+  constructor(private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
-  ) { }
+    private snackBar: MatSnackBar,
+  ) {
+    this.loginForm = this.fb.group({
+      email: ["", [Validators.required, Validators.email]],
+      senha: ["", [Validators.required, Validators.minLength(6)]],
+      rememberMe: [false],
+    })
+  }
 
-  ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.minLength(3)]],
-      senha: ['', [Validators.required, Validators.minLength(3)]]
-    });
+  get email() {
+    return this.loginForm.get("email")
+  }
+
+  get senha() {
+    return this.loginForm.get("senha")
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const email = this.loginForm.get('email')!.value;
-      const senha = this.loginForm.get('senha')!.value;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched()
+      return
+    }
 
-      this.authService.loginUser(email, senha).subscribe({
+    // this.isSubmitting = true
+    // this.loginError = null
+
+    const email = this.loginForm.get('email')!.value;
+    const senha = this.loginForm.get('senha')!.value;
+
+      this.authService.loginUserKeycloak(email, senha).subscribe({
         next: (resp) => {
-          this.router.navigateByUrl('/admin')
+          this.router.navigateByUrl('')
         },
         error: (err) => {
           console.log(err);
           this.showSnackbarTopPosition("Dados inválidos", 'Fechar', 2000);
         }
       });
-      
-    } 
-  }
-
-  onRegister() {
-    // criar usuário
   }
 
   showSnackbarTopPosition(content: any, action: any, duration: any) {

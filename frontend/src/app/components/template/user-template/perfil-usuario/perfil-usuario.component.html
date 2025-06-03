@@ -304,8 +304,8 @@
 
               <div class="card-details">
                 <h3>{{ cartao.titular }}</h3>
-                <p class="card-number">{{ cartao.numero }}</p>
-                <p class="card-expiry">Válido até: {{ cartao.dataValidade }}</p>
+                <p class="card-number">{{ cartao.numero | formatarCartao }}</p>
+                <p class="card-expiry">Válido até: {{ cartao.dataValidade | date: 'MM/yy'}}</p>
               </div>
 
               <div class="card-actions">

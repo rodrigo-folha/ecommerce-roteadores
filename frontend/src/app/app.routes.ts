@@ -89,9 +89,13 @@ export const routes: Routes = [
     title: 'Administrativo',
     children: [
       // {path: 'sidebar', component: SidebarComponent},
+
+      
         {path: '', pathMatch: 'full', redirectTo: 'admin'},
         {path: '', component: HomeComponent, title: 'Home'},
 
+        {path: 'login', component: LoginComponent, title: 'Login' },
+      
         {path: 'home-admin', component: HomeAdminComponent, title: 'Home Admin'},
         {path: 'perfil', component: PerfilAdminComponent, title: 'Perfil Admin'},
         {path: 'produto-admin', component: ProdutoAdminComponent, title: 'Produto Admin'},

@@ -63,7 +63,10 @@ export class PaginaRoteadoresComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarRoteadores();
-    this.carregarListaDesejos();
+    const usuarioLogado = localStorage.getItem('usuario_logado');
+    if (usuarioLogado) {
+      this.carregarListaDesejos();
+    }
   }
 
   carregarRoteadores() {

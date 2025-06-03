@@ -45,6 +45,8 @@ export class HeaderUserComponent implements OnInit, OnDestroy {
   obterUsuarioLogado() {
     this.subscription.add(this.authService.getUsuarioLogado().subscribe((usuario) => {
       this.usuarioLogado = usuario
+      this.fotoPerfil = null;
+      this.cliente = null;
       if (usuario) {
         this.obterCliente(usuario.email);
       }
@@ -55,15 +57,17 @@ export class HeaderUserComponent implements OnInit, OnDestroy {
   obterCliente(email: string) {
     this.clienteService.findByUsuario(email).subscribe((cliente) => {
       this.cliente = cliente;
-      this.clienteService.getUrlImageHeader(cliente.nomeImagem).subscribe({
-        next: (blob) => {
-          const objectURL = URL.createObjectURL(blob);
-          this.fotoPerfil = objectURL;
-        },
-        error: (err) => {
-          console.error('Erro ao carregar imagem:', err);
-        }
-      })
+      if (cliente.nomeImagem) {
+        this.clienteService.getUrlImageHeader(cliente.nomeImagem).subscribe({
+          next: (blob) => {
+            const objectURL = URL.createObjectURL(blob);
+            this.fotoPerfil = objectURL;
+          },
+          error: (err) => {
+            console.error('Erro ao carregar imagem:', err);
+          }
+        })
+      }
     })
 
   }

@@ -13,7 +13,6 @@ export const authGuard: CanActivateFn = (route, state) => {
     router.navigate(['/login']);
     return false;
   } else {
-    console.log('Token Válido');
     return true;
   }
 };

@@ -26,7 +26,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Número</mat-label>
-      <input matInput formControlName="numero" required onkeypress="return /^[0-9]+$/.test(event.key)" />
+      <input matInput formControlName="numero" required onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="19" mask="0000 0000 0000 0000"/>
       <mat-error
         *ngIf="
           cartaoForm.get('numero') &&
@@ -42,7 +42,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>CPF</mat-label>
-      <input matInput formControlName="cpfCartao" required />
+      <input matInput formControlName="cpfCartao" required onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="14" mask="000.000.000-00"/>
       <mat-error
         *ngIf="
           cartaoForm.get('cpfCartao') &&
@@ -58,7 +58,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>CVC</mat-label>
-      <input matInput formControlName="cvc" required onkeypress="return /^[0-9]+$/.test(event.key)"/>
+      <input matInput formControlName="cvc" required onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="3"/>
       <mat-error
         *ngIf="
           cartaoForm.get('cvc') &&

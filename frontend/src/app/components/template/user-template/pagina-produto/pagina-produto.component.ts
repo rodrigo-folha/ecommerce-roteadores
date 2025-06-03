@@ -189,11 +189,19 @@ export class PaginaProdutoComponent {
   }
 
   ngOnInit(): void {
-    this.roteador = this.activatedRoute.snapshot.data['roteador'];
-    this.carregarImagensDoRoteador();
-    this.carregarProdutosRelacionados();
-    this.carregarListaDesejos();
-    this.carregarQuantidadeEstoque();
+    this.activatedRoute.params.subscribe(params => {
+      const idRoteador = params['idRoteador'];
+      
+      window.scroll(0, 0);
+      this.roteador = this.activatedRoute.snapshot.data['roteador'];
+      this.carregarImagensDoRoteador();
+      this.carregarProdutosRelacionados();
+      const usuarioLogado = localStorage.getItem('usuario_logado');
+      if (usuarioLogado) {
+        this.carregarListaDesejos();
+      }
+      this.carregarQuantidadeEstoque();
+    })
   }
 
   // Métodos para interação do usuário

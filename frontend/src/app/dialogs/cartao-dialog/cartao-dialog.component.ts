@@ -10,11 +10,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute } from '@angular/router';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-cartao-dialog',
   providers: [provideNativeDateAdapter(), {
-        provide: MAT_DATE_LOCALE, useValue: 'pt-BR'}
+        provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+        provideNgxMask(),
       ],
   imports: [CommonModule,
       ReactiveFormsModule,
@@ -24,7 +26,8 @@ import { ActivatedRoute } from '@angular/router';
       MatButtonModule,
       MatSelectModule,
       MatToolbarModule,
-      MatDatepickerModule
+      MatDatepickerModule,
+      NgxMaskDirective,
     ],
   templateUrl: './cartao-dialog.component.html',
   styleUrl: './cartao-dialog.component.css'

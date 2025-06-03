@@ -27,6 +27,7 @@ import { RoteadorService } from '../../../../services/roteador.service';
 import { Roteador } from '../../../../models/roteador.model';
 import { CarrinhoService } from '../../../../services/carrinho.service';
 import { TelefoneDialogComponent } from '../../../../dialogs/telefone-dialog/telefone-dialog.component';
+import { FormatarCartaoPipe } from '../../../../pipe/formatar-cartao.pipe';
 registerLocaleData(localePt);
 
 interface UserProfile {
@@ -82,10 +83,22 @@ type Card = {
 @Component({
   selector: 'app-perfil-usuario',
   providers: [provideNativeDateAdapter(), {
-        provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
-        { provide: LOCALE_ID, useValue: 'pt-BR'}
-      ],
-  imports: [NgIf, CommonModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule, RouterLink],
+    provide: MAT_DATE_LOCALE, useValue: 'pt-BR'
+  },
+  { provide: LOCALE_ID, useValue: 'pt-BR' }
+  ],
+  imports: [
+    NgIf, 
+    CommonModule, 
+    FormsModule, 
+    ReactiveFormsModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatDatepickerModule, 
+    MatSelectModule, 
+    RouterLink, 
+    FormatarCartaoPipe
+  ],
   templateUrl: './perfil-usuario.component.html',
   styleUrl: './perfil-usuario.component.css'
 })
@@ -130,7 +143,7 @@ export class PerfilUsuarioComponent {
 
   // File upload
   fileName: string = '';
-  selectedFile: File | null = null; 
+  selectedFile: File | null = null;
   imagePreview: string | ArrayBuffer | null = null;
 
   private subscription = new Subscription();
@@ -146,7 +159,6 @@ export class PerfilUsuarioComponent {
     private cartaoService: CartaoService,
     private roteadorService: RoteadorService,
     private carrinhoService: CarrinhoService,
-
     private dialog: MatDialog,
   ) {
 
@@ -244,15 +256,17 @@ export class PerfilUsuarioComponent {
           this.adicionarEndereco(endereco);
         })
 
-        this.clienteService.getUrlImageHeader(this.cliente.nomeImagem).subscribe({
-        next: (blob) => {
-          const objectURL = URL.createObjectURL(blob);
-          this.imagePreview = objectURL;
-        },
-        error: (err) => {
-          console.error('Erro ao carregar imagem:', err);
+        if (cliente.nomeImagem) {
+          this.clienteService.getUrlImageHeader(this.cliente.nomeImagem).subscribe({
+            next: (blob) => {
+              const objectURL = URL.createObjectURL(blob);
+              this.imagePreview = objectURL;
+            },
+            error: (err) => {
+              console.error('Erro ao carregar imagem:', err);
+            }
+          });
         }
-      });
 
       })
 
@@ -468,7 +482,7 @@ export class PerfilUsuarioComponent {
       width: '600px',
       data: endereco || {},
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.salvarEndereco(result);
@@ -481,7 +495,7 @@ export class PerfilUsuarioComponent {
       width: '600px',
       data: telefone || {},
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.salvarTelefone(result);
@@ -494,7 +508,7 @@ export class PerfilUsuarioComponent {
       width: '600px',
       data: cartao || {},
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.salvarCartao(result);
@@ -503,9 +517,9 @@ export class PerfilUsuarioComponent {
   }
 
   salvarCartao(cartao: Cartao) {
-    const operacao = cartao.id == null 
-    ? this.cartaoService.insert(cartao)
-    : this.cartaoService.update(cartao)
+    const operacao = cartao.id == null
+      ? this.cartaoService.insert(cartao)
+      : this.cartaoService.update(cartao)
 
     operacao.subscribe({
       next: () => {
@@ -532,7 +546,7 @@ export class PerfilUsuarioComponent {
   }
 
   salvarEndereco(endereco: Endereco) {
-    const clienteAtualizado = {... this.cliente};
+    const clienteAtualizado = { ... this.cliente };
     const index = clienteAtualizado.usuario.enderecos.findIndex(e => e.id === endereco.id);
 
     if (index > -1) {
@@ -561,7 +575,7 @@ export class PerfilUsuarioComponent {
   }
 
   salvarTelefone(telefone: Telefone) {
-    const clienteAtualizado = {... this.cliente};
+    const clienteAtualizado = { ... this.cliente };
     const index = clienteAtualizado.usuario.telefones.findIndex(e => e.id === telefone.id);
 
     if (index > -1) {
@@ -572,7 +586,7 @@ export class PerfilUsuarioComponent {
 
     this.clienteService.updateBasico(clienteAtualizado.usuario).subscribe(response => {
       this.cliente = response;
-      this.showNotification('Telefone atualizado com sucesso!', 'success');      
+      this.showNotification('Telefone atualizado com sucesso!', 'success');
       this.initializeForm();
     })
   }
@@ -594,15 +608,15 @@ export class PerfilUsuarioComponent {
   private uploadImage(clienteId: number) {
     if (this.selectedFile) {
       this.clienteService.uploadImage(clienteId, this.selectedFile.name, this.selectedFile)
-      .subscribe({
-        next: () => {
-          this.router.navigateByUrl('minha-conta');
-        },
-        error: err => {
-          console.log('Erro ao fazer o upload da imagem');
-          // tratar o erro
-        }
-      })
+        .subscribe({
+          next: () => {
+            this.router.navigateByUrl('minha-conta');
+          },
+          error: err => {
+            console.log('Erro ao fazer o upload da imagem');
+            // tratar o erro
+          }
+        })
     } else {
       this.router.navigateByUrl('minha-conta');
     }
@@ -635,11 +649,11 @@ export class PerfilUsuarioComponent {
 
   tratarErros(httpError: HttpErrorResponse): void {
     if (httpError.status === 400) {
-      if(httpError.error?.errors){
-        httpError.error.errors.forEach((validationError: any)  => {
+      if (httpError.error?.errors) {
+        httpError.error.errors.forEach((validationError: any) => {
           const formControl = this.formGroup.get(validationError.fieldName);
           if (formControl) {
-            formControl.setErrors({apiError: validationError.message})
+            formControl.setErrors({ apiError: validationError.message })
           }
         });
       }
@@ -649,22 +663,22 @@ export class PerfilUsuarioComponent {
 
   }
 
-  getErrorMessage(controlName: string, errors: ValidationErrors | null | undefined) : string {
+  getErrorMessage(controlName: string, errors: ValidationErrors | null | undefined): string {
     if (!errors || !this.errorMessages[controlName]) {
       return 'invalid field';
     }
 
-    for(const errorName in errors) {
+    for (const errorName in errors) {
       // console.log(errorName);
-      if (this.errorMessages[controlName][errorName]){
+      if (this.errorMessages[controlName][errorName]) {
         return this.errorMessages[controlName][errorName];
       }
     }
     return 'invalid field';
   }
-  
+
   // é proximno ao Map do java
-  errorMessages: {[controlName: string] : {[errorName: string] : string}} = {
+  errorMessages: { [controlName: string]: { [errorName: string]: string } } = {
     nome: {
       required: 'O nome deve ser informado.',
       apiError: ' '
@@ -717,7 +731,6 @@ export class PerfilUsuarioComponent {
   }
 
   removerDaListaDesejo(card: Card) {
-    console.log("Esse é o id do roteador: ", card.id)
     this.clienteService.removerItemListaDesejo(card.id).subscribe(() => {
       this.showSnackbarTopPosition('O Produto (' + card.titulo + ') foi removido da lista de desejo.')
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
@@ -734,6 +747,6 @@ export class PerfilUsuarioComponent {
     });
   }
 
-  
+
 
 }

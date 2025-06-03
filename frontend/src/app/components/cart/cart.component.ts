@@ -12,6 +12,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Endereco } from '../../models/endereco.model';
 import { Cliente } from '../../models/cliente.model';
 import { ClienteService } from '../../services/cliente.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EnderecoDialogComponent } from '../../dialogs/endereco-dialog/endereco-dialog.component';
+import { Cartao } from '../../models/cartao.model';
+import { CartaoDialogComponent } from '../../dialogs/cartao-dialog/cartao-dialog.component';
+import { CartaoService } from '../../services/cartao.service';
 registerLocaleData(localePt);
 
 interface CartItem {
@@ -74,7 +79,7 @@ export class CartComponent implements OnInit {
 
   // Payment methods
   paymentMethods: PaymentMethod[] = [
-    { id: "credit_card", name: "Cartão de Crédito", icon: "credit_card" },
+    { id: "cartao", name: "Cartão de Crédito", icon: "credit_card" },
     { id: "pix", name: "PIX", icon: "qr_code" },
     { id: "boleto", name: "Boleto Bancário", icon: "receipt" },
   ]
@@ -97,6 +102,8 @@ export class CartComponent implements OnInit {
     private carrinhoService: CarrinhoService,
     private snackBar: MatSnackBar,
     private clienteService: ClienteService,
+    private cartaoService: CartaoService,
+    private dialog: MatDialog,
   ) {
     // Initialize forms
     this.addressForm = this.fb.group({
@@ -143,13 +150,71 @@ export class CartComponent implements OnInit {
     }
   }
 
-  abrirModalEndereco() {
+  abrirModalEndereco(endereco?: Endereco): void {
     // abre seu modal
+  }
+
+  adicionarEnderecoDialog(endereco?: Endereco): void {
+    const dialogRef = this.dialog.open(EnderecoDialogComponent, {
+      width: '600px',
+      data: endereco || {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.salvarEndereco(result);
+      }
+    });
+  }
+
+  salvarEndereco(endereco: Endereco) {
+    const clienteAtualizado = { ... this.cliente };
+    const index = clienteAtualizado.usuario.enderecos.findIndex(e => e.id === endereco.id);
+
+    if (index > -1) {
+      clienteAtualizado.usuario.enderecos[index] = endereco;
+    } else {
+      clienteAtualizado.usuario.enderecos.push(endereco);
+    }
+
+    this.clienteService.updateBasico(clienteAtualizado.usuario).subscribe(response => {
+      this.cliente = response;
+    })
   }
 
   carregarEnderecos() {
     this.enderecos = this.cliente.usuario.enderecos;
   }
+
+  adicionarCartaoDialog(cartao?: Cartao): void {
+      const dialogRef = this.dialog.open(CartaoDialogComponent, {
+        width: '600px',
+        data: cartao || {},
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.salvarCartao(result);
+        }
+      });
+    }
+  
+    salvarCartao(cartao: Cartao) {
+      const operacao = cartao.id == null
+        ? this.cartaoService.insert(cartao)
+        : this.cartaoService.update(cartao)
+  
+      operacao.subscribe({
+        next: () => {
+          this.router.navigateByUrl('minha-conta');
+          this.showNotification('Cartão salvo com sucesso!', 'success');
+  
+        },
+        error: (errorResponse) => {
+          console.log('Erro ao gravar' + JSON.stringify(errorResponse));
+        }
+      })
+    }
 
   aumentarQuantidade(item: any) {
     this.carrinhoService.adicionar(item);
@@ -181,22 +246,7 @@ export class CartComponent implements OnInit {
         price: 3999.9,
         originalPrice: 4499.9,
         quantity: 1,
-      },
-      {
-        id: 2,
-        name: "Fone de Ouvido Bluetooth",
-        image: "/assets/images/products/headphones.jpg",
-        price: 299.9,
-        quantity: 2,
-      },
-      {
-        id: 3,
-        name: "Smartwatch Pro",
-        image: "/assets/images/products/smartwatch.jpg",
-        price: 899.9,
-        originalPrice: 1099.9,
-        quantity: 1,
-      },
+      }
     ]
   }
 
@@ -263,6 +313,10 @@ export class CartComponent implements OnInit {
 
   // Go to next step
   nextStep(): void {
+    if (!this.cliente || this.cliente.id == null) {
+      this.router.navigateByUrl('/login');
+      return;
+    }
     if (this.currentStep === 1) {
       // Validate cart has items
       if (this.carrinhoItens.length === 0) {
@@ -273,12 +327,13 @@ export class CartComponent implements OnInit {
     } else if (this.currentStep === 2) {
       // Validate address form
       if (this.enderecoSelecionadoId == null) {
+        alert("Selecione um endereço")
         return
       }
       this.currentStep = 3
     } else if (this.currentStep === 3) {
       // Validate payment form if credit card is selected
-      if (this.selectedPaymentMethod === "credit_card" && this.paymentForm.invalid) {
+      if (this.selectedPaymentMethod === "cartao" && this.paymentForm.invalid) {
         this.paymentForm.markAllAsTouched()
         return
       }
@@ -333,6 +388,15 @@ export class CartComponent implements OnInit {
       duration: 3000,
       verticalPosition: "top",
       horizontalPosition: "center"
+    });
+  }
+
+  showNotification(message: string, type: 'success' | 'error') {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      verticalPosition: 'bottom',
+      horizontalPosition: 'center',
+      panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar'
     });
   }
 

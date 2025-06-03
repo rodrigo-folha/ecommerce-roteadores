@@ -236,7 +236,7 @@
         </div>
       </div>
 
-      <button type="button" (click)="abrirModalEndereco()" class="botao-endereco">+ Cadastrar novo endereço</button>
+      <button type="button" (click)="adicionarEnderecoDialog()" class="botao-endereco">+ Cadastrar novo endereço</button>
       <!-- Shipping Methods -->
       <div class="shipping-methods">
         <h2>Método de Envio</h2>
@@ -284,7 +284,7 @@
       </div>
 
       <!-- Credit Card Form -->
-      <div *ngIf="selectedPaymentMethod === 'credit_card'" class="credit-card-form">
+      <div *ngIf="selectedPaymentMethod === 'cartao'" class="credit-card-form">
         <form [formGroup]="paymentForm">
           <div class="form-row">
             <div class="form-group">
