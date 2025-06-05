@@ -56,14 +56,21 @@ export class PedidoService {
   }
 
   insert(pedido: Pedido): Observable<Pedido> {
-    const data = {
+    const data: any = {
       valorTotal: pedido.valorTotal,
       listaItemPedido: pedido.listaItemPedido,
       idEndereco: pedido.enderecoEntrega.id,
-      cupomDesconto: pedido.cupomDesconto.codigo,
       tipoPagamento: pedido.modalidadePagamento.toLowerCase(),
-      idCartao: pedido.idCartao,
     }
+
+    if (pedido.cupomDesconto && pedido.cupomDesconto.codigo !== null) {
+      data.cupomDesconto = pedido.cupomDesconto.codigo;
+    }
+
+    if (pedido.modalidadePagamento.toLowerCase() == 'cartao') {
+      data.idCartao = pedido.idCartao;
+    }
+
     return this.httpClient.post<Pedido>(this.baseUrl, data);
   }
 

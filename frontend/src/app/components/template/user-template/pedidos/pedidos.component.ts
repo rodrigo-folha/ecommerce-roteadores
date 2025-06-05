@@ -1,12 +1,19 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { Component, LOCALE_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PedidoService } from '../../../../services/pedido.service';
 import { Pedido } from '../../../../models/pedido.model';
 import { SituacaoPedidoPipe } from '../../../../pipe/situacaoPedido.pipe';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+registerLocaleData(localePt);
 
 @Component({
   selector: 'app-pedidos',
+  providers: [provideNativeDateAdapter(), {
+              provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+              { provide: LOCALE_ID, useValue: 'pt-BR'}
+            ],
   imports: [CommonModule, SituacaoPedidoPipe],
   templateUrl: './pedidos.component.html',
   styleUrl: './pedidos.component.css'

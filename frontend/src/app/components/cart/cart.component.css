@@ -830,46 +830,12 @@
     transform: scale(1.15);
   }
 
-  .endereco-opcao {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  margin-bottom: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  transition: box-shadow 0.3s;
-}
-
-.endereco-opcao:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.endereco-radio {
-  display: flex;
-  align-items: center;
-  margin-right: 16px;
-}
-
-.endereco-radio input[type="radio"] {
-  width: 20px;
-  height: 20px;
-  accent-color: #007bff; /* cor personalizada se quiser */
-}
-
-.endereco-detalhes {
-  flex: 1;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #333;
-}
-
 .botao-endereco {
   display: inline-block;
   margin-top: 16px;
   padding: 10px 20px;
   border: none;
-  background-color: #007bff; /* azul padrão */
+  background-color: #007bff; 
   color: white;
   border-radius: 6px;
   font-size: 14px;
@@ -880,7 +846,117 @@
 }
 
 .botao-endereco:hover {
-  background-color: #0056b3; /* azul mais escuro no hover */
+  background-color: #0056b3;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+.cartao-opcao {
+  margin-bottom: 1rem;
+}
+
+/* Estilo base do container */
+.cartao-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Estilo quando passar o mouse */
+.cartao-container:hover {
+  border-color: #888;
+  background-color: #f9f9f9;
+}
+
+
+/* Estilo quando o radio está marcado */
+.cartao-container input[type="radio"]:checked + .cartao-detalhes {
+  border-left: 4px solid #007bff;
+  padding-left: 0.75rem;
+  /* background-color: #e9f3ff; */
+}
+
+/* Detalhes do cartão */
+.cartao-detalhes {
+  flex: 1;
+}
+
+.cartao-detalhes h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.cartao-detalhes p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+.cartao-numero {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.cartao-validade {
+  color: #666;
+}
+
+
+/* endereco */
+
+.endereco-opcao {
+  margin-bottom: 1rem;
+}
+
+/* Estilo base do container */
+.endereco-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Estilo quando passar o mouse */
+.endereco-container:hover {
+  border-color: #888;
+  background-color: #f9f9f9;
+}
+
+
+/* Estilo quando o radio está marcado */
+.endereco-container input[type="radio"]:checked + .endereco-detalhes {
+  border-left: 4px solid #007bff;
+  padding-left: 0.75rem;
+  /* background-color: #e9f3ff; */
+}
+
+/* Detalhes do cartão */
+.endereco-detalhes {
+  flex: 1;
+}
+
+.endereco-detalhes h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.endereco-detalhes p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+.endereco-numero {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.endereco-validade {
+  color: #666;
+}

@@ -218,22 +218,22 @@
       </form> -->
 
       <div *ngFor="let endereco of enderecos; let i = index" class="endereco-opcao">
-        <label class="endereco-radio">
+        <label class="endereco-container">
           <input
             type="radio"
             name="enderecoSelecionado"
-            [value]="endereco.id"
+            [value]="endereco"
             [(ngModel)]="enderecoSelecionado" 
           />
+          <div class="endereco-detalhes">
+            <h3>Endereço {{i + 1}}</h3>
+            <p>Logradouro: {{ endereco.logradouro }}, {{ endereco.numero }}</p>
+            <p *ngIf="endereco.complemento">Complemento: {{ endereco.complemento }}</p>
+            <p>Bairro: {{ endereco.bairro }}</p>
+            <p>Cidade: {{ endereco.cidade.nome }}/{{endereco.cidade.estado.sigla}}</p>
+            <p>CEP: {{ endereco.cep }}</p>
+          </div>
         </label>
-        <div class="endereco-detalhes">
-          <h3>Endereço {{i + 1}}</h3>
-          <p>Logradouro: {{ endereco.logradouro }}, {{ endereco.numero }}</p>
-          <p *ngIf="endereco.complemento">Complemento: {{ endereco.complemento }}</p>
-          <p>Bairro: {{ endereco.bairro }}</p>
-          <p>Cidade: {{ endereco.cidade.nome }}/{{endereco.cidade.estado.sigla}}</p>
-          <p>CEP: {{ endereco.cep }}</p>
-        </div>
       </div>
 
       <button type="button" (click)="adicionarEnderecoDialog()" class="botao-endereco">+ Cadastrar novo endereço</button>
@@ -335,6 +335,25 @@
             </div>
           </div>
         </form> -->
+        <div *ngFor="let cartao of cartoes; let i = index" class="cartao-opcao">
+          <label class="cartao-container">
+            <input
+              type="radio"
+              name="cartaoSelecionado"
+              [value]="cartao"
+              [(ngModel)]="cartaoSelecionado"
+            />
+            <div class="cartao-detalhes">
+              <h3>Cartão {{ i + 1 }}</h3>
+              <p>Titular: {{ cartao.titular }}</p>
+              <p class="cartao-numero">{{ cartao.numero | formatarCartao }}</p>
+              <p class="cartao-validade">Válido até: {{ cartao.dataValidade | date: 'MM/yy' }}</p>
+            </div>
+          </label>
+        </div>
+
+
+      <button type="button" (click)="adicionarCartaoDialog()" class="botao-endereco">+ Cadastrar novo cartão</button>
       </div>
 
       <!-- PIX Payment -->

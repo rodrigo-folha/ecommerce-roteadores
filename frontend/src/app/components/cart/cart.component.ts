@@ -20,6 +20,7 @@ import { CartaoService } from '../../services/cartao.service';
 import { PedidoService } from '../../services/pedido.service';
 import { Pedido } from '../../models/pedido.model';
 import { ItemPedido } from '../../models/item-pedido.model';
+import { FormatarCartaoPipe } from '../../pipe/formatar-cartao.pipe';
 registerLocaleData(localePt);
 
 interface CartItem {
@@ -50,7 +51,7 @@ interface PaymentMethod {
             provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
             { provide: LOCALE_ID, useValue: 'pt-BR'}
           ],
-  imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule, MatIconModule, MatButtonModule, FormatarCartaoPipe],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
@@ -155,6 +156,7 @@ export class CartComponent implements OnInit {
       this.clienteService.findById(clienteConvertido.id).subscribe((item) => {
         this.cliente = item;
         this.carregarEnderecos();
+        this.carregarCartoes();
       })
     }
   }
@@ -195,6 +197,10 @@ export class CartComponent implements OnInit {
     this.enderecos = this.cliente.usuario.enderecos;
   }
 
+  carregarCartoes() {
+    this.cartoes = this.cliente.cartao;
+  }
+
   adicionarCartaoDialog(cartao?: Cartao): void {
       const dialogRef = this.dialog.open(CartaoDialogComponent, {
         width: '600px',
@@ -215,7 +221,7 @@ export class CartComponent implements OnInit {
   
       operacao.subscribe({
         next: () => {
-          this.router.navigateByUrl('minha-conta');
+          this.inicializar();
           this.showNotification('Cartão salvo com sucesso!', 'success');
   
         },
@@ -342,11 +348,12 @@ export class CartComponent implements OnInit {
       this.currentStep = 3
     } else if (this.currentStep === 3) {
       // Validate payment form if credit card is selected
-      if (this.selectedPaymentMethod === "cartao" && this.paymentForm.invalid) {
-        this.paymentForm.markAllAsTouched()
+      if (this.selectedPaymentMethod === "cartao" && this.cartaoSelecionado == null) {
+        alert("Selecione um cartão")
         return
       }
-      this.placeOrder()
+      this.fazerPedido();
+      // this.placeOrder()
     }
   }
 
@@ -379,28 +386,23 @@ export class CartComponent implements OnInit {
       statusPedidos: [], // ou status inicial
       enderecoEntrega: this.enderecoSelecionado!, // precisa garantir que está preenchido
       cupomDesconto: null as any, // ou um objeto válido
-      idCartao: this.cartaoSelecionadoId!,
+      idCartao: this.cartaoSelecionado?.id!,
       pagamento: null as any, // ou um objeto do tipo Pagamento
       modalidadePagamento: this.selectedPaymentMethod
     };
 
+    console.log("Esse é o meu pedido de envio: ", pedido);
     this.pedidoService.insert(pedido).subscribe({
       next: res => {
-        console.log('Pedido feito com sucesso!', res);
-        // talvez resetar carrinho ou navegar
+        this.showNotification('Pedido realizado com sucesso!', 'success');
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['/minha-conta'], { queryParams: { aba: 5 } });
+      });
       },
       error: err => {
         console.error('Erro ao fazer o pedido:', err);
       }
     });
-  }
-
-  // Place order
-  placeOrder(): void {
-    // Here you would normally send the order to your backend
-    alert("Pedido realizado com sucesso!")
-    // Redirect to order confirmation page
-    // this.router.navigate(['/order-confirmation']);
   }
 
   // Get installment options
