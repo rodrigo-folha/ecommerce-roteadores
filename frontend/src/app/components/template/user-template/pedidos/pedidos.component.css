@@ -1,0 +1,272 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.order-details {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.header {
+  background: #343a40;
+  color: white;
+  padding: 25px 30px;
+}
+
+.btn-back {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.btn-back:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+h1 {
+  color: white;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Layout em Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0;
+  min-height: 500px;
+}
+
+.left-column {
+  padding: 0;
+}
+
+.right-column {
+  background: #f8f9fa;
+  border-left: 1px solid #e9ecef;
+  padding: 0;
+}
+
+.section {
+  padding: 25px 30px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.section h2 {
+  margin: 0 0 20px 0;
+  color: #495057;
+  font-size: 18px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+/* Valor Total */
+.total-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #28a745;
+  text-align: center;
+  padding: 25px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+}
+
+/* Lista de Itens */
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.item {
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 20px;
+  background: #ffffff;
+  transition: box-shadow 0.3s ease;
+}
+
+.item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.item-name {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #495057;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.item-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.item-details span:last-child {
+  color: #495057;
+  font-weight: 600;
+}
+
+/* Status */
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  border-left: 4px solid #007bff;
+}
+
+.status-date {
+  font-size: 13px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.status-text {
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Endereço */
+.address {
+  background: #ffffff;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  line-height: 1.6;
+}
+
+.address p {
+  margin: 6px 0;
+  color: #495057;
+  font-size: 14px;
+}
+
+.address p:first-child {
+  font-weight: 600;
+  color: #343a40;
+}
+
+/* Pagamento */
+.payment {
+  background: #ffffff;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  line-height: 1.6;
+}
+
+.payment p {
+  margin: 8px 0;
+  color: #495057;
+  font-size: 14px;
+}
+
+.payment strong {
+  color: #343a40;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .right-column {
+    background: white;
+    border-left: none;
+    border-top: 1px solid #e9ecef;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .header {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .section {
+    padding: 20px;
+  }
+
+  .total-value {
+    font-size: 28px;
+    padding: 20px;
+  }
+
+  .item-details {
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+  }
+
+  .status-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .header {
+    padding: 15px;
+  }
+
+  .section {
+    padding: 15px;
+  }
+
+  .section h2 {
+    font-size: 16px;
+  }
+
+  .total-value {
+    font-size: 24px;
+    padding: 15px;
+  }
+}

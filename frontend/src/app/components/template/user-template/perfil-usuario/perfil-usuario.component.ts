@@ -28,6 +28,15 @@ import { Roteador } from '../../../../models/roteador.model';
 import { CarrinhoService } from '../../../../services/carrinho.service';
 import { TelefoneDialogComponent } from '../../../../dialogs/telefone-dialog/telefone-dialog.component';
 import { FormatarCartaoPipe } from '../../../../pipe/formatar-cartao.pipe';
+import { ItemPedido } from '../../../../models/item-pedido.model';
+import { Pedido } from '../../../../models/pedido.model';
+import { PedidoService } from '../../../../services/pedido.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatIconModule } from '@angular/material/icon';
+import { PedidoResumido } from '../../../../models/pedido-resumido.model';
+import { MatButtonModule } from '@angular/material/button';
+import { SituacaoPedidoPipe } from '../../../../pipe/situacaoPedido.pipe';
 registerLocaleData(localePt);
 
 interface UserProfile {
@@ -97,7 +106,12 @@ type Card = {
     MatDatepickerModule, 
     MatSelectModule, 
     RouterLink, 
-    FormatarCartaoPipe
+    FormatarCartaoPipe,
+    MatTableModule,
+    MatPaginatorModule,
+    MatIconModule,
+    MatButtonModule,
+    SituacaoPedidoPipe,
   ],
   templateUrl: './perfil-usuario.component.html',
   styleUrl: './perfil-usuario.component.css'
@@ -129,6 +143,14 @@ export class PerfilUsuarioComponent {
   cards = signal<Card[]>([]);
   roteadoresListaDesejo: Roteador[] = [];
 
+  // Pedidos
+  pedidos: Pedido[] = [];
+  pedidosResumidos: PedidoResumido[] = [];
+  totalRecords = 0;
+  pageSize = 10;
+  page = 0;
+  displayedColumns: string[] = ['id', 'valorTotal', 'metodoPagamento', 'statusPedido', 'data', 'acao'];
+
   // Data arrays
   addresses: Address[] = []
   creditCards: CreditCard[] = []
@@ -159,6 +181,7 @@ export class PerfilUsuarioComponent {
     private cartaoService: CartaoService,
     private roteadorService: RoteadorService,
     private carrinhoService: CarrinhoService,
+    private pedidoService: PedidoService,
     private dialog: MatDialog,
   ) {
 
@@ -219,7 +242,7 @@ export class PerfilUsuarioComponent {
     });
     this.activatedRoute.queryParams.subscribe(params => {
       const aba = +params['aba'];
-      if (aba >= 1 && aba <= 4) {
+      if (aba >= 1 && aba <= 5) {
         this.setActiveTab(aba);
       }
     });
@@ -235,6 +258,10 @@ export class PerfilUsuarioComponent {
       this.clienteService.findById(clienteConvertido.id).subscribe((item) => {
         cliente = item;
         this.cliente = item;
+        this.pedidoService.findPedidoResumido(this.cliente.usuario.email, this.page, this.pageSize).subscribe((pedido) => {
+          this.pedidosResumidos = pedido.resultado;
+          this.totalRecords = pedido.total;
+        })
         const usuario = cliente?.id ? cliente.usuario : null;
 
         this.formGroup = this.fb.group({
@@ -290,7 +317,7 @@ export class PerfilUsuarioComponent {
           console.error('Erro ao buscar lista de desejos:', err);
         }
       });
-
+      
     }
   }
 
@@ -746,6 +773,14 @@ export class PerfilUsuarioComponent {
       horizontalPosition: "center"
     });
   }
+
+  paginar(event: PageEvent): void {
+      this.page = event.pageIndex;
+      this.pageSize = event.pageSize;
+  
+      // this.carregarPedidosEmail();
+      this.initializeForm();
+    }
 
 
 

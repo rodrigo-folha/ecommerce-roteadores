@@ -59,6 +59,8 @@ import { CarrinhoComponent } from './components/carrinho/carrinho.component';
 import { CartComponent } from './components/cart/cart.component';
 import { PerfilUsuarioComponent } from './components/template/user-template/perfil-usuario/perfil-usuario.component';
 import { authGuard } from './guards/auth.guard';
+import { PedidosComponent } from './components/template/user-template/pedidos/pedidos.component';
+import { pedidoResolver } from './components/template/user-template/pedidos/pedido.resolver';
 
 export const routes: Routes = [
   {
@@ -78,6 +80,7 @@ export const routes: Routes = [
       {path: 'roteadores', component: PaginaRoteadoresComponent},
       
       {path: 'minha-conta', component: PerfilUsuarioComponent, canActivate: [authGuard]},
+      {path: 'minha-conta/pedidos/:id', component: PedidosComponent, canActivate: [authGuard], resolve: {pedido: pedidoResolver}},
       // {path: 'login', component: LoginComponent},
       // {path: 'cadastrar', component: CadastroComponent},
     ]

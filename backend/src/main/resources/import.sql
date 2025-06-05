@@ -209,3 +209,18 @@ insert into funcionario(id_usuario, altura) values (13, 1.75);
 insert into usuario(nome, cpf, dataNascimento, email, senha) values ('ana','41122334446','1966-09-13', 'ana@email.com', '0cctg7WgpEz7kC/AzVC+KX+bZLPXDtgJDqWWZWnmzHH+7Na2YVxYYSFPxcf7ImAjqfNckx0aT4n5qKM7WEoeEQ==');
 insert into perfil_usuario(perfis, id_usuario) values (1, 14);
 insert into funcionario(id_usuario, altura) values (14, 1.55);
+
+
+-- inserindo pedido finalizar
+insert into endereco(logradouro, bairro, numero, cep, complemento, id_cidade) values ('106 Sul, Alameda 11', 'Plano Diretor Sul', '01', '77000111', 'S/C', 1);
+insert into endereco_usuario(id_usuario, enderecos_id) values (3, 4);
+insert into cartao(titular, numero, cvc, cpfcartao, id_cliente, modalidadecartao, datavalidade) values ('Carlos de Assis', '5530 2919 5703 9335', '675', '12345678900', 3, 1, '2029-02-01');
+
+-- insert into cartaopagamento(titular, numero, cvc, cpfcartao, modalidadecartao, datavalidade) values ('Carlos de Assis', '5530 2919 5703 9335', '675', '12345678900', 1, '2029-02-01');
+-- insert into enderecoentrega(logradouro, bairro, numero, cep, complemento, id_cidade) values ('106 Sul, Alameda 11', 'Plano Diretor Sul', '01', '77000111', 'S/C', 1);
+-- insert into pagamento(valor) values (394.87)
+-- insert into pedido(valortotal, data, id_cliente, id_enderecoentrega, id_pagamento) values (394.87, '2025-06-05', 3, 1, 1);
+-- insert into itempedido(preco, quantidade, id_lote, id_pedido) values (394.87, 1, 2, 1);
+
+-- insert into statuspedido(situacaopedido, dataatualizacao, id_statuspedido) values (1, '2025-06-05 00:04:06', 1);
+-- insert into statuspedido(situacaopedido, dataatualizacao, id_statuspedido) values (2, '2025-06-05 00:05:06', 1);

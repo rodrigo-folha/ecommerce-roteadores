@@ -102,8 +102,24 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public List<Pedido> findByEmail(String email) {
-        return pedidoRepository.findByEmail(email);
+    public long countByEmail(String email) {
+        Cliente cliente = clienteService.findByUsuario(email);
+        if (cliente == null)
+            throw new ValidationException("email", "cliente nao encontrado");
+        
+        Long count = pedidoRepository.countByEmail(email);
+        return count;
+    }
+
+    @Override
+    public List<Pedido> findByEmail(String email, Integer page, Integer pageSize) {
+        PanacheQuery<Pedido> query = null;
+        if (page == null || pageSize == null)
+            query = pedidoRepository.findByEmail(email);
+        else
+            query = pedidoRepository.findByEmail(email).page(page, pageSize);
+
+        return query.list();
     }
 
     @Override

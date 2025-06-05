@@ -12,7 +12,7 @@ public interface PedidoService {
 
     Pedido findById(String email, Long id);
 
-    List<Pedido> findByEmail(String email);
+    List<Pedido> findByEmail(String email, Integer page, Integer pageSize);
 
     Pedido create(PedidoRequestDTO dto, String email);
 
@@ -34,5 +34,6 @@ public interface PedidoService {
     List<Pedido> findAll(Integer page, Integer pageSize);
 
     long count();
+    long countByEmail(String email);
 
 }

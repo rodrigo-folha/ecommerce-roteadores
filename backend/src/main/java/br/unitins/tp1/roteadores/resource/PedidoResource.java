@@ -40,33 +40,51 @@ public class PedidoResource {
 
     @GET
     @RolesAllowed("User")
-    public Response findByEmail() {
+    public Response findByEmail(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        
         LOG.info("Execucao do metodo findByEmail");
-
+        
         // buscando o username do hash do jwt
         String username = jwt.getSubject();
         username = jwt.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
+        Long count = pedidoService.countByEmail(username);
+        PaginacaoResponseDTO<PedidoResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, pedidoService.findByEmail(username, page, pageSize).stream().map(PedidoResponseDTO::valueOf).toList());
 
-        return Response.ok(pedidoService.findByEmail(username).
-                    stream().
-                    map(o -> PedidoResponseDTO.valueOf(o)).
-                    toList()).build();
+        return Response.ok(paginacao).build();
+
+        // return Response.ok(pedidoService.findByEmail(username).
+        //             stream().
+        //             map(o -> PedidoResponseDTO.valueOf(o)).
+        //             toList()).build();
     }
 
     @GET
     @RolesAllowed("User")
     @Path("/resumo")
-    public Response findByEmailResumido() {
+    public Response findByEmailResumido(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
         LOG.info("Execucao do metodo findByEmailResumido");
 
         // buscando o username do hash do jwt
         String username = jwt.getSubject();
         username = jwt.getName(); // caso esteja usando o jwt do keycloak, caso contrario apagar essa linha.
 
-        return Response.ok(pedidoService.findByEmail(username).
-                    stream().
-                    map(o -> PedidoBasicoResponseDTO.valueOf(o)).
-                    toList()).build();
+        Long count = pedidoService.countByEmail(username);
+        PaginacaoResponseDTO<PedidoBasicoResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, pedidoService.findByEmail(username, page, pageSize).stream().map(PedidoBasicoResponseDTO::valueOf).toList());
+
+        return Response.ok(paginacao).build();
+
+        // return Response.ok(pedidoService.findByEmail(username, page, pageSize).
+        //             stream().
+        //             map(o -> PedidoBasicoResponseDTO.valueOf(o)).
+        //             toList()).build();
     }
 
     @GET

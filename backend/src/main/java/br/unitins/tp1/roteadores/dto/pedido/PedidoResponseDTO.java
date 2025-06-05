@@ -14,7 +14,8 @@ public record PedidoResponseDTO(
     List<ItemPedidoResponseDTO> listaItemPedido,
     List<StatusPedidoResponseDTO> statusPedidos,
     EnderecoResponseDTO enderecoEntrega,
-    Object pagamento
+    Object pagamento,
+    String modalidadePagamento
 ) {
 
     public static PedidoResponseDTO valueOf(Pedido pedido) {
@@ -25,7 +26,9 @@ public record PedidoResponseDTO(
             pedido.getListaItemPedido().stream().map(ItemPedidoResponseDTO::valueOf).toList(),
             pedido.getStatusPedido().stream().map(StatusPedidoResponseDTO::valueOf).toList(),
             EnderecoResponseDTO.valueOf(pedido.getEnderecoEntrega()),
-            PagamentoResponseDTO.valueOf(pedido.getPagamento()));
+            PagamentoResponseDTO.valueOf(pedido.getPagamento()),
+            PedidoBasicoResponseDTO.getTipoPagamento(pedido)
+        );
       
     }
     

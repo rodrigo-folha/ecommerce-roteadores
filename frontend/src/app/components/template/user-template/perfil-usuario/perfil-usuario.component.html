@@ -28,6 +28,10 @@
       <i class="material-icons">favorite</i>
       Lista de Desejos
     </button>
+    <button class="tab-button" [class.active]="activeTab === 5" (click)="setActiveTab(5)">
+      <i class="material-icons">shopping_bag</i>
+      Meus Pedidos
+    </button>
   </div>
 
   <!-- Tab Content -->
@@ -390,5 +394,88 @@
         </div>
       </div>
     </div>
+
+    <!-- Tab 5: Orders -->
+<div *ngIf="activeTab === 5" class="tab-panel orders">
+  <h2>Meus Pedidos</h2>
+
+  <div *ngIf="pedidosResumidos.length > 0; else semPedidos" class="order-list">
+    <!-- <div *ngFor="let pedido of pedidos; let i = index" class="order-card">
+      <div class="order-header">
+        <h3>Pedido #{{ pedido.id }}</h3>
+        <p class="order-date">Realizado em: {{ pedido.data | date: 'dd/MM/yyyy' }}</p>
+        <span class="order-status">{{ pedido.statusPedido }}</span>
+      </div>
+
+      <div class="order-details">
+        <p><strong>Total:</strong> {{ pedido.valorTotal | currency:'BRL':'symbol' }}</p>
+        <p><strong>Endereço de Entrega:</strong> {{ pedido.enderecoEntrega.logradouro }}, {{ pedido.enderecoEntrega.numero }} - {{ pedido.enderecoEntrega.cidade.nome }}/{{ pedido.enderecoEntrega.cidade.estado.sigla }}</p>
+      </div>
+
+      <div class="order-actions">
+        <button class="btn-text" >
+          <i class="material-icons">visibility</i>
+          Ver Detalhes
+        </button>
+      </div>
+    </div> -->
+    <table mat-table [dataSource]="pedidosResumidos" class="mat-elevation-z8">
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Id.</th>
+      <td mat-cell *matCellDef="let pedido">{{ pedido.id }}</td>
+    </ng-container>
+  
+    <!-- Codigo Column -->
+    <ng-container matColumnDef="valorTotal">
+      <th mat-header-cell *matHeaderCellDef>Valor Total</th>
+      <td mat-cell *matCellDef="let pedido">{{ pedido.valorTotal | currency:'BRL':'symbol' }}</td>
+    </ng-container>
+  
+    <!-- percentualDesconto Column -->
+    <ng-container matColumnDef="metodoPagamento">
+      <th mat-header-cell *matHeaderCellDef>Método de Pagamento</th>
+      <td mat-cell *matCellDef="let pedido">{{ pedido.metodoPagamento }}</td>
+    </ng-container>
+
+    <!-- Data de Validade Column -->
+    <ng-container matColumnDef="statusPedido">
+        <th mat-header-cell *matHeaderCellDef>Status do Pedido</th>
+        <td mat-cell *matCellDef="let pedido">{{ pedido.situacao | situacaoPedido }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let pedido">{{ pedido.data | date:'dd/MM/yyyy' }}</td>
+    </ng-container>
+  
+    <!-- Acao Column -->
+    <ng-container matColumnDef="acao">
+      <th mat-header-cell *matHeaderCellDef>Ação</th>
+      <td mat-cell *matCellDef="let pedido">
+        <button mat-icon-button 
+                color="primary"
+                routerLink="/minha-conta/pedidos/{{ pedido.id }}">
+                <mat-icon>visibility</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    [pageSize]="pageSize"
+    [length]="totalRecords"
+    (page)="paginar($event)"
+  >
+  </mat-paginator>
+  </div>
+
+  <ng-template #semPedidos>
+    <p style="margin-top: 1rem;">Você ainda não fez nenhum pedido.</p>
+  </ng-template>
+</div>
   </div>
 </div>

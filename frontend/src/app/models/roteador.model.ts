@@ -16,6 +16,6 @@ export class Roteador {
     protocoloSeguranca!: ProtocoloSeguranca;
     quantidadeAntena!: QuantidadeAntena;
     sinalWireless!: SinalWireless;
-    fornecedor!: Fornecedor
+    fornecedor!: Fornecedor;
     listaImagem!: string[];
 }

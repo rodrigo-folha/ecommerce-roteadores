@@ -17,6 +17,9 @@ import { EnderecoDialogComponent } from '../../dialogs/endereco-dialog/endereco-
 import { Cartao } from '../../models/cartao.model';
 import { CartaoDialogComponent } from '../../dialogs/cartao-dialog/cartao-dialog.component';
 import { CartaoService } from '../../services/cartao.service';
+import { PedidoService } from '../../services/pedido.service';
+import { Pedido } from '../../models/pedido.model';
+import { ItemPedido } from '../../models/item-pedido.model';
 registerLocaleData(localePt);
 
 interface CartItem {
@@ -57,6 +60,11 @@ export class CartComponent implements OnInit {
   enderecos: Endereco[] = [];
   cliente: Cliente = new Cliente();
   enderecoSelecionadoId: number | null = null;
+  enderecoSelecionado: Endereco | null = null;
+
+  cartoes: Cartao[] = [];
+  cartaoSelecionadoId: number | null = null;
+  cartaoSelecionado: Cartao | null = null;
 
   // Current step (1: Cart, 2: Address, 3: Payment)
   currentStep = 1
@@ -103,6 +111,7 @@ export class CartComponent implements OnInit {
     private snackBar: MatSnackBar,
     private clienteService: ClienteService,
     private cartaoService: CartaoService,
+    private pedidoService: PedidoService,
     private dialog: MatDialog,
   ) {
     // Initialize forms
@@ -326,7 +335,7 @@ export class CartComponent implements OnInit {
       this.currentStep = 2
     } else if (this.currentStep === 2) {
       // Validate address form
-      if (this.enderecoSelecionadoId == null) {
+      if (this.enderecoSelecionado == null) {
         alert("Selecione um endereço")
         return
       }
@@ -346,6 +355,44 @@ export class CartComponent implements OnInit {
     if (this.currentStep > 1) {
       this.currentStep--
     }
+  }
+
+  fazerPedido() {
+    const listaItemCarrinho = this.carrinhoItens;
+
+    const listaItemPedido: ItemPedido[] = listaItemCarrinho.map(item => ({
+      nome: item.nome,
+      idProduto: item.id,
+      quantidade: item.quantidade,
+      valor: item.preco
+    }));
+
+    const valorTotal = listaItemCarrinho.reduce(
+      (total, item) => total + item.preco * item.quantidade, 0
+    );
+
+    const pedido: Pedido = {
+      id: 0, // ou undefined se o backend gerar
+      data: new Date(),
+      valorTotal: valorTotal,
+      listaItemPedido: listaItemPedido,
+      statusPedidos: [], // ou status inicial
+      enderecoEntrega: this.enderecoSelecionado!, // precisa garantir que está preenchido
+      cupomDesconto: null as any, // ou um objeto válido
+      idCartao: this.cartaoSelecionadoId!,
+      pagamento: null as any, // ou um objeto do tipo Pagamento
+      modalidadePagamento: this.selectedPaymentMethod
+    };
+
+    this.pedidoService.insert(pedido).subscribe({
+      next: res => {
+        console.log('Pedido feito com sucesso!', res);
+        // talvez resetar carrinho ou navegar
+      },
+      error: err => {
+        console.error('Erro ao fazer o pedido:', err);
+      }
+    });
   }
 
   // Place order

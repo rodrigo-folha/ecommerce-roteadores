@@ -223,7 +223,7 @@
             type="radio"
             name="enderecoSelecionado"
             [value]="endereco.id"
-            [(ngModel)]="enderecoSelecionadoId" 
+            [(ngModel)]="enderecoSelecionado" 
           />
         </label>
         <div class="endereco-detalhes">
@@ -285,7 +285,7 @@
 
       <!-- Credit Card Form -->
       <div *ngIf="selectedPaymentMethod === 'cartao'" class="credit-card-form">
-        <form [formGroup]="paymentForm">
+        <!-- <form [formGroup]="paymentForm">
           <div class="form-row">
             <div class="form-group">
               <label for="cardNumber">Número do Cartão</label>
@@ -334,7 +334,7 @@
               </select>
             </div>
           </div>
-        </form>
+        </form> -->
       </div>
 
       <!-- PIX Payment -->
