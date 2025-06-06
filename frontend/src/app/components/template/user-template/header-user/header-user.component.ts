@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Usuario } from '../../../../models/usuario.model';
@@ -97,6 +97,19 @@ export class HeaderUserComponent implements OnInit, OnDestroy {
     } else {
       document.body.classList.remove("dark")
     }
+  }
+
+  buscar(event: Event) {
+    const valor = (event.target as HTMLInputElement)?.value ?? '';
+    this.buscaService.atualizarTermoBusca(valor);
+  }
+
+  termoBusca: string = '';
+
+  buscarBotao() {
+    this.buscaService.atualizarTermoBusca(this.termoBusca);
+    this.router.navigate(['/roteadores'], { queryParams: { busca: this.termoBusca } });
+    this.termoBusca = '';
   }
 
 }

@@ -1,8 +1,8 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
-import { Component, LOCALE_ID, OnInit, signal } from '@angular/core';
+import { Component, effect, LOCALE_ID, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Roteador } from '../../../../models/roteador.model';
 import { RoteadorService } from '../../../../services/roteador.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,6 +10,7 @@ import { CarrinhoService } from '../../../../services/carrinho.service';
 import { ClienteService } from '../../../../services/cliente.service';
 import { RoteadorFilterRequest } from '../../../../models/roteador-filter-request';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { BuscaRoteadoresService } from '../../../../services/busca-roteadores.service';
 registerLocaleData(localePt);
 
 type Card = {
@@ -44,12 +45,24 @@ export class PaginaRoteadoresComponent implements OnInit {
     private snackBar: MatSnackBar,
     private carrinhoService: CarrinhoService,
     private clienteService: ClienteService,
+    private buscaService: BuscaRoteadoresService,
+    private route: ActivatedRoute,
   ) {
+    this.route.queryParams.subscribe(params => {
+      const termo = params['busca'] || '';
+      this.buscaService.atualizarTermoBusca(termo);
+    });
+
+    effect(() => {
+      const termo = this.buscaService.termoBusca();
+      this.nomeFiltro = termo;
+      this.applyFilters();
+    });
     
   }
 
   ngOnInit(): void {
-    this.carregarRoteadores();
+    // this.carregarRoteadores();
     const usuarioLogado = localStorage.getItem('usuario_logado');
     if (usuarioLogado) {
       this.carregarListaDesejos();
@@ -191,6 +204,8 @@ export class PaginaRoteadoresComponent implements OnInit {
     this.frequencyBands.forEach(b => b.checked = false);
     this.antennaCounts.forEach(a => a.checked = false);
     this.wirelessSignals.forEach(w => w.checked = false);
+
+    this.nomeFiltro = '';
 
   }
 
