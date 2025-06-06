@@ -1,5 +1,6 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { Component, LOCALE_ID, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Roteador } from '../../../../models/roteador.model';
@@ -7,6 +8,9 @@ import { RoteadorService } from '../../../../services/roteador.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CarrinhoService } from '../../../../services/carrinho.service';
 import { ClienteService } from '../../../../services/cliente.service';
+import { RoteadorFilterRequest } from '../../../../models/roteador-filter-request';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+registerLocaleData(localePt);
 
 interface Product {
   id: string
@@ -40,6 +44,10 @@ type Card = {
 
 @Component({
   selector: 'app-pagina-roteadores',
+  providers: [provideNativeDateAdapter(), {
+          provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+          { provide: LOCALE_ID, useValue: 'pt-BR'}
+        ],
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './pagina-roteadores.component.html',
   styleUrl: './pagina-roteadores.component.css'
@@ -55,10 +63,7 @@ export class PaginaRoteadoresComponent implements OnInit {
     private carrinhoService: CarrinhoService,
     private clienteService: ClienteService,
   ) {
-    this.filteredProducts = [...this.allProducts]
-
-    // Definir os valores mínimo e máximo com base nos produtos
-    this.updatePriceRange()
+    
   }
 
   ngOnInit(): void {
@@ -95,30 +100,33 @@ export class PaginaRoteadoresComponent implements OnInit {
   }
 
   // Filtros
-  priceRange = { min: 0, max: 100000 }
+  priceRange = { 
+    min: 0,
+    max: 100000
+  };
   minPrice = 0
   maxPrice = 100000
 
   // Opções de filtro
   securityProtocols = [
-    { name: "WPS", checked: false },
-    { name: "WPA2-PSK", checked: false },
-    { name: "WPA3", checked: false },
-    { name: "WEP", checked: false },
+    { id: 7, name: "WPS", checked: false },
+    { id: 1, name: "WPA2-PSK", checked: false },
+    { id: 2, name: "WPA3", checked: false },
+    { id: 3, name: "WEP", checked: false },
   ]
 
   operatingSystems = [
-    { name: "RouterOS", checked: false },
-    { name: "Cisco IOS", checked: false },
-    { name: "ZynOS", checked: false },
-    { name: "Juno OS", checked: false },
+    { id: 3, name: "RouterOS", checked: false },
+    { id: 1, name: "Cisco IOS", checked: false },
+    { id: 4, name: "ZynOS", checked: false },
+    { id: 2, name: "Juno OS", checked: false },
   ]
 
   frequencyBands = [
-    { name: "Single-Band", checked: false },
-    { name: "Dual-Band", checked: false },
-    { name: "Tri-Band", checked: false },
-    { name: "Quad-Band", checked: false },
+    { id: 1, name: "Single-Band", checked: false },
+    { id: 2, name: "Dual-Band", checked: false },
+    { id: 3, name: "Tri-Band", checked: false },
+    { id: 4, name: "Quad-Band", checked: false },
   ]
 
   antennaCounts = [
@@ -130,335 +138,75 @@ export class PaginaRoteadoresComponent implements OnInit {
   ]
 
   wirelessSignals = [
-    { name: "Wi-Fi 6", checked: false },
-    { name: "Wi-Fi 5", checked: false },
+    { id: 2, name: "Wi-Fi 6", checked: false },
+    { id: 1, name: "Wi-Fi 5", checked: false },
   ]
 
   // Estado do filtro
   isFilterOpen = true
 
-  // Produtos
-  allProducts: Product[] = [
-    {
-      id: "router-tp-link-ac1200",
-      name: "Roteador TP-Link AC1200 Dual Band",
-      category: "Roteadores",
-      price: 199.99,
-      salePrice: 179.99,
-      image: "../login/placeholder.svg",
-      badge: "Oferta",
-      rating: 4.5,
-      reviews: 128,
-      inWishlist: false,
-      securityProtocol: "WPA2",
-      operatingSystem: "Linux",
-      frequencyBand: "Dual Band",
-      antennaCount: 4,
-      wirelessSignal: "Alta Potência",
-    },
-    {
-      id: "router-netgear-nighthawk",
-      name: "Roteador Netgear Nighthawk Pro Gaming XR500",
-      category: "Roteadores",
-      price: 599.99,
-      salePrice: null,
-      image: "../login/placeholder.svg",
-      badge: "Premium",
-      rating: 4.8,
-      reviews: 64,
-      inWishlist: true,
-      securityProtocol: "WPA3",
-      operatingSystem: "Linux",
-      frequencyBand: "Dual Band",
-      antennaCount: 4,
-      wirelessSignal: "Alta Potência",
-    },
-    {
-      id: "router-asus-rt-ax88u",
-      name: "Roteador ASUS RT-AX88U AX6000",
-      category: "Roteadores",
-      price: 799.99,
-      salePrice: 749.99,
-      image: "../login/placeholder.svg",
-      badge: "Novo",
-      rating: 4.7,
-      reviews: 42,
-      inWishlist: false,
-      securityProtocol: "WPA3",
-      operatingSystem: "Linux",
-      frequencyBand: "Dual Band",
-      antennaCount: 5,
-      wirelessSignal: "Alta Potência",
-    },
-    {
-      id: "router-linksys-ea7500",
-      name: "Roteador Linksys EA7500 Max-Stream AC1900",
-      category: "Roteadores",
-      price: 349.99,
-      salePrice: null,
-      image: "../login/placeholder.svg",
-      badge: null,
-      rating: 4.3,
-      reviews: 96,
-      inWishlist: false,
-      securityProtocol: "WPA2",
-      operatingSystem: "Linux",
-      frequencyBand: "Dual Band",
-      antennaCount: 3,
-      wirelessSignal: "Padrão",
-    },
-    {
-      id: "router-d-link-dir-842",
-      name: "Roteador D-Link DIR-842 AC1200",
-      category: "Roteadores",
-      price: 149.99,
-      salePrice: 129.99,
-      image: "../login/placeholder.svg",
-      badge: "Econômico",
-      rating: 4.0,
-      reviews: 78,
-      inWishlist: false,
-      securityProtocol: "WPA2",
-      operatingSystem: "Linux",
-      frequencyBand: "Dual Band",
-      antennaCount: 2,
-      wirelessSignal: "Padrão",
-    },
-    {
-      id: "router-tenda-ac10",
-      name: "Roteador Tenda AC10 AC1200",
-      category: "Roteadores",
-      price: 129.99,
-      salePrice: null,
-      image: "../login/placeholder.svg",
-      badge: null,
-      rating: 3.9,
-      reviews: 56,
-      inWishlist: false,
-      securityProtocol: "WPA2",
-      operatingSystem: "Linux",
-      frequencyBand: "Dual Band",
-      antennaCount: 3,
-      wirelessSignal: "Padrão",
-    },
-    {
-      id: "router-xiaomi-ax3600",
-      name: "Roteador Xiaomi AX3600 WiFi 6",
-      category: "Roteadores",
-      price: 399.99,
-      salePrice: 349.99,
-      image: "../login/placeholder.svg",
-      badge: "WiFi 6",
-      rating: 4.6,
-      reviews: 37,
-      inWishlist: true,
-      securityProtocol: "WPA3",
-      operatingSystem: "Android",
-      frequencyBand: "Dual Band",
-      antennaCount: 5,
-      wirelessSignal: "Alta Potência",
-    },
-    {
-      id: "router-tp-link-archer-c6",
-      name: "Roteador TP-Link Archer C6 AC1200",
-      category: "Roteadores",
-      price: 179.99,
-      salePrice: null,
-      image: "../login/placeholder.svg",
-      badge: null,
-      rating: 4.2,
-      reviews: 112,
-      inWishlist: false,
-      securityProtocol: "WPA2",
-      operatingSystem: "Linux",
-      frequencyBand: "Dual Band",
-      antennaCount: 4,
-      wirelessSignal: "Padrão",
-    },
-    {
-      id: "router-mercusys-ac12",
-      name: "Roteador Mercusys AC12 AC1200",
-      category: "Roteadores",
-      price: 99.99,
-      salePrice: 89.99,
-      image: "../login/placeholder.svg",
-      badge: "Básico",
-      rating: 3.8,
-      reviews: 45,
-      inWishlist: false,
-      securityProtocol: "WPA2",
-      operatingSystem: "Linux",
-      frequencyBand: "Dual Band",
-      antennaCount: 2,
-      wirelessSignal: "Padrão",
-    },
-    {
-      id: "router-huawei-ax3",
-      name: "Roteador Huawei AX3 WiFi 6+",
-      category: "Roteadores",
-      price: 299.99,
-      salePrice: null,
-      image: "../login/placeholder.svg",
-      badge: "WiFi 6",
-      rating: 4.4,
-      reviews: 28,
-      inWishlist: false,
-      securityProtocol: "WPA3",
-      operatingSystem: "Android",
-      frequencyBand: "Dual Band",
-      antennaCount: 4,
-      wirelessSignal: "Alta Potência",
-    },
-    {
-      id: "router-intelbras-action-rf1200",
-      name: "Roteador Intelbras Action RF1200",
-      category: "Roteadores",
-      price: 159.99,
-      salePrice: 139.99,
-      image: "../login/placeholder.svg",
-      badge: null,
-      rating: 4.1,
-      reviews: 87,
-      inWishlist: false,
-      securityProtocol: "WPA2",
-      operatingSystem: "Linux",
-      frequencyBand: "Dual Band",
-      antennaCount: 3,
-      wirelessSignal: "Padrão",
-    },
-    {
-      id: "router-multilaser-re163v",
-      name: "Roteador Multilaser RE163v",
-      category: "Roteadores",
-      price: 89.99,
-      salePrice: null,
-      image: "../login/placeholder.svg",
-      badge: "Econômico",
-      rating: 3.5,
-      reviews: 62,
-      inWishlist: false,
-      securityProtocol: "WEP",
-      operatingSystem: "Linux",
-      frequencyBand: "2.4 GHz",
-      antennaCount: 1,
-      wirelessSignal: "Padrão",
-    },
-  ]
 
-  filteredProducts: Product[] = [];
-
-  updatePriceRange() {
-    const prices = this.allProducts.map((product) => product.salePrice || product.price)
-    this.priceRange.min = Math.floor(Math.min(...prices))
-    this.priceRange.max = Math.ceil(Math.max(...prices))
-    this.minPrice = this.priceRange.min
-    this.maxPrice = this.priceRange.max
+  onMinPriceSliderChange(event: any) {
+    const value = +event.target.value;
+    this.minPrice = Math.min(value, this.maxPrice);
   }
 
-  // Atualizar o valor mínimo quando o slider mudar
-  onMinPriceSliderChange(event: Event) {
-    const value = +(event.target as HTMLInputElement).value
-    this.minPrice = value
-    if (this.minPrice > this.maxPrice) {
-      this.maxPrice = this.minPrice
-    }
-    this.applyFilters()
+  onMaxPriceSliderChange(event: any) {
+    const value = +event.target.value;
+    this.maxPrice = Math.max(value, this.minPrice);
   }
 
-  // Atualizar o valor máximo quando o slider mudar
-  onMaxPriceSliderChange(event: Event) {
-    const value = +(event.target as HTMLInputElement).value
-    this.maxPrice = value
-    if (this.maxPrice < this.minPrice) {
-      this.minPrice = this.maxPrice
-    }
-    this.applyFilters()
-  }
-
-  // Atualizar o valor mínimo quando o input mudar
   onMinPriceInputChange() {
-    if (this.minPrice < this.priceRange.min) {
-      this.minPrice = this.priceRange.min
-    }
     if (this.minPrice > this.maxPrice) {
-      this.maxPrice = this.minPrice
+      this.minPrice = this.maxPrice;
     }
-    this.applyFilters()
+    if (this.minPrice < this.priceRange.min) {
+      this.minPrice = this.priceRange.min;
+    }
   }
 
-  // Atualizar o valor máximo quando o input mudar
   onMaxPriceInputChange() {
-    if (this.maxPrice > this.priceRange.max) {
-      this.maxPrice = this.priceRange.max
-    }
     if (this.maxPrice < this.minPrice) {
-      this.minPrice = this.maxPrice
+      this.maxPrice = this.minPrice;
     }
-    this.applyFilters()
+    if (this.maxPrice > this.priceRange.max) {
+      this.maxPrice = this.priceRange.max;
+    }
   }
 
-  // Aplicar todos os filtros
-  applyFilters() {
-    this.filteredProducts = this.allProducts.filter((product) => {
-      const productPrice = product.salePrice || product.price
+  applyFilters(): void {
+    const filtros: RoteadorFilterRequest = {
+      precoMin: this.minPrice,
+      precoMax: this.maxPrice,
+      protocolosSeguranca: this.securityProtocols.filter(p => p.checked).map(p => p.id.toString()),
+      sistemasOperacionais: this.operatingSystems.filter(os => os.checked).map(os => os.id.toString()),
+      bandasFrequencia: this.frequencyBands.filter(band => band.checked).map(band => band.id.toString()),
+      qtdAntenas: this.antennaCounts.filter(a => a.checked).map(a => a.value),
+      sinaisWireless: this.wirelessSignals.filter(signal => signal.checked).map(signal => signal.id.toString()),
+    };
 
-      // Filtro de preço
-      if (productPrice < this.minPrice || productPrice > this.maxPrice) {
-        return false
+    this.roteadorService.buscarComFiltros(filtros).subscribe({
+      next: (result) => {
+        this.roteadores = result;
+        this.carregarCards();
+      },
+      error: (error) => {
+        console.error('Erro ao buscar roteadores com filtros', error);
       }
-
-      // Filtro de protocolo de segurança
-      const securityFilters = this.securityProtocols.filter((f) => f.checked).map((f) => f.name)
-      if (securityFilters.length > 0 && !securityFilters.includes(product.securityProtocol)) {
-        return false
-      }
-
-      // Filtro de sistema operacional
-      const osFilters = this.operatingSystems.filter((f) => f.checked).map((f) => f.name)
-      if (osFilters.length > 0 && !osFilters.includes(product.operatingSystem)) {
-        return false
-      }
-
-      // Filtro de banda de frequência
-      const bandFilters = this.frequencyBands.filter((f) => f.checked).map((f) => f.name)
-      if (bandFilters.length > 0 && !bandFilters.includes(product.frequencyBand)) {
-        return false
-      }
-
-      // Filtro de quantidade de antenas
-      const antennaFilters = this.antennaCounts.filter((f) => f.checked).map((f) => f.value)
-      if (antennaFilters.length > 0) {
-        // Caso especial para 5+ antenas
-        if (product.antennaCount >= 5 && antennaFilters.includes(5)) {
-          return true
-        }
-        if (!antennaFilters.includes(product.antennaCount)) {
-          return false
-        }
-      }
-
-      // Filtro de sinal wireless
-      const signalFilters = this.wirelessSignals.filter((f) => f.checked).map((f) => f.name)
-      if (signalFilters.length > 0 && !signalFilters.includes(product.wirelessSignal)) {
-        return false
-      }
-
-      return true
-    })
+    });
   }
 
-  // Limpar todos os filtros
-  clearFilters() {
-    this.minPrice = this.priceRange.min
-    this.maxPrice = this.priceRange.max
 
-    this.securityProtocols.forEach((item) => (item.checked = false))
-    this.operatingSystems.forEach((item) => (item.checked = false))
-    this.frequencyBands.forEach((item) => (item.checked = false))
-    this.antennaCounts.forEach((item) => (item.checked = false))
-    this.wirelessSignals.forEach((item) => (item.checked = false))
+  clearFilters(): void {
+    this.minPrice = this.priceRange.min;
+    this.maxPrice = this.priceRange.max;
 
-    this.filteredProducts = [...this.allProducts]
+    this.securityProtocols.forEach(p => p.checked = false);
+    this.operatingSystems.forEach(os => os.checked = false);
+    this.frequencyBands.forEach(b => b.checked = false);
+    this.antennaCounts.forEach(a => a.checked = false);
+    this.wirelessSignals.forEach(w => w.checked = false);
+
   }
 
   // Alternar visibilidade do filtro em dispositivos móveis

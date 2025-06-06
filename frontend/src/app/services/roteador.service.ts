@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Roteador } from '../models/roteador.model';
 import { IPaginator } from '../interfaces/ipaginator';
+import { RoteadorFilterRequest } from '../models/roteador-filter-request';
 
 @Injectable({
   providedIn: 'root'
@@ -120,5 +121,9 @@ export class RoteadorService {
     formData.append('imagem', imagem, imagem.name);
     
     return this.httpClient.patch<Roteador>(`${this.baseUrl}/${id}/upload/imagem`, formData);
+  }
+
+  buscarComFiltros(filtros: RoteadorFilterRequest): Observable<Roteador[]> {
+    return this.httpClient.post<Roteador[]>(`${this.baseUrl}/search/filtros`, filtros);
   }
 }

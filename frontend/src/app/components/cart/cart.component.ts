@@ -378,10 +378,12 @@ export class CartComponent implements OnInit {
       (total, item) => total + item.preco * item.quantidade, 0
     );
 
+    const valorTotalArredondado = Number(valorTotal.toFixed(2));
+
     const pedido: Pedido = {
       id: 0, // ou undefined se o backend gerar
       data: new Date(),
-      valorTotal: valorTotal,
+      valorTotal: valorTotalArredondado,
       listaItemPedido: listaItemPedido,
       statusPedidos: [], // ou status inicial
       enderecoEntrega: this.enderecoSelecionado!, // precisa garantir que está preenchido
@@ -395,6 +397,7 @@ export class CartComponent implements OnInit {
     this.pedidoService.insert(pedido).subscribe({
       next: res => {
         this.showNotification('Pedido realizado com sucesso!', 'success');
+        this.carrinhoService.removerTudo();
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
         this.router.navigate(['/minha-conta'], { queryParams: { aba: 5 } });
       });

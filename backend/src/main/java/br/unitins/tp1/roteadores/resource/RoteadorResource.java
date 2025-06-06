@@ -6,6 +6,7 @@ import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.tp1.roteadores.dto.PaginacaoResponseDTO;
+import br.unitins.tp1.roteadores.dto.roteador.RoteadorFiltroRequestDTO;
 import br.unitins.tp1.roteadores.dto.roteador.RoteadorRequestDTO;
 import br.unitins.tp1.roteadores.dto.roteador.RoteadorResponseDTO;
 import br.unitins.tp1.roteadores.form.ImageForm;
@@ -243,5 +244,17 @@ public class RoteadorResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
                         .entity("Erro ao deletar a imagem.").build();
         }
+    }
+
+    @POST
+    @Path("/search/filtros")
+    public Response buscarComFiltros(RoteadorFiltroRequestDTO filtros) {
+        LOG.info("Execução do método buscarComFiltros");
+        var resultado = roteadorService.buscarComFiltros(filtros)
+            .stream()
+            .map(RoteadorResponseDTO::valueOf)
+            .toList();
+
+        return Response.ok(resultado).build();
     }
 }

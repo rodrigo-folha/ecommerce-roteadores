@@ -2,6 +2,7 @@ package br.unitins.tp1.roteadores.service.roteador;
 
 import java.util.List;
 
+import br.unitins.tp1.roteadores.dto.roteador.RoteadorFiltroRequestDTO;
 import br.unitins.tp1.roteadores.dto.roteador.RoteadorRequestDTO;
 import br.unitins.tp1.roteadores.model.roteador.Roteador;
 
@@ -36,4 +37,6 @@ public interface RoteadorService {
     long count(String nome);
 
     long countQuantidadeTotalById(Long id);
+
+    List<Roteador> buscarComFiltros(RoteadorFiltroRequestDTO filtros);
 }

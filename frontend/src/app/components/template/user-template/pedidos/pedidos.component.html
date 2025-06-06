@@ -32,8 +32,12 @@
             </div>
           </div>
         </div>
+        <div *ngIf="exibirBotaoPagamento()" class="section">
+          <button class="btn-pagar" (click)="realizarPagamento()">Pagar agora</button>
+        </div>
       </div>
 
+      
       <!-- Coluna Direita -->
       <div class="right-column">
         <!-- Valor Total -->

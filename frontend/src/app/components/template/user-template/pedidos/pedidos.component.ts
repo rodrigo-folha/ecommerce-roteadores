@@ -6,6 +6,7 @@ import { PedidoService } from '../../../../services/pedido.service';
 import { Pedido } from '../../../../models/pedido.model';
 import { SituacaoPedidoPipe } from '../../../../pipe/situacaoPedido.pipe';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 registerLocaleData(localePt);
 
 @Component({
@@ -27,6 +28,7 @@ export class PedidosComponent {
     private route: ActivatedRoute,
     private router: Router,
     private pedidoService: PedidoService,
+    private snackBar: MatSnackBar,
   ) {
 
   }
@@ -45,62 +47,6 @@ export class PedidosComponent {
       this.pedido = data;
     })
   }
-
-  // loadOrderDetails(id: number) {
-  //   // Simulando dados do pedido
-  //   setTimeout(() => {
-  //     this.pedido = {
-  //       id: 1,
-  //       // data: "2025-06-04T20:39:10.518635",
-  //       valorTotal: 394.87,
-  //       listaItemPedido: [
-  //         {
-  //           idProduto: 1,
-  //           nome: "ROT WIFI GIGA AC1200MBPS 4ANT Tenda AC8",
-  //           quantidade: 1,
-  //           valor: 394.87,
-  //         },
-  //       ],
-  //       statusPedidos: [
-  //         {
-  //           dataAtualizacao: "2025-06-04T20:39:10.544354",
-  //           situacaoPedido: "AGUARDANDO_PAGAMENTO",
-  //         },
-  //         {
-  //           dataAtualizacao: "2025-06-04T20:39:10.551069",
-  //           situacaoPedido: "PAGAMENTO_AUTORIZADO",
-  //         },
-  //       ],
-  //       enderecoEntrega: {
-  //         id: 1,
-  //         logradouro: "Z",
-  //         bairro: "!",
-  //         numero: "R",
-  //         complemento: "string",
-  //         cep: "B",
-  //         cidade: {
-  //           id: 1,
-  //           nome: "Palmas",
-  //           estado: {
-  //             id: 1,
-  //             nome: "Tocantins",
-  //             sigla: "TO",
-  //           },
-  //         },
-  //       },
-  //       pagamento: {
-  //         id: 1,
-  //         titular: "w",
-  //         cpfCartao: "*",
-  //         numero: "&",
-  //         dataValidade: "2028-03-10",
-  //         cvc: "III",
-  //         modalidade: "CREDITO",
-  //       },
-  //     }
-  //     this.loading = false
-  //   }, 1000)
-  // }
 
   formatDate(dateString: string): string {
     const date = new Date(dateString)
@@ -137,4 +83,75 @@ export class PedidosComponent {
       this.router.navigate(['/minha-conta'], { queryParams: { aba: 5 } });
     });
   }
+
+  exibirBotaoPagamento(): boolean {
+    const modalidade = this.pedido?.modalidadePagamento?.toLowerCase();
+    const statusList = this.pedido?.statusPedidos;
+
+    if (!statusList || statusList.length === 0) return false;
+
+    // Pega o último status com base na data
+    const ultimoStatus = statusList.reduce((maisRecente, atual) => {
+      return new Date(atual.dataAtualizacao) > new Date(maisRecente.dataAtualizacao) ? atual : maisRecente;
+    });
+
+    const statusAtual = ultimoStatus?.situacaoPedido;
+
+    return (
+      (modalidade === 'pix' || modalidade === 'boleto') &&
+      statusAtual === 'AGUARDANDO_PAGAMENTO'
+    );
+  }
+
+  realizarPagamento() {
+    if (!this.pedido) return;
+
+    const idPedido = this.pedido.id;
+    const modalidade = this.pedido.modalidadePagamento?.toLowerCase();
+
+    if (modalidade === 'pix') {
+      const idPix = this.pedido.id;
+      if (idPix) {
+        this.pedidoService.pagarPix(idPedido, idPix).subscribe({
+          next: () => {
+            this.showSnackbarTopPosition('Pagamento via PIX realizado com sucesso!')
+            this.carregarPedido(String(idPedido)); // Atualiza os dados do pedido
+          },
+          error: (err) => {
+            console.error('Erro ao pagar com PIX:', err);
+            alert('Erro ao realizar pagamento via PIX.');
+          }
+        });
+      } else {
+        alert('ID do PIX não encontrado.');
+      }
+    } else if (modalidade === 'boleto') {
+      const idBoleto = this.pedido.id;
+      if (idBoleto) {
+        this.pedidoService.pagarBoleto(idPedido, idBoleto).subscribe({
+          next: () => {
+            this.showSnackbarTopPosition('Pagamento via Boleto realizado com sucesso!')
+            this.carregarPedido(String(idPedido));
+          },
+          error: (err) => {
+            console.error('Erro ao pagar com boleto:', err);
+            alert('Erro ao realizar pagamento via boleto.');
+          }
+        });
+      } else {
+        alert('ID do boleto não encontrado.');
+      }
+    } else {
+      alert('Modalidade de pagamento inválida.');
+    }
+  }
+
+  showSnackbarTopPosition(content: any) {
+    this.snackBar.open(content, 'fechar', {
+      duration: 3000,
+      verticalPosition: "top",
+      horizontalPosition: "center"
+    });
+  }
+
 }

@@ -93,4 +93,20 @@ export class PedidoService {
   delete(pedido: Pedido): Observable<any> {
     return this.httpClient.delete<Pedido>(`${this.baseUrl}/${pedido.id}`);
   }
+
+  cancelarPedido(idPedido: number): Observable<void> {
+    return this.httpClient.patch<void>(`${this.baseUrl}/cancelar/${idPedido}`, {});
+  }
+
+  devolverPedido(idPedido: number): Observable<void> {
+    return this.httpClient.patch<void>(`${this.baseUrl}/devolver/${idPedido}`, {});
+  }
+
+  pagarBoleto(idPedido: number, idBoleto: number): Observable<void> {
+    return this.httpClient.patch<void>(`${this.baseUrl}/${idPedido}/pagamento/pagar/boleto/${idBoleto}`, {});
+  }
+
+  pagarPix(idPedido: number, idPix: number): Observable<void> {
+    return this.httpClient.patch<void>(`${this.baseUrl}/${idPedido}/pagamento/pagar/pix/${idPix}`, {});
+  }
 }

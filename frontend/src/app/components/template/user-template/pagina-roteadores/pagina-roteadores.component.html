@@ -89,7 +89,6 @@
                 <input 
                   type="checkbox" 
                   [(ngModel)]="protocol.checked" 
-                  (change)="applyFilters()" 
                   class="checkbox-input"
                 >
                 <span class="checkbox-custom"></span>
@@ -108,7 +107,6 @@
                 <input 
                   type="checkbox" 
                   [(ngModel)]="os.checked" 
-                  (change)="applyFilters()" 
                   class="checkbox-input"
                 >
                 <span class="checkbox-custom"></span>
@@ -127,7 +125,6 @@
                 <input 
                   type="checkbox" 
                   [(ngModel)]="band.checked" 
-                  (change)="applyFilters()" 
                   class="checkbox-input"
                 >
                 <span class="checkbox-custom"></span>
@@ -146,7 +143,6 @@
                 <input 
                   type="checkbox" 
                   [(ngModel)]="antenna.checked" 
-                  (change)="applyFilters()" 
                   class="checkbox-input"
                 >
                 <span class="checkbox-custom"></span>
@@ -165,7 +161,6 @@
                 <input 
                   type="checkbox" 
                   [(ngModel)]="signal.checked" 
-                  (change)="applyFilters()" 
                   class="checkbox-input"
                 >
                 <span class="checkbox-custom"></span>
@@ -174,6 +169,11 @@
             </div>
           </div>
         </div>
+        <div>
+        <button class="add-to-cart-button" (click)="applyFilters()">
+          Aplicar filtros
+        </button>
+      </div>
       </aside>
   
       <!-- Lista de produtos -->
@@ -214,12 +214,12 @@
                 <div class="product-price-container">
                   <ng-container *ngIf="card.preco; else regularPrice">
                     <div class="product-price-sale">
-                      <span class="sale-price">R$ {{ card.preco }}</span>
-                      <span class="original-price">R$ {{ card.preco }}</span>
+                      <span class="sale-price">{{ card.preco | currency:'BRL':'symbol' }}</span>
+                      <span class="original-price">{{ card.preco | currency:'BRL':'symbol' }}</span>
                     </div>
                   </ng-container>
                   <ng-template #regularPrice>
-                    <span class="product-price">R$ {{ card.preco }}</span>
+                    <span class="product-price">{{ card.preco | currency:'BRL':'symbol' }}</span>
                   </ng-template>
                 </div>
                 
@@ -256,7 +256,7 @@
           </div>
           
           <!-- Mensagem quando não há produtos -->
-          <div *ngIf="filteredProducts.length === 0" class="no-products-message">
+          <div *ngIf="roteadores.length === 0" class="no-products-message">
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="no-products-icon">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="8" y1="12" x2="16" y2="12"></line>

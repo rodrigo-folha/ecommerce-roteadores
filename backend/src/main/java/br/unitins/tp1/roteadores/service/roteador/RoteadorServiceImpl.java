@@ -3,6 +3,7 @@ package br.unitins.tp1.roteadores.service.roteador;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.unitins.tp1.roteadores.dto.roteador.RoteadorFiltroRequestDTO;
 import br.unitins.tp1.roteadores.dto.roteador.RoteadorRequestDTO;
 import br.unitins.tp1.roteadores.model.roteador.Roteador;
 import br.unitins.tp1.roteadores.repository.LoteRepository;
@@ -175,5 +176,10 @@ public class RoteadorServiceImpl implements RoteadorService {
         return loteRepository.findByIdRoteadorQtdeTotal(id)
                 .stream()
                 .reduce(0, (subtotal, b) -> subtotal + b.getEstoque(), Integer::sum);
+    }
+
+    @Override
+    public List<Roteador> buscarComFiltros(RoteadorFiltroRequestDTO filtros) {
+        return roteadorRepository.buscarComFiltros(filtros).list();
     }
 }
