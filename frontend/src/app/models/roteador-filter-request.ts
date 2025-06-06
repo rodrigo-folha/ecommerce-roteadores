@@ -7,4 +7,5 @@ export interface RoteadorFilterRequest {
   qtdAntenas?: number[];
   sinaisWireless?: string[];
   sortBy?: string;
+  nome?: string;
 }

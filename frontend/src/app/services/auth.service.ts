@@ -143,5 +143,19 @@ export class AuthService {
       return true;
     }
   }
+
+  getRolesFromToken(): string[] {
+    const token = this.getToken();
+    if (!token) return [];
+
+    try {
+      const decodedToken: any = this.jwtHelper.decodeToken(token);
+      const roles = decodedToken?.realm_access?.roles;
+      return Array.isArray(roles) ? roles : [];
+    } catch (error) {
+      console.error("Erro ao decodificar token:", error);
+      return [];
+    }
+  }
   
 }

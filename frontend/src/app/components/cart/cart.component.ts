@@ -153,16 +153,13 @@ export class CartComponent implements OnInit {
     const usuarioLocalStorage = localStorage.getItem('usuario_logado');
     if (usuarioLocalStorage) {
       const clienteConvertido = JSON.parse(usuarioLocalStorage);
-      this.clienteService.findById(clienteConvertido.id).subscribe((item) => {
+      this.clienteService.findByUsuario(clienteConvertido.email).subscribe((item) => {
+        console.log("esse é o cliente: ", item)
         this.cliente = item;
         this.carregarEnderecos();
         this.carregarCartoes();
-      })
+      });
     }
-  }
-
-  abrirModalEndereco(endereco?: Endereco): void {
-    // abre seu modal
   }
 
   adicionarEnderecoDialog(endereco?: Endereco): void {
@@ -190,11 +187,15 @@ export class CartComponent implements OnInit {
 
     this.clienteService.updateBasico(clienteAtualizado.usuario).subscribe(response => {
       this.cliente = response;
+      this.inicializar();
+      this.showNotification('Endereço salvo com sucesso!', 'success');
     })
   }
 
   carregarEnderecos() {
-    this.enderecos = this.cliente.usuario.enderecos;
+    if (this.cliente.usuario) {
+      this.enderecos = this.cliente.usuario.enderecos;
+    }
   }
 
   carregarCartoes() {
@@ -347,13 +348,11 @@ export class CartComponent implements OnInit {
       }
       this.currentStep = 3
     } else if (this.currentStep === 3) {
-      // Validate payment form if credit card is selected
       if (this.selectedPaymentMethod === "cartao" && this.cartaoSelecionado == null) {
         alert("Selecione um cartão")
         return
       }
       this.fazerPedido();
-      // this.placeOrder()
     }
   }
 
@@ -390,7 +389,8 @@ export class CartComponent implements OnInit {
       cupomDesconto: null as any, // ou um objeto válido
       idCartao: this.cartaoSelecionado?.id!,
       pagamento: null as any, // ou um objeto do tipo Pagamento
-      modalidadePagamento: this.selectedPaymentMethod
+      modalidadePagamento: this.selectedPaymentMethod,
+      idCliente: this.cliente.id
     };
 
     console.log("Esse é o meu pedido de envio: ", pedido);

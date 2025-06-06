@@ -69,13 +69,14 @@
               class="form-input" 
               placeholder="000.000.000-00"
               [class.input-error]="cpf?.invalid && cpf?.touched"
-              (input)="formatCpf($event)"
+              onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="14" mask="000.000.000-00"
               maxlength="14"
             >
           </div>
-          <div *ngIf="cpf?.invalid && cpf?.touched" class="error-message">
+          <div *ngIf="cpf?.invalid && cpf?.touched || cpf?.errors?.['backend']" class="error-message">
             <span *ngIf="cpf?.errors?.['required']">CPF é obrigatório</span>
             <span *ngIf="cpf?.errors?.['invalidCpf']">CPF inválido</span>
+            <span *ngIf="cpf?.errors?.['backend']">{{ cpf?.errors?.['backend'] }}</span>
           </div>
         </div>
   
@@ -99,6 +100,7 @@
           <div *ngIf="email?.invalid && email?.touched" class="error-message">
             <span *ngIf="email?.errors?.['required']">E-mail é obrigatório</span>
             <span *ngIf="email?.errors?.['email']">Digite um e-mail válido</span>
+            <span *ngIf="email?.errors?.['backend']">{{ email?.errors?.['backend'] }}</span>
           </div>
         </div>
   

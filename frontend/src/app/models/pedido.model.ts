@@ -15,4 +15,5 @@ export class Pedido {
   idCartao!: number;
   pagamento!: Pagamento;
   modalidadePagamento!: string;
+  idCliente!: number;
 }

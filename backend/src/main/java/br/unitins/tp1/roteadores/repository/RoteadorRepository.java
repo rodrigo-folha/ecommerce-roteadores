@@ -84,6 +84,11 @@ public class RoteadorRepository implements PanacheRepository<Roteador> {
             params.put("sinais", filtros.sinaisWireless());
         }
 
+        if (filtros.nome() != null && !filtros.nome().isBlank()) {
+            jpql.append("AND LOWER(r.nome) LIKE :nome ");
+            params.put("nome", "%" + filtros.nome().toLowerCase() + "%");
+        }
+
         String orderClause = filtros.sortBy() != null && filtros.sortBy().equalsIgnoreCase("preco-desc")
                 ? " ORDER BY r.preco DESC"
                 : " ORDER BY r.preco ASC";

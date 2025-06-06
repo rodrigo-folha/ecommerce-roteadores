@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Usuario } from '../../../../models/usuario.model';
@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ClienteService } from '../../../../services/cliente.service';
 import { Cliente } from '../../../../models/cliente.model';
+import { BuscaRoteadoresService } from '../../../../services/busca-roteadores.service';
 
 @Component({
   selector: 'app-header-user',
@@ -32,6 +33,7 @@ export class HeaderUserComponent implements OnInit, OnDestroy {
     public carrinhoService: CarrinhoService,
     private router: Router,
     private clienteService: ClienteService,
+    private buscaService: BuscaRoteadoresService,
   ) {}
 
   ngOnDestroy(): void {
@@ -96,11 +98,5 @@ export class HeaderUserComponent implements OnInit, OnDestroy {
       document.body.classList.remove("dark")
     }
   }
-
-  contabilizarCarrinho() {
-
-  }
-
-
 
 }

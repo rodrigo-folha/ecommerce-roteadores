@@ -12,24 +12,6 @@ import { RoteadorFilterRequest } from '../../../../models/roteador-filter-reques
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 registerLocaleData(localePt);
 
-interface Product {
-  id: string
-  name: string
-  category: string
-  price: number
-  salePrice: number | null
-  image: string
-  badge: string | null
-  rating: number
-  reviews: number
-  inWishlist: boolean
-  securityProtocol: string
-  operatingSystem: string
-  frequencyBand: string
-  antennaCount: number
-  wirelessSignal: string
-}
-
 type Card = {
   idRoteador: number;
   titulo: string;
@@ -174,6 +156,8 @@ export class PaginaRoteadoresComponent implements OnInit {
     }
   }
 
+  nomeFiltro: string = '';
+
   applyFilters(): void {
     const filtros: RoteadorFilterRequest = {
       precoMin: this.minPrice,
@@ -183,6 +167,7 @@ export class PaginaRoteadoresComponent implements OnInit {
       bandasFrequencia: this.frequencyBands.filter(band => band.checked).map(band => band.id.toString()),
       qtdAntenas: this.antennaCounts.filter(a => a.checked).map(a => a.value),
       sinaisWireless: this.wirelessSignals.filter(signal => signal.checked).map(signal => signal.id.toString()),
+      nome: this.nomeFiltro
     };
 
     this.roteadorService.buscarComFiltros(filtros).subscribe({

@@ -190,7 +190,60 @@ public class KeycloakAdminServiceImpl implements KeycloakAdminService{
             throw new RuntimeException("Erro ao atribuir role ao usuário", e);
         }
     }
-    
+
+    @Override
+    public void alterarSenhaUsuario(String username, String novaSenha) {
+        String token = obterAdminToken();
+
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+
+            // 1. Buscar ID do usuário
+            HttpRequest getUserRequest = HttpRequest.newBuilder()
+                .uri(URI.create(KEYCLOAK_URL + "/admin/realms/" + REALM + "/users?username=" + username))
+                .header("Authorization", "Bearer " + token)
+                .build();
+
+            HttpResponse<String> getUserResponse = client.send(getUserRequest, HttpResponse.BodyHandlers.ofString());
+
+            if (getUserResponse.statusCode() != 200) {
+                throw new RuntimeException("Erro ao buscar usuário: " + getUserResponse.body());
+            }
+
+            var usuarios = Json.createReader(new StringReader(getUserResponse.body())).readArray();
+            if (usuarios.isEmpty()) {
+                throw new RuntimeException("Usuário não encontrado");
+            }
+
+            String userId = usuarios.getJsonObject(0).getString("id");
+
+            // 2. Criar novo objeto de credencial
+            JsonObject novaCredencial = Json.createObjectBuilder()
+                .add("type", "password")
+                .add("value", novaSenha)
+                .add("temporary", false)  // Se quiser forçar troca na primeira vez, use true
+                .build();
+
+            // 3. Fazer PUT para atualizar senha
+            HttpRequest alterarSenhaRequest = HttpRequest.newBuilder()
+                .uri(URI.create(KEYCLOAK_URL + "/admin/realms/" + REALM + "/users/" + userId + "/reset-password"))
+                .header("Authorization", "Bearer " + token)
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(novaCredencial.toString()))
+                .build();
+
+            HttpResponse<String> response = client.send(alterarSenhaRequest, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 204) {
+                throw new RuntimeException("Erro ao alterar senha: " + response.body());
+            }
+
+            System.out.println("Senha alterada com sucesso para o usuário " + username);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao alterar senha do usuário", e);
+        }
+    }    
 
     
 }

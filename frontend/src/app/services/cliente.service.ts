@@ -176,4 +176,14 @@ export class ClienteService {
     return this.httpClient.patch<Cliente>(`${this.baseUrlClientesBasicos}/imagem/upload`, formData);
   }
 
+  alterarSenha(senhaAtual: string, novaSenha: string, repetirNovaSenha: string): Observable<any> {
+  const data = {
+    senhaAtual: senhaAtual,
+    novaSenha: novaSenha,
+    repetirNovaSenha: repetirNovaSenha
+  };
+
+  return this.httpClient.patch<any>(`${this.baseUrlClientesBasicos}/update/senha`, data);
+}
+
 }

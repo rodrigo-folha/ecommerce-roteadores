@@ -57,3 +57,8 @@
   .usuario-logado p {
     color: white;
   }
+
+  .nome-perfil { 
+    color: white;
+    padding-right: 1rem;
+  }

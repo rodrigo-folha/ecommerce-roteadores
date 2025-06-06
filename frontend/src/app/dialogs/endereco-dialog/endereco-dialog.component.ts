@@ -12,9 +12,15 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Endereco } from '../../models/endereco.model';
 import { ActivatedRoute } from '@angular/router';
 import { Cliente } from '../../models/cliente.model';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-endereco-dialog',
+  providers: [provideNativeDateAdapter(), {
+          provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+          provideNgxMask(),
+        ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -24,6 +30,7 @@ import { Cliente } from '../../models/cliente.model';
     MatButtonModule,
     MatSelectModule,
     MatToolbarModule,
+    NgxMaskDirective,
   ],
   templateUrl: './endereco-dialog.component.html',
   styleUrl: './endereco-dialog.component.css'

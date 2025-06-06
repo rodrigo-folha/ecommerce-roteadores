@@ -7,6 +7,8 @@ import { Pedido } from '../../../../models/pedido.model';
 import { SituacaoPedidoPipe } from '../../../../pipe/situacaoPedido.pipe';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ClienteService } from '../../../../services/cliente.service';
+import { Cliente } from '../../../../models/cliente.model';
 registerLocaleData(localePt);
 
 @Component({
@@ -28,6 +30,7 @@ export class PedidosComponent {
     private route: ActivatedRoute,
     private router: Router,
     private pedidoService: PedidoService,
+    private clienteService: ClienteService,
     private snackBar: MatSnackBar,
   ) {
 
@@ -43,8 +46,32 @@ export class PedidosComponent {
   }
   
   carregarPedido(idPedido: string) {
+    const usuarioLocalStorage = localStorage.getItem('usuario_logado');
+
+    if (!usuarioLocalStorage) {
+      this.snackBar.open("Você não está autenticado.", 'Fechar', {
+        duration: 3000,
+        verticalPosition: "top",
+        horizontalPosition: "center"
+      });
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.pedidoService.findById(idPedido).subscribe((data) => {
       this.pedido = data;
+      const clienteConvertido = JSON.parse(usuarioLocalStorage);
+      this.clienteService.findByUsuario(clienteConvertido.email).subscribe((cliente) => {
+        if (cliente.id !== data.idCliente) {
+            this.snackBar.open("Você não pode acessar este pedido.", 'Fechar', {
+            duration: 3000,
+            verticalPosition: "top",
+            horizontalPosition: "center"
+          });
+          this.router.navigate(['/minha-conta']);
+          return;
+        }
+      })
     })
   }
 

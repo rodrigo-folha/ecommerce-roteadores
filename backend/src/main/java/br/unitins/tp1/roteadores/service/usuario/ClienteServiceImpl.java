@@ -382,6 +382,9 @@ public class ClienteServiceImpl implements ClienteService {
             throw new ValidationException("repetirNovaSenha", "as senhas nao conferem");
 
         usuario.setSenha(hashService.getHashSenha(dto.novaSenha()));
+
+        keycloakAdminService.alterarSenhaUsuario(email, dto.novaSenha());
+
     }
 
     @Override

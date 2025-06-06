@@ -9,5 +9,7 @@ public interface KeycloakAdminService {
     public void criarUsuario(String username, String email, String senha);
 
     public void atribuirRoleUser(String username);
+
+    public void alterarSenhaUsuario(String username, String novaSenha);
     
 }

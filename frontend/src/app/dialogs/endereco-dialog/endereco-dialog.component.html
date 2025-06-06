@@ -63,7 +63,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>CEP</mat-label>
-      <input matInput formControlName="cep" required onkeypress="return /^[0-9]+$/.test(event.key)"/>
+      <input matInput formControlName="cep" required onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="10" mask="00.000-000"/>
       <mat-error
         *ngIf="
           enderecoForm.get('cep') &&

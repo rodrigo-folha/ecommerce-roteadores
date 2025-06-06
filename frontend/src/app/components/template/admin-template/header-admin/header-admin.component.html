@@ -9,13 +9,10 @@
       </button>
     </div>
     <div class="toolbar-divisao">
-      <button mat-icon-button class="conta">
-        <mat-icon>account_circle</mat-icon>
-      </button>
-      <div class="usuario-logado">
-        <p>Fulano de Tal</p>
-      </div>
+      <span class="nome-perfil">{{usuarioLogado?.nome}}</span>
+      <button mat-icon-button (click)="deslogar()">
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
     </div>
-    <!-- <div class="container" [class.is-mobile]="isMobile()"></div> -->
   </div>
 </mat-toolbar>

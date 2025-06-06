@@ -153,6 +153,44 @@
         </div>
       </form>
 
+      <div *ngIf="showPasswordForm" class="password-form">
+        <h3>Alterar Senha</h3>
+        <form [formGroup]="passwordForm">
+          <div class="form-group">
+            <label for="currentPassword">Senha Atual</label>
+            <input type="password" id="senhaAtual" formControlName="senhaAtual">
+            <div *ngIf="hasError(passwordForm, 'senhaAtual')" class="error-message">
+              Senha atual é obrigatória
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="newPassword">Nova Senha</label>
+            <input type="password" id="novaSenha" formControlName="novaSenha">
+            <div *ngIf="hasError(passwordForm, 'novaSenha')" class="error-message">
+              Nova senha deve ter pelo menos 6 caracteres
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirmar Nova Senha</label>
+            <input type="password" id="repetirNovaSenha" formControlName="repetirNovaSenha">
+            <div *ngIf="hasError(passwordForm, 'repetirNovaSenha')" class="error-message">
+              Confirmação de senha é obrigatória
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-primary" (click)="alterarSenha()">
+              Alterar Senha
+            </button>
+            <button type="button" class="btn-outline" (click)="showPasswordForm = false">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+
       <!-- Telefones Section -->
       <div class="section-header">
         <h2>Meus Telefones</h2>
@@ -191,46 +229,6 @@
           </ng-template>
         </div>
 
-      </div>
-
-
-      <!-- Password Change Form -->
-      <div *ngIf="showPasswordForm" class="password-form">
-        <h3>Alterar Senha</h3>
-        <form [formGroup]="passwordForm">
-          <div class="form-group">
-            <label for="currentPassword">Senha Atual</label>
-            <input type="password" id="currentPassword" formControlName="currentPassword">
-            <div *ngIf="hasError(passwordForm, 'currentPassword')" class="error-message">
-              Senha atual é obrigatória
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="newPassword">Nova Senha</label>
-            <input type="password" id="newPassword" formControlName="newPassword">
-            <div *ngIf="hasError(passwordForm, 'newPassword')" class="error-message">
-              Nova senha deve ter pelo menos 6 caracteres
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="confirmPassword">Confirmar Nova Senha</label>
-            <input type="password" id="confirmPassword" formControlName="confirmPassword">
-            <div *ngIf="hasError(passwordForm, 'confirmPassword')" class="error-message">
-              Confirmação de senha é obrigatória
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-primary" (click)="changePassword()">
-              Alterar Senha
-            </button>
-            <button type="button" class="btn-outline" (click)="showPasswordForm = false">
-              Cancelar
-            </button>
-          </div>
-        </form>
       </div>
     </div>
 

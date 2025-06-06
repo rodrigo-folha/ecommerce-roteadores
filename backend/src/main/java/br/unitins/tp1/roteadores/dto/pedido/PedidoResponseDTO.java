@@ -9,6 +9,7 @@ import br.unitins.tp1.roteadores.model.pedido.Pedido;
 
 public record PedidoResponseDTO(
     Long id,
+    Long idCliente,
     LocalDateTime data,
     Double valorTotal,
     List<ItemPedidoResponseDTO> listaItemPedido,
@@ -21,6 +22,7 @@ public record PedidoResponseDTO(
     public static PedidoResponseDTO valueOf(Pedido pedido) {
         return new PedidoResponseDTO(
             pedido.getId(),
+            pedido.getCliente().getId(),
             pedido.getData(),
             pedido.getValorTotal(),
             pedido.getListaItemPedido().stream().map(ItemPedidoResponseDTO::valueOf).toList(),

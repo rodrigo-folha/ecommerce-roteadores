@@ -7,13 +7,17 @@ export const authAdminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if (authService.isTokenExpired()) {
-    console.log("Token inválido!");
     authService.removeToken();
     authService.removeUsuarioLogado();
     router.navigate(['/admin/login']);
     return false;
-  } else {
-    console.log('Token Válido');
-    return true;
   }
+
+  const roles = authService.getRolesFromToken();
+  if (!roles.includes('Adm')) {
+    router.navigate(['/admin/login']);
+    return false;
+  }
+
+  return true;
 };

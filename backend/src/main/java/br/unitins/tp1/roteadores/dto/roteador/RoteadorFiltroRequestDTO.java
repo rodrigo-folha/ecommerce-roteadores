@@ -10,7 +10,8 @@ public record RoteadorFiltroRequestDTO (
     List<String> bandasFrequencia,
     List<Integer> qtdAntenas,
     List<String> sinaisWireless,
-    String sortBy
+    String sortBy,
+    String nome
 ){
 
 }

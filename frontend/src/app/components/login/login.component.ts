@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +25,7 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatCheckboxModule,
     MatSnackBarModule,
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -73,7 +74,7 @@ export class LoginComponent {
 
       this.authService.loginUserKeycloak(email, senha).subscribe({
         next: (resp) => {
-          this.router.navigateByUrl('')
+          this.router.navigateByUrl('/admin')
         },
         error: (err) => {
           console.log(err);

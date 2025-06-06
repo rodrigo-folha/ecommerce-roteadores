@@ -61,6 +61,7 @@ import { PerfilUsuarioComponent } from './components/template/user-template/perf
 import { authGuard } from './guards/auth.guard';
 import { PedidosComponent } from './components/template/user-template/pedidos/pedidos.component';
 import { pedidoResolver } from './components/template/user-template/pedidos/pedido.resolver';
+import { authAdminGuard } from './guards/auth-admin.guard';
 
 export const routes: Routes = [
   {
@@ -72,7 +73,6 @@ export const routes: Routes = [
       {path: '', component: HomeUserComponent},
       {path: 'pagina-roteador/:id', component: PaginaProdutoComponent, resolve: {roteador: roteadorResolver}},
       
-      {path: 'cart', component: CarrinhoComponent},
       {path: 'carrinho', component: CartComponent},
       
       {path: 'login', component: LoginUserComponent},
@@ -86,10 +86,13 @@ export const routes: Routes = [
     ]
   },
 
+  {path: 'admin/login', component: LoginComponent, title: 'Login' },
+
   {
     path: 'admin',
     component: AdminTemplateComponent,
     title: 'Administrativo',
+    canActivate: [authAdminGuard],
     children: [
       // {path: 'sidebar', component: SidebarComponent},
 
@@ -97,7 +100,7 @@ export const routes: Routes = [
         {path: '', pathMatch: 'full', redirectTo: 'admin'},
         {path: '', component: HomeComponent, title: 'Home'},
 
-        {path: 'login', component: LoginComponent, title: 'Login' },
+        // {path: 'login', component: LoginComponent, title: 'Login' },
       
         {path: 'home-admin', component: HomeAdminComponent, title: 'Home Admin'},
         {path: 'perfil', component: PerfilAdminComponent, title: 'Perfil Admin'},

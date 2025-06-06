@@ -4,10 +4,17 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterLink } from '@angular/router';
 import { ClienteService } from '../../../../services/cliente.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-registrar-user',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  providers: [provideNativeDateAdapter(), {
+          provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+          provideNgxMask(),
+        ],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, NgxMaskDirective],
   templateUrl: './registrar-user.component.html',
   styleUrl: './registrar-user.component.css'
 })
@@ -161,11 +168,20 @@ export class RegistrarUserComponent {
           this.registerSuccess = true
           this.isSubmitting = false
         },
-        error: (err) => {
-          console.log(err);
-          this.showSnackbarTopPosition("Não foi possível cadastrar nesse momento", 'Fechar', 2000);
-          this.registerSuccess = false
-          this.isSubmitting = false
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 400 && err.error?.errors) {
+            err.error.errors.forEach((error: any) => {
+              const field = error.fieldName;
+              const message = error.message;
+
+              const control = this.registerForm.get(field);
+              if (control) {
+                control.setErrors({ backend: message });
+              }
+              this.registerSuccess = false
+              this.isSubmitting = false
+            });
+          }
         }
       })
     }

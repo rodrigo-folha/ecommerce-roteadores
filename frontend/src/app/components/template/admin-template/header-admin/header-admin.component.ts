@@ -6,8 +6,11 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { SidebarService } from '../../../../services/sidebar.service';
+import { AuthService } from '../../../../services/auth.service';
+import { Subscription } from 'rxjs';
+import { Usuario } from '../../../../models/usuario.model';
 
 @Component({
   selector: 'app-header-admin',
@@ -16,23 +19,36 @@ import { SidebarService } from '../../../../services/sidebar.service';
   styleUrl: './header-admin.component.css'
 })
 export class HeaderAdminComponent {
-  // protected readonly isMobile = signal(true);
+  usuarioLogado: Usuario | null = null;
+  private subscription = new Subscription();
 
-  // private readonly _mobileQuery: MediaQueryList;
-  // private readonly _mobileQueryListener: () => void;
+  constructor(
+    private sidebarService: SidebarService, 
+    private authService: AuthService,
+    private router: Router,
+  ) {
 
-  constructor(private sidebarService: SidebarService) {
-    // const media = inject(MediaMatcher);
-
-    // this._mobileQuery = media.matchMedia('(max-width: 600px)');
-    // this.isMobile.set(this._mobileQuery.matches);
-    // this._mobileQueryListener = () => this.isMobile.set(this._mobileQuery.matches);
-    // this._mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
-  // ngOnDestroy(): void {
-  //   this._mobileQuery.removeEventListener('change', this._mobileQueryListener);
-  // }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this.obterUsuarioLogado();
+  }
+
+  obterUsuarioLogado() {
+    this.subscription.add(this.authService.getUsuarioLogado().subscribe(
+      usuario => this.usuarioLogado = usuario
+    ));
+  }
+
+  deslogar() {
+    this.authService.removeToken();
+    this.authService.removeUsuarioLogado();
+    this.router.navigate(['/admin/login']);
+  }
 
   toggleSidebar() {
     this.sidebarService.toggle();

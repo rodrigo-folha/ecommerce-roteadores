@@ -170,6 +170,20 @@ export class PerfilUsuarioComponent {
 
   private subscription = new Subscription();
 
+  senhaVisivel: { 
+    senhaAtual: boolean; 
+    novaSenha: boolean; 
+    repetirNovaSenha: boolean; 
+  } = {
+    senhaAtual: false,
+    novaSenha: false,
+    repetirNovaSenha: false
+  };
+
+  alternarVisibilidade(campo: keyof typeof this.senhaVisivel) {
+    this.senhaVisivel[campo] = !this.senhaVisivel[campo];
+  }
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -226,9 +240,9 @@ export class PerfilUsuarioComponent {
     })
 
     this.passwordForm = this.fb.group({
-      currentPassword: ["", [Validators.required]],
-      newPassword: ["", [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ["", [Validators.required]],
+      senhaAtual: ["", [Validators.required]],
+      novaSenha: ["", [Validators.required, Validators.minLength(6)]],
+      repetirNovaSenha: ["", [Validators.required]],
     })
 
     this.maxDate = new Date();
@@ -255,7 +269,7 @@ export class PerfilUsuarioComponent {
     const usuarioLocalStorage = localStorage.getItem('usuario_logado');
     if (usuarioLocalStorage) {
       const clienteConvertido = JSON.parse(usuarioLocalStorage);
-      this.clienteService.findById(clienteConvertido.id).subscribe((item) => {
+      this.clienteService.findByUsuario(clienteConvertido.email).subscribe((item) => {
         cliente = item;
         this.cliente = item;
         this.pedidoService.findPedidoResumido(this.cliente.usuario.email, this.page, this.pageSize).subscribe((pedido) => {
@@ -405,8 +419,8 @@ export class PerfilUsuarioComponent {
 
   changePassword(): void {
     if (this.passwordForm.valid) {
-      const { newPassword, confirmPassword } = this.passwordForm.value
-      if (newPassword !== confirmPassword) {
+      const { novaSenha, repetirNovaSenha } = this.passwordForm.value
+      if (novaSenha !== repetirNovaSenha) {
         alert("As senhas não coincidem!")
         return
       }
@@ -415,6 +429,23 @@ export class PerfilUsuarioComponent {
       alert("Senha alterada com sucesso!")
       this.showPasswordForm = false
       this.passwordForm.reset()
+    }
+  }
+
+  alterarSenha() {
+    if (this.passwordForm.valid) {
+      const { senhaAtual, novaSenha, repetirNovaSenha } = this.passwordForm.value
+      if (novaSenha !== repetirNovaSenha) {
+        alert("As senhas não coincidem!")
+        return
+      }
+
+      this.clienteService.alterarSenha(senhaAtual, novaSenha, repetirNovaSenha).subscribe(() => {
+        this.showNotification('Senha alterada com sucesso!', 'success');
+        this.showPasswordForm = false
+        this.passwordForm.reset()
+      });
+      
     }
   }
 
