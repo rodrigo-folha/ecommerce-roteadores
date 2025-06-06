@@ -1,0 +1,108 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Política de Troca e Devolução</h1>
+    <p>Conheça seus direitos e como proceder para trocas e devoluções</p>
+  </header>
+
+  <div class="content">
+    <section class="policy-section">
+      <h2>Direito de Arrependimento</h2>
+      <p>Conforme o Código de Defesa do Consumidor, você tem <strong>7 dias corridos</strong> para desistir da compra, contados a partir do recebimento do produto.</p>
+      
+      <h3>Condições para Devolução:</h3>
+      <ul>
+        <li>Produto em perfeito estado, sem sinais de uso</li>
+        <li>Embalagem original preservada</li>
+        <li>Todos os acessórios e manuais inclusos</li>
+        <li>Nota fiscal original</li>
+      </ul>
+    </section>
+
+    <section class="policy-section">
+      <h2>Produtos com Defeito</h2>
+      <p>Para produtos com defeito de fabricação, você tem <strong>30 dias</strong> para solicitar a troca ou reparo.</p>
+      
+      <h3>Procedimento:</h3>
+      <ol>
+        <li>Entre em contato conosco através do formulário abaixo</li>
+        <li>Descreva detalhadamente o problema encontrado</li>
+        <li>Aguarde nossas instruções para envio</li>
+        <li>Envie o produto para análise técnica</li>
+      </ol>
+    </section>
+
+    <section class="policy-section">
+      <h2>Custos de Frete</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>Arrependimento</h4>
+          <p>Frete de retorno por conta do cliente</p>
+        </div>
+        <div class="info-card">
+          <h4>Produto com Defeito</h4>
+          <p>Frete de retorno por nossa conta</p>
+        </div>
+        <div class="info-card">
+          <h4>Troca por Outro Produto</h4>
+          <p>Frete de ida e volta por nossa conta</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Produtos Não Aceitos para Devolução</h2>
+      <ul>
+        <li>Roteadores com firmware modificado</li>
+        <li>Produtos danificados por mau uso</li>
+        <li>Equipamentos com etiquetas de garantia violadas</li>
+        <li>Produtos personalizados ou configurados sob medida</li>
+      </ul>
+    </section>
+
+    <section class="policy-section">
+      <h2>Solicitar Devolução</h2>
+      <form [formGroup]="returnForm" (ngSubmit)="onSubmit()" class="return-form">
+        <div class="form-group">
+          <label for="orderNumber">Número do Pedido *</label>
+          <input type="text" id="orderNumber" formControlName="orderNumber" placeholder="Ex: #12345">
+        </div>
+
+        <div class="form-group">
+          <label for="reason">Motivo da Devolução *</label>
+          <select id="reason" formControlName="reason">
+            <option value="">Selecione o motivo</option>
+            <option value="arrependimento">Arrependimento</option>
+            <option value="defeito">Produto com defeito</option>
+            <option value="diferente">Produto diferente do anunciado</option>
+            <option value="danificado">Produto danificado no transporte</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descrição Detalhada *</label>
+          <textarea id="description" formControlName="description" rows="4" 
+                    placeholder="Descreva detalhadamente o problema ou motivo da devolução"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="email">E-mail para Contato *</label>
+          <input type="email" id="email" formControlName="email" placeholder="seu@email.com">
+        </div>
+
+        <button type="submit" [disabled]="returnForm.invalid" class="submit-btn">
+          Solicitar Devolução
+        </button>
+      </form>
+    </section>
+
+    <section class="policy-section">
+      <h2>Prazo para Reembolso</h2>
+      <p>Após a aprovação da devolução, o reembolso será processado em até <strong>5 dias úteis</strong> na mesma forma de pagamento utilizada na compra.</p>
+      
+      <div class="highlight-box">
+        <h4>💡 Dica Importante</h4>
+        <p>Guarde sempre a nota fiscal e o comprovante de postagem até a conclusão do processo de devolução.</p>
+      </div>
+    </section>
+  </div>
+</div>

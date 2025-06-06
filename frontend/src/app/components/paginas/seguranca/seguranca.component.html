@@ -1,0 +1,212 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Segurança e Proteção</h1>
+    <p>Sua segurança é nossa prioridade. Conheça nossas medidas de proteção</p>
+  </header>
+
+  <div class="content">
+    <section class="security-section">
+      <h2>Certificações e Selos de Segurança</h2>
+      <div class="certificates-grid">
+        <div class="certificate-item">
+          <div class="cert-icon">🏆</div>
+          <h3>SSL Extended Validation</h3>
+          <p>Certificado de validação estendida que garante a autenticidade do site</p>
+        </div>
+        
+        <div class="certificate-item">
+          <div class="cert-icon">✅</div>
+          <h3>Site Blindado</h3>
+          <p>Proteção contra ataques virtuais e tentativas de invasão</p>
+        </div>
+        
+        <div class="certificate-item">
+          <div class="cert-icon">🛡️</div>
+          <h3>Google Safe Browsing</h3>
+          <p>Verificado pelo Google como site seguro para navegação</p>
+        </div>
+        
+        <div class="certificate-item">
+          <div class="cert-icon">🔒</div>
+          <h3>HTTPS Everywhere</h3>
+          <p>Todas as páginas protegidas com conexão criptografada</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <h2>Recursos de Segurança</h2>
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of securityFeatures">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <h2>Proteção de Pagamentos</h2>
+      <div class="payment-security">
+        <div class="payment-info">
+          <h3>💳 Processamento Seguro</h3>
+          <p>Utilizamos os mais altos padrões de segurança para processar seus pagamentos:</p>
+          <ul>
+            <li>Tokenização de dados do cartão</li>
+            <li>Não armazenamos dados completos do cartão</li>
+            <li>Processamento através de gateways certificados</li>
+            <li>Monitoramento 24/7 de transações</li>
+          </ul>
+        </div>
+        
+        <div class="payment-methods">
+          <h3>🏦 Métodos Aceitos</h3>
+          <div class="methods-grid">
+            <div class="method-item">
+              <span class="method-icon">💳</span>
+              <span>Cartão de Crédito</span>
+            </div>
+            <div class="method-item">
+              <span class="method-icon">💰</span>
+              <span>Cartão de Débito</span>
+            </div>
+            <div class="method-item">
+              <span class="method-icon">📱</span>
+              <span>PIX</span>
+            </div>
+            <div class="method-item">
+              <span class="method-icon">📄</span>
+              <span>Boleto Bancário</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <h2>Prevenção contra Fraudes</h2>
+      <div class="fraud-prevention">
+        <p>Implementamos múltiplas camadas de proteção para prevenir fraudes:</p>
+        <div class="prevention-list">
+          <div class="prevention-item" *ngFor="let item of fraudPrevention">
+            <span class="check-icon">✓</span>
+            <span>{{ item }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <h2>Proteção de Dados Pessoais</h2>
+      <div class="data-protection">
+        <div class="lgpd-info">
+          <h3>📋 Conformidade com LGPD</h3>
+          <p>Estamos em total conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018):</p>
+        </div>
+        
+        <div class="protection-measures">
+          <div class="measure-item" *ngFor="let measure of dataProtection">
+            <span class="shield-icon">🛡️</span>
+            <span>{{ measure }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <h2>Como Identificar Tentativas de Fraude</h2>
+      <div class="fraud-identification">
+        <div class="warning-signs">
+          <h3>🚨 Sinais de Alerta</h3>
+          <div class="signs-grid">
+            <div class="sign-item danger">
+              <span class="sign-icon">⚠️</span>
+              <div>
+                <strong>E-mails Suspeitos</strong>
+                <p>Nunca solicitamos dados pessoais por e-mail</p>
+              </div>
+            </div>
+            
+            <div class="sign-item danger">
+              <span class="sign-icon">📞</span>
+              <div>
+                <strong>Ligações Falsas</strong>
+                <p>Não pedimos senhas ou dados por telefone</p>
+              </div>
+            </div>
+            
+            <div class="sign-item danger">
+              <span class="sign-icon">🔗</span>
+              <div>
+                <strong>Links Suspeitos</strong>
+                <p>Sempre verifique a URL antes de inserir dados</p>
+              </div>
+            </div>
+            
+            <div class="sign-item danger">
+              <span class="sign-icon">💰</span>
+              <div>
+                <strong>Ofertas Irreais</strong>
+                <p>Desconfie de promoções muito vantajosas</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="safety-tips">
+          <h3>💡 Dicas de Segurança</h3>
+          <ul>
+            <li>Sempre acesse nosso site digitando a URL diretamente</li>
+            <li>Verifique se o endereço começa com "https://"</li>
+            <li>Mantenha seus dados de acesso em sigilo</li>
+            <li>Use senhas fortes e únicas</li>
+            <li>Mantenha seu antivírus atualizado</li>
+            <li>Não acesse sua conta em computadores públicos</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <h2>Contato de Segurança</h2>
+      <div class="security-contact">
+        <div class="contact-info">
+          <h3>🔒 Central de Segurança</h3>
+          <p>Em caso de suspeita de fraude ou problemas de segurança, entre em contato imediatamente:</p>
+          
+          <div class="contact-methods">
+            <div class="contact-method">
+              <span class="contact-icon">📞</span>
+              <div>
+                <strong>Telefone de Emergência</strong>
+                <p>(11) 3456-7890 - Ramal 9</p>
+                <small>24 horas por dia, 7 dias por semana</small>
+              </div>
+            </div>
+            
+            <div class="contact-method">
+              <span class="contact-icon">📧</span>
+              <div>
+                <strong>E-mail de Segurança</strong>
+                <p>seguranca&#64;connecthub.com.br</p>
+                <small>Resposta prioritária em até 2 horas</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="report-fraud">
+          <h3>🚨 Reportar Fraude</h3>
+          <p>Se você suspeita que foi vítima de fraude relacionada ao Connect Hub:</p>
+          <ol>
+            <li>Entre em contato conosco imediatamente</li>
+            <li>Não forneça mais informações pessoais</li>
+            <li>Altere suas senhas de acesso</li>
+            <li>Monitore seus extratos bancários</li>
+            <li>Registre um boletim de ocorrência se necessário</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -190,7 +190,7 @@
             <input type="checkbox" formControlName="termsAccepted" class="checkbox-input">
             <span class="checkbox-custom"></span>
             <span class="checkbox-text">
-              Eu li e aceito os <a href="#" class="terms-link">Termos de Uso</a> e a <a href="#" class="terms-link">Política de Privacidade</a>
+              Eu li e aceito os <a routerLink="/termos" class="terms-link">Termos de Uso</a> e a <a routerLink="/politica-privacidade" class="terms-link">Política de Privacidade</a>
             </span>
           </label>
           <div *ngIf="termsAccepted?.invalid && termsAccepted?.touched" class="error-message">

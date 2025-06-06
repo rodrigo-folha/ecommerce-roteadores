@@ -62,6 +62,15 @@ import { authGuard } from './guards/auth.guard';
 import { PedidosComponent } from './components/template/user-template/pedidos/pedidos.component';
 import { pedidoResolver } from './components/template/user-template/pedidos/pedido.resolver';
 import { authAdminGuard } from './guards/auth-admin.guard';
+import { SobreComponent } from './components/sobre/sobre.component';
+import { ContatoComponent } from './components/paginas/contato/contato.component';
+import { PoliticaPrivacidadeComponent } from './components/paginas/politica-privacidade/politica-privacidade.component';
+import { TermosComponent } from './components/paginas/termos/termos.component';
+import { DevolucaoComponent } from './components/paginas/devolucao/devolucao.component';
+import { GarantiaComponent } from './components/paginas/garantia/garantia.component';
+import { SegurancaComponent } from './components/paginas/seguranca/seguranca.component';
+import { EntregaComponent } from './components/paginas/entrega/entrega.component';
+import { FaqComponent } from './components/paginas/faq/faq.component';
 
 export const routes: Routes = [
   {
@@ -72,6 +81,17 @@ export const routes: Routes = [
       {path: '', pathMatch: 'full', redirectTo: ''},
       {path: '', component: HomeUserComponent},
       {path: 'pagina-roteador/:id', component: PaginaProdutoComponent, resolve: {roteador: roteadorResolver}},
+      
+      {path: 'sobre', component: SobreComponent},
+      {path: 'contato', component: ContatoComponent},
+      {path: 'politica-privacidade', component: PoliticaPrivacidadeComponent},
+      {path: 'termos', component: TermosComponent},
+      {path: 'devolucao', component: DevolucaoComponent},
+      {path: 'garantia', component: GarantiaComponent},
+      {path: 'seguranca', component: SegurancaComponent},
+      {path: 'entrega', component: EntregaComponent},
+      {path: 'faq', component: FaqComponent},
+
       
       {path: 'carrinho', component: CartComponent},
       

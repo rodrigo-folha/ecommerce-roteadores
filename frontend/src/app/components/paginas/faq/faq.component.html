@@ -1,0 +1,106 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Perguntas Frequentes</h1>
+    <p>Encontre respostas para as dúvidas mais comuns sobre nossos produtos e serviços</p>
+  </header>
+
+  <div class="content">
+    <section class="faq-controls">
+      <div class="control-buttons">
+        <button class="control-btn" (click)="expandAll()">📖 Expandir Todas</button>
+        <button class="control-btn" (click)="collapseAll()">📕 Recolher Todas</button>
+      </div>
+    </section>
+
+    <section class="faq-categories" *ngFor="let category of faqCategories; let categoryIndex = index">
+      <div class="category-header">
+        <span class="category-icon">{{ category.icon }}</span>
+        <h2>{{ category.title }}</h2>
+      </div>
+      
+      <div class="questions-container">
+        <div class="question-item" *ngFor="let question of category.questions; let questionIndex = index">
+          <div class="question-header" (click)="toggleQuestion(categoryIndex, questionIndex)">
+            <h3>{{ question.question }}</h3>
+            <span class="toggle-icon" [class.rotated]="question.isOpen">▼</span>
+          </div>
+          
+          <div class="answer-content" [class.open]="question.isOpen">
+            <div class="answer-text">
+              <p>{{ question.answer }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-support">
+      <div class="support-card">
+        <h2>Não encontrou sua resposta?</h2>
+        <p>Nossa equipe de suporte está pronta para ajudar você!</p>
+        
+        <div class="support-options">
+          <div class="support-option">
+            <span class="support-icon">📞</span>
+            <div>
+              <strong>Telefone</strong>
+              <p>(11) 3456-7890</p>
+              <small>Seg a Sex, 8h às 18h</small>
+            </div>
+          </div>
+          
+          <div class="support-option">
+            <span class="support-icon">💬</span>
+            <div>
+              <strong>WhatsApp</strong>
+              <p>(11) 99999-8888</p>
+              <small>Seg a Sex, 8h às 18h</small>
+            </div>
+          </div>
+          
+          <div class="support-option">
+            <span class="support-icon">📧</span>
+            <div>
+              <strong>E-mail</strong>
+              <p>suporte&#64;connecthub.com.br</p>
+              <small>Resposta em até 24h</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="helpful-resources">
+      <h2>Recursos Úteis</h2>
+      <div class="resources-grid">
+        <div class="resource-card">
+          <span class="resource-icon">📚</span>
+          <h3>Manuais de Produtos</h3>
+          <p>Baixe manuais completos de todos os nossos roteadores</p>
+          <button class="resource-btn">Acessar Manuais</button>
+        </div>
+        
+        <div class="resource-card">
+          <span class="resource-icon">🎥</span>
+          <h3>Vídeos Tutoriais</h3>
+          <p>Aprenda a configurar e otimizar seu roteador</p>
+          <button class="resource-btn">Ver Vídeos</button>
+        </div>
+        
+        <div class="resource-card">
+          <span class="resource-icon">🔧</span>
+          <h3>Ferramentas de Diagnóstico</h3>
+          <p>Teste a velocidade e qualidade da sua conexão</p>
+          <button class="resource-btn">Usar Ferramentas</button>
+        </div>
+        
+        <div class="resource-card">
+          <span class="resource-icon">💡</span>
+          <h3>Dicas de Otimização</h3>
+          <p>Melhore o desempenho da sua rede WiFi</p>
+          <button class="resource-btn">Ver Dicas</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

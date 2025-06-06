@@ -1,0 +1,227 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Política de Garantia</h1>
+    <p>Proteção completa para seus roteadores e equipamentos de rede</p>
+  </header>
+
+  <div class="content">
+    <section class="policy-section">
+      <h2>Tipos de Garantia</h2>
+      <div class="warranty-types">
+        <div class="warranty-card" *ngFor="let warranty of warrantyTypes">
+          <div class="warranty-header">
+            <h3>{{ warranty.title }}</h3>
+            <span class="warranty-duration">{{ warranty.duration }}</span>
+          </div>
+          <div class="warranty-coverage">
+            <strong>Cobertura:</strong> {{ warranty.coverage }}
+          </div>
+          <p class="warranty-description">{{ warranty.description }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>O que está Coberto</h2>
+      <div class="coverage-grid">
+        <div class="coverage-item covered">
+          <span class="coverage-icon">✅</span>
+          <div>
+            <h4>Defeitos de Fabricação</h4>
+            <p>Problemas originados no processo de fabricação do produto</p>
+          </div>
+        </div>
+        
+        <div class="coverage-item covered">
+          <span class="coverage-icon">✅</span>
+          <div>
+            <h4>Falhas de Componentes</h4>
+            <p>Defeitos em processadores, memória, antenas e outros componentes</p>
+          </div>
+        </div>
+        
+        <div class="coverage-item covered">
+          <span class="coverage-icon">✅</span>
+          <div>
+            <h4>Problemas de Software</h4>
+            <p>Falhas no firmware original e atualizações oficiais</p>
+          </div>
+        </div>
+        
+        <div class="coverage-item covered">
+          <span class="coverage-icon">✅</span>
+          <div>
+            <h4>Superaquecimento</h4>
+            <p>Problemas relacionados ao sistema de refrigeração</p>
+          </div>
+        </div>
+        
+        <div class="coverage-item not-covered">
+          <span class="coverage-icon">❌</span>
+          <div>
+            <h4>Danos Físicos</h4>
+            <p>Quedas, impactos, líquidos derramados ou mau uso</p>
+          </div>
+        </div>
+        
+        <div class="coverage-item not-covered">
+          <span class="coverage-icon">❌</span>
+          <div>
+            <h4>Firmware Modificado</h4>
+            <p>Instalação de firmware não oficial ou modificações</p>
+          </div>
+        </div>
+        
+        <div class="coverage-item not-covered">
+          <span class="coverage-icon">❌</span>
+          <div>
+            <h4>Desgaste Natural</h4>
+            <p>Deterioração normal pelo uso prolongado</p>
+          </div>
+        </div>
+        
+        <div class="coverage-item not-covered">
+          <span class="coverage-icon">❌</span>
+          <div>
+            <h4>Danos Elétricos</h4>
+            <p>Surtos elétricos, raios ou problemas na rede elétrica</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Como Acionar a Garantia</h2>
+      <div class="service-steps">
+        <div class="step-item" *ngFor="let step of serviceSteps">
+          <div class="step-number">{{ step.step }}</div>
+          <div class="step-content">
+            <h4>{{ step.title }}</h4>
+            <p>{{ step.description }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Documentos Necessários</h2>
+      <div class="documents-grid">
+        <div class="document-item">
+          <span class="doc-icon">📄</span>
+          <div>
+            <h4>Nota Fiscal</h4>
+            <p>Comprovante de compra original ou cópia legível</p>
+          </div>
+        </div>
+        
+        <div class="document-item">
+          <span class="doc-icon">🏷️</span>
+          <div>
+            <h4>Número de Série</h4>
+            <p>Etiqueta do produto com número de série visível</p>
+          </div>
+        </div>
+        
+        <div class="document-item">
+          <span class="doc-icon">📋</span>
+          <div>
+            <h4>Descrição do Problema</h4>
+            <p>Relato detalhado do defeito apresentado</p>
+          </div>
+        </div>
+        
+        <div class="document-item">
+          <span class="doc-icon">📸</span>
+          <div>
+            <h4>Fotos (se aplicável)</h4>
+            <p>Imagens do produto e do problema identificado</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Rede de Assistência Técnica</h2>
+      <div class="service-centers">
+        <div class="center-card">
+          <h4>🏢 Centro Principal - São Paulo</h4>
+          <p><strong>Endereço:</strong> Rua das Redes, 123 - Vila Olímpia</p>
+          <p><strong>Telefone:</strong> (11) 3456-7890</p>
+          <p><strong>Horário:</strong> Seg a Sex, 8h às 18h</p>
+        </div>
+        
+        <div class="center-card">
+          <h4>🏢 Centro Regional - Rio de Janeiro</h4>
+          <p><strong>Endereço:</strong> Av. Conectividade, 456 - Copacabana</p>
+          <p><strong>Telefone:</strong> (21) 2345-6789</p>
+          <p><strong>Horário:</strong> Seg a Sex, 9h às 17h</p>
+        </div>
+        
+        <div class="center-card">
+          <h4>🏢 Centro Regional - Belo Horizonte</h4>
+          <p><strong>Endereço:</strong> Rua WiFi, 789 - Savassi</p>
+          <p><strong>Telefone:</strong> (31) 3456-7890</p>
+          <p><strong>Horário:</strong> Seg a Sex, 8h às 17h</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Prazos e Condições</h2>
+      <div class="terms-grid">
+        <div class="term-item">
+          <h4>⏱️ Prazo de Reparo</h4>
+          <p>Até 15 dias úteis para diagnóstico e reparo do produto</p>
+        </div>
+        
+        <div class="term-item">
+          <h4>🔄 Produto Substituto</h4>
+          <p>Disponível para empresas durante o período de reparo</p>
+        </div>
+        
+        <div class="term-item">
+          <h4>📦 Frete de Garantia</h4>
+          <p>Envio e retorno por nossa conta para produtos em garantia</p>
+        </div>
+        
+        <div class="term-item">
+          <h4>🆕 Produto Novo</h4>
+          <p>Substituição por produto novo se não for possível o reparo</p>
+        </div>
+        
+        <div class="term-item">
+          <h4>📞 Suporte Técnico</h4>
+          <p>Atendimento especializado durante todo o período de garantia</p>
+        </div>
+        
+        <div class="term-item">
+          <h4>🔧 Configuração Gratuita</h4>
+          <p>Suporte para configuração após reparo ou substituição</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Contato para Garantia</h2>
+      <div class="contact-warranty">
+        <div class="contact-method">
+          <h4>📞 Telefone</h4>
+          <p><strong>(11) 3456-7890</strong></p>
+          <p>Seg a Sex, 8h às 18h</p>
+        </div>
+        
+        <div class="contact-method">
+          <h4>📧 E-mail</h4>
+          <p><strong>garantia&#64;connecthub.com.br</strong></p>
+          <p>Resposta em até 24 horas</p>
+        </div>
+        
+        <div class="contact-method">
+          <h4>💬 WhatsApp</h4>
+          <p><strong>(11) 99999-8888</strong></p>
+          <p>Seg a Sex, 8h às 18h</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

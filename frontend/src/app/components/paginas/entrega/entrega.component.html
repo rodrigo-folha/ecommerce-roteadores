@@ -1,0 +1,182 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Política de Entrega</h1>
+    <p>Informações sobre prazos, custos e modalidades de entrega</p>
+  </header>
+
+  <div class="content">
+    <section class="policy-section">
+      <h2>Modalidades de Entrega</h2>
+      <div class="shipping-options">
+        <div class="shipping-card">
+          <h3>📦 Entrega Padrão</h3>
+          <p>Entrega econômica via Correios com rastreamento completo.</p>
+          <ul>
+            <li>Prazo: 2 a 10 dias úteis (conforme região)</li>
+            <li>Seguro incluso até R$ 3.000</li>
+            <li>Rastreamento online</li>
+          </ul>
+        </div>
+        
+        <div class="shipping-card">
+          <h3>⚡ Entrega Expressa</h3>
+          <p>Entrega rápida via transportadora com prioridade.</p>
+          <ul>
+            <li>Prazo: 1 a 6 dias úteis (conforme região)</li>
+            <li>Seguro incluso até R$ 5.000</li>
+            <li>Rastreamento em tempo real</li>
+          </ul>
+        </div>
+        
+        <div class="shipping-card">
+          <h3>🏪 Retirada na Loja</h3>
+          <p>Retire seu pedido em nossa loja física sem custo de frete.</p>
+          <ul>
+            <li>Prazo: Disponível em 2 horas</li>
+            <li>Sem custo de frete</li>
+            <li>Horário: Seg a Sex, 8h às 18h</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Tabela de Prazos e Preços</h2>
+      <div class="shipping-table-container">
+        <table class="shipping-table">
+          <thead>
+            <tr>
+              <th>Região</th>
+              <th>Entrega Padrão</th>
+              <th>Preço Padrão</th>
+              <th>Entrega Expressa</th>
+              <th>Preço Expressa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rate of shippingRates">
+              <td>{{ rate.region }}</td>
+              <td>{{ rate.standard }}</td>
+              <td>{{ rate.standardPrice }}</td>
+              <td>{{ rate.express }}</td>
+              <td>{{ rate.expressPrice }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="shipping-notes">
+        <p><strong>Observações:</strong></p>
+        <ul>
+          <li>Prazos contados em dias úteis a partir da confirmação do pagamento</li>
+          <li>Frete grátis para compras acima de R$ 299,00 (entrega padrão)</li>
+          <li>Produtos em estoque são enviados no mesmo dia (pedidos até 14h)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Rastreamento do Pedido</h2>
+      <div class="tracking-info">
+        <h3>Como Acompanhar:</h3>
+        <ol>
+          <li>Acesse sua conta no site</li>
+          <li>Vá em "Meus Pedidos"</li>
+          <li>Clique no pedido desejado</li>
+          <li>Acompanhe o status em tempo real</li>
+        </ol>
+        
+        <div class="tracking-statuses">
+          <h3>Status de Entrega:</h3>
+          <div class="status-grid">
+            <div class="status-item">
+              <span class="status-icon">📋</span>
+              <div>
+                <strong>Pedido Confirmado</strong>
+                <p>Pagamento aprovado e pedido em preparação</p>
+              </div>
+            </div>
+            <div class="status-item">
+              <span class="status-icon">📦</span>
+              <div>
+                <strong>Enviado</strong>
+                <p>Produto despachado e código de rastreamento gerado</p>
+              </div>
+            </div>
+            <div class="status-item">
+              <span class="status-icon">🚚</span>
+              <div>
+                <strong>Em Trânsito</strong>
+                <p>Produto a caminho do destino</p>
+              </div>
+            </div>
+            <div class="status-item">
+              <span class="status-icon">✅</span>
+              <div>
+                <strong>Entregue</strong>
+                <p>Produto entregue no endereço informado</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Problemas na Entrega</h2>
+      <div class="problem-scenarios">
+        <div class="scenario">
+          <h3>🏠 Ninguém em Casa</h3>
+          <p>O transportador tentará a entrega por 3 vezes. Após isso, o produto retorna para nossa central e você será contatado para reagendar.</p>
+        </div>
+        
+        <div class="scenario">
+          <h3>📍 Endereço Incorreto</h3>
+          <p>Verifique sempre os dados de entrega. Correções de endereço podem gerar custos adicionais e atrasos na entrega.</p>
+        </div>
+        
+        <div class="scenario">
+          <h3>⏰ Atraso na Entrega</h3>
+          <p>Em caso de atraso superior a 2 dias úteis do prazo estimado, entre em contato conosco para verificação.</p>
+        </div>
+        
+        <div class="scenario">
+          <h3>📦 Produto Danificado</h3>
+          <p>Não aceite produtos visivelmente danificados. Recuse a entrega e entre em contato conosco imediatamente.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="policy-section">
+      <h2>Informações Importantes</h2>
+      <div class="important-info">
+        <div class="info-box">
+          <h4>📋 Documentação Necessária</h4>
+          <ul>
+            <li>Documento com foto do destinatário</li>
+            <li>Comprovante de endereço (se solicitado)</li>
+            <li>Número do pedido para conferência</li>
+          </ul>
+        </div>
+        
+        <div class="info-box">
+          <h4>🏢 Entrega para Empresas</h4>
+          <ul>
+            <li>Horário comercial: 8h às 17h</li>
+            <li>Necessário CNPJ no endereço de entrega</li>
+            <li>Recebimento por funcionário autorizado</li>
+          </ul>
+        </div>
+        
+        <div class="info-box">
+          <h4>🎁 Produtos Especiais</h4>
+          <ul>
+            <li>Roteadores enterprise: embalagem reforçada</li>
+            <li>Kits completos: verificação de itens na entrega</li>
+            <li>Produtos importados: possível retenção na Receita</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
