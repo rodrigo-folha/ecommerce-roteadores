@@ -51,6 +51,8 @@
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="/minha-conta">Minha Conta</button>
+        <button mat-menu-item (click)="irParaListaDesejos()">Lista de Desejos</button>
+        <button mat-menu-item (click)="irParaPedidos()">Meus Pedidos</button>
         <button mat-menu-item (click)="deslogar()">Sair</button>
       </mat-menu>
       <!-- <span class="header-link">Olá, {{usuarioLogado.nome}}</span>

@@ -8,6 +8,11 @@ import { Component } from '@angular/core';
   styleUrl: './seguranca.component.css'
 })
 export class SegurancaComponent {
+
+  ngOnInit() {
+    window.scroll(0, 0);
+  }
+
   securityFeatures = [
     {
       icon: "🔒",

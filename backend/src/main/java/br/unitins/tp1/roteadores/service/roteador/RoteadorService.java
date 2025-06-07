@@ -34,9 +34,12 @@ public interface RoteadorService {
     void delete(Long id);
 
     long count();
+    
     long count(String nome);
 
     long countQuantidadeTotalById(Long id);
 
     List<Roteador> buscarComFiltros(RoteadorFiltroRequestDTO filtros);
+    
+    void removerNomeImagem(Long idRoteador, String nomeImagem);
 }

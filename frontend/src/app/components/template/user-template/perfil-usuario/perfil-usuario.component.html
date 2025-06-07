@@ -378,8 +378,11 @@
                 <span class="review-count">({{ card.reviews }} reviews)</span>
               </div>
 
-              <button (click)="adicionarAoCarrinho(card)" class="add-to-cart-button">
+              <button (click)="adicionarAoCarrinho(card)" class="add-to-cart-button" *ngIf="card.estoque > 0">
                 Adicionar ao Carrinho
+              </button>
+              <button class="add-to-cart-button" *ngIf="card.estoque === 0" [disabled]="card.estoque === 0">
+                ESGOTADO
               </button>
 
               <div class="botao-wishlist">
@@ -398,25 +401,6 @@
   <h2>Meus Pedidos</h2>
 
   <div *ngIf="pedidosResumidos.length > 0; else semPedidos" class="order-list">
-    <!-- <div *ngFor="let pedido of pedidos; let i = index" class="order-card">
-      <div class="order-header">
-        <h3>Pedido #{{ pedido.id }}</h3>
-        <p class="order-date">Realizado em: {{ pedido.data | date: 'dd/MM/yyyy' }}</p>
-        <span class="order-status">{{ pedido.statusPedido }}</span>
-      </div>
-
-      <div class="order-details">
-        <p><strong>Total:</strong> {{ pedido.valorTotal | currency:'BRL':'symbol' }}</p>
-        <p><strong>Endereço de Entrega:</strong> {{ pedido.enderecoEntrega.logradouro }}, {{ pedido.enderecoEntrega.numero }} - {{ pedido.enderecoEntrega.cidade.nome }}/{{ pedido.enderecoEntrega.cidade.estado.sigla }}</p>
-      </div>
-
-      <div class="order-actions">
-        <button class="btn-text" >
-          <i class="material-icons">visibility</i>
-          Ver Detalhes
-        </button>
-      </div>
-    </div> -->
     <table mat-table [dataSource]="pedidosResumidos" class="mat-elevation-z8">
     <!-- Id Column -->
     <ng-container matColumnDef="id">

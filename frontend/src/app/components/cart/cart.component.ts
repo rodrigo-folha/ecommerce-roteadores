@@ -94,10 +94,6 @@ export class CartComponent implements OnInit {
   ]
   selectedPaymentMethod = this.paymentMethods[0].id
 
-  // Forms
-  addressForm: FormGroup
-  paymentForm: FormGroup
-
   // Order summary
   subtotal = 0
   discount = 0
@@ -115,28 +111,7 @@ export class CartComponent implements OnInit {
     private pedidoService: PedidoService,
     private dialog: MatDialog,
   ) {
-    // Initialize forms
-    this.addressForm = this.fb.group({
-      fullName: ["", [Validators.required]],
-      email: ["", [Validators.required, Validators.email]],
-      phone: ["", [Validators.required]],
-      address: ["", [Validators.required]],
-      number: ["", [Validators.required]],
-      complement: [""],
-      neighborhood: ["", [Validators.required]],
-      city: ["", [Validators.required]],
-      state: ["", [Validators.required]],
-      zipCode: ["", [Validators.required]],
-      saveAddress: [true],
-    })
 
-    this.paymentForm = this.fb.group({
-      cardNumber: ["", [Validators.required]],
-      cardName: ["", [Validators.required]],
-      expiryDate: ["", [Validators.required]],
-      cvv: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(4)]],
-      installments: ["1", [Validators.required]],
-    })
   }
 
   ngOnInit(): void {
@@ -154,7 +129,6 @@ export class CartComponent implements OnInit {
     if (usuarioLocalStorage) {
       const clienteConvertido = JSON.parse(usuarioLocalStorage);
       this.clienteService.findByUsuario(clienteConvertido.email).subscribe((item) => {
-        console.log("esse é o cliente: ", item)
         this.cliente = item;
         this.carregarEnderecos();
         this.carregarCartoes();
@@ -393,7 +367,6 @@ export class CartComponent implements OnInit {
       idCliente: this.cliente.id
     };
 
-    console.log("Esse é o meu pedido de envio: ", pedido);
     this.pedidoService.insert(pedido).subscribe({
       next: res => {
         this.showNotification('Pedido realizado com sucesso!', 'success');

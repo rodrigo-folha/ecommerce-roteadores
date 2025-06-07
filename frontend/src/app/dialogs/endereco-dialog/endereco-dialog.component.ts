@@ -39,9 +39,21 @@ export class EnderecoDialogComponent {
   enderecoForm: FormGroup;
   cidades: Cidade[] = [];
 
+  estados: string[] = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+  'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS',
+  'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
+
+  todasCidades: Cidade[] = [];
+
   ngOnInit(): void {
     this.cidadeService.findAll().subscribe((data) => {
       this.cidades = data.resultado;
+      this.todasCidades = data.resultado;
+
+      const estadoSelecionado = this.enderecoForm.get('estado')?.value;
+      if (estadoSelecionado) {
+        this.filtrarCidadesPorEstado(estadoSelecionado);
+      }
     });
     this.initializeForm();
   }
@@ -60,7 +72,8 @@ export class EnderecoDialogComponent {
       numero: [data?.numero || '', Validators.required],
       complemento: [data?.complemento || ''],
       cep: [data?.cep || '', Validators.required],
-      cidade: [data?.cidade || '', Validators.required]
+      cidade: [data?.cidade || '', Validators.required],
+      estado: [this.data?.estado ?? null, [Validators.required]],
     });
   }
 
@@ -74,8 +87,14 @@ export class EnderecoDialogComponent {
         complemento: [(this.data && this.data.complemento) ? this.data.complemento : null],
         cep: [(this.data && this.data.cep) ? this.data.cep : null, [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
         cidade: [(this.data && this.data.cidade) ? this.data.cidade : null, [Validators.required]],
+        estado: [this.data?.estado ?? null, [Validators.required]],
       });
     }
+
+  filtrarCidadesPorEstado(uf: string): void {
+    this.cidades = this.todasCidades.filter(c => c.estado.sigla === uf);
+    this.enderecoForm.get('cidade')?.setValue(null); // limpa cidade ao trocar estado
+  }
 
   compareCidades(c1: any, c2: any): boolean {
     return c1 && c2 ? c1.id === c2.id : c1 === c2;

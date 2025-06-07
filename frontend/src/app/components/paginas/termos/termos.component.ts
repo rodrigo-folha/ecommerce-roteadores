@@ -8,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class TermosComponent {
 
+  ngOnInit() {
+    window.scroll(0, 0);
+  }
+
 }

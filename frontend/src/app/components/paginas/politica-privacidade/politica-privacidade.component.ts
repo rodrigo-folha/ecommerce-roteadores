@@ -9,5 +9,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   styleUrl: './politica-privacidade.component.css'
 })
 export class PoliticaPrivacidadeComponent {
+
+  ngOnInit() {
+    window.scroll(0, 0);
+  }
   
 }

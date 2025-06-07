@@ -2,7 +2,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { Component, effect, LOCALE_ID, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Roteador } from '../../../../models/roteador.model';
 import { RoteadorService } from '../../../../services/roteador.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,6 +11,7 @@ import { ClienteService } from '../../../../services/cliente.service';
 import { RoteadorFilterRequest } from '../../../../models/roteador-filter-request';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { BuscaRoteadoresService } from '../../../../services/busca-roteadores.service';
+import { forkJoin, map } from 'rxjs';
 registerLocaleData(localePt);
 
 type Card = {
@@ -23,6 +24,7 @@ type Card = {
   rating: number;
   reviews: number;
   imagemUrl: string;
+  estoque: number;
 };
 
 @Component({
@@ -40,6 +42,8 @@ export class PaginaRoteadoresComponent implements OnInit {
   roteadores: Roteador[] = [];
   cards = signal<Card[]>([]);
   listaDesejo: number[] = [];
+  sortBy: 'preco-asc' | 'preco-desc' = 'preco-asc';
+
   constructor(
     private roteadorService: RoteadorService,
     private snackBar: MatSnackBar,
@@ -47,6 +51,7 @@ export class PaginaRoteadoresComponent implements OnInit {
     private clienteService: ClienteService,
     private buscaService: BuscaRoteadoresService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {
     this.route.queryParams.subscribe(params => {
       const termo = params['busca'] || '';
@@ -63,6 +68,7 @@ export class PaginaRoteadoresComponent implements OnInit {
 
   ngOnInit(): void {
     // this.carregarRoteadores();
+    window.scroll(0,0);
     const usuarioLogado = localStorage.getItem('usuario_logado');
     if (usuarioLogado) {
       this.carregarListaDesejos();
@@ -76,22 +82,51 @@ export class PaginaRoteadoresComponent implements OnInit {
     })
   }
 
+  // carregarCards() {
+  //   const cards: Card[] = [];
+  //   this.roteadores.forEach((roteador) => {
+  //     this.roteadorService.countQuantidadeTotalById(roteador.id).subscribe((estoque) => {
+  //       cards.push({
+  //         idRoteador: roteador.id,
+  //         titulo: roteador.nome,
+  //         preco: roteador.preco,
+  //         bandaFrequencia: roteador.bandaFrequencia.nome,
+  //         protocoloSeguranca: roteador.protocoloSeguranca.nome,
+  //         quantidadeAntena: roteador.quantidadeAntena.quantidade,
+  //         rating: 4.8,
+  //         reviews: 100,
+  //         imagemUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString()),
+  //         estoque: estoque
+  //       });
+
+  //       if (cards.length === this.roteadores.length) {
+  //         this.cards.set(cards);
+  //       }
+  //     });
+  //   });
+  // }
+
   carregarCards() {
-    const cards: Card[] = [];
-    this.roteadores.forEach((roteador) => {
-      cards.push({
-        idRoteador: roteador.id,
-        titulo: roteador.nome,
-        preco: roteador.preco,
-        bandaFrequencia: roteador.bandaFrequencia.nome,
-        protocoloSeguranca: roteador.protocoloSeguranca.nome,
-        quantidadeAntena: roteador.quantidadeAntena.quantidade,
-        rating: 4.8,
-        reviews: 100,
-        imagemUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString())
-      })
-    })
-    this.cards.set(cards);
+    const observables = this.roteadores.map((roteador) =>
+      this.roteadorService.countQuantidadeTotalById(roteador.id).pipe(
+        map((estoque) => ({
+          idRoteador: roteador.id,
+          titulo: roteador.nome,
+          preco: roteador.preco,
+          bandaFrequencia: roteador.bandaFrequencia.nome,
+          protocoloSeguranca: roteador.protocoloSeguranca.nome,
+          quantidadeAntena: roteador.quantidadeAntena.quantidade,
+          rating: 4.8,
+          reviews: 100,
+          imagemUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString()),
+          estoque
+        }))
+      )
+    );
+
+    forkJoin(observables).subscribe((cardsFinal) => {
+      this.cards.set(cardsFinal);
+    });
   }
 
   // Filtros
@@ -180,17 +215,25 @@ export class PaginaRoteadoresComponent implements OnInit {
       bandasFrequencia: this.frequencyBands.filter(band => band.checked).map(band => band.id.toString()),
       qtdAntenas: this.antennaCounts.filter(a => a.checked).map(a => a.value),
       sinaisWireless: this.wirelessSignals.filter(signal => signal.checked).map(signal => signal.id.toString()),
-      nome: this.nomeFiltro
+      nome: this.nomeFiltro,
+      sortBy: this.sortBy
     };
 
     this.roteadorService.buscarComFiltros(filtros).subscribe({
       next: (result) => {
         this.roteadores = result;
+
+        const maiorPreco = Math.max(...this.roteadores.map(r => r.preco));
+        this.priceRange.max = maiorPreco;
+        this.maxPrice = maiorPreco;
+        
         this.carregarCards();
+        window.scroll(0,0);
       },
       error: (error) => {
         console.error('Erro ao buscar roteadores com filtros', error);
       }
+      
     });
   }
 
@@ -206,6 +249,8 @@ export class PaginaRoteadoresComponent implements OnInit {
     this.wirelessSignals.forEach(w => w.checked = false);
 
     this.nomeFiltro = '';
+
+    this.router.navigate(['/roteadores']);
 
   }
 

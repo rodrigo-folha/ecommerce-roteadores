@@ -87,6 +87,7 @@ type Card = {
   rating: number;
   reviews: number;
   imageUrl: string;
+  estoque: number;
 };
 
 @Component({
@@ -249,7 +250,6 @@ export class PerfilUsuarioComponent {
   }
 
   ngOnInit(): void {
-    this.loadWishlistItems()
     this.initializeForm();
     this.cidadeService.findAll().subscribe((data) => {
       this.cidades = data.resultado;
@@ -373,17 +373,24 @@ export class PerfilUsuarioComponent {
 
   carregarCards() {
     const cards: Card[] = [];
+
     this.roteadoresListaDesejo.forEach((roteador) => {
-      cards.push({
-        id: roteador.id,
-        titulo: roteador.nome,
-        preco: roteador.preco,
-        rating: 4.8,
-        reviews: 100,
-        imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString())
-      })
-    })
-    this.cards.set(cards);
+      this.roteadorService.countQuantidadeTotalById(roteador.id).subscribe((estoque) => {
+        cards.push({
+          id: roteador.id,
+          titulo: roteador.nome,
+          preco: roteador.preco,
+          rating: 4.8,
+          reviews: 100,
+          imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString()),
+          estoque: estoque
+        });
+
+        if (cards.length === this.roteadoresListaDesejo.length) {
+          this.cards.set(cards);
+        }
+      });
+    });
   }
 
   // Tab navigation
@@ -474,38 +481,6 @@ export class PerfilUsuarioComponent {
     if (cleaned.startsWith("5")) return "Mastercard"
     if (cleaned.startsWith("3")) return "American Express"
     return "Outros"
-  }
-
-  // Wishlist methods
-  loadWishlistItems(): void {
-    this.wishlistItems = [
-      {
-        id: 1,
-        name: "Smartphone Galaxy S24",
-        image: "../login/placeholder.svg?height=200&width=200",
-        price: 3499.9,
-        originalPrice: 3999.9,
-        inStock: true,
-        onSale: true,
-      },
-      {
-        id: 2,
-        name: "Notebook Dell Inspiron",
-        image: "../login/placeholder.svg?height=200&width=200",
-        price: 2899.9,
-        inStock: true,
-        onSale: false,
-      },
-      {
-        id: 3,
-        name: "Fone de Ouvido Sony",
-        image: "../login/placeholder.svg?height=200&width=200",
-        price: 599.9,
-        originalPrice: 799.9,
-        inStock: false,
-        onSale: true,
-      },
-    ]
   }
 
   removeFromWishlist(id: number): void {
@@ -680,28 +655,67 @@ export class PerfilUsuarioComponent {
     }
   }
 
+  // salvar() {
+  //   this.formGroup.markAllAsTouched();
+
+  //   if (this.formGroup.valid) {
+  //     const cliente = this.formGroup.value;
+
+  //     const operacao = this.clienteService.updateBasico(cliente)
+
+  //     operacao.subscribe({
+  //       next: () => {
+  //         this.uploadImage(cliente.id);
+  //         this.router.navigateByUrl('/minha-conta').then(() => {
+  //           window.location.reload();
+  //         });
+  //         this.showNotification('Perfil atualizado com sucesso!', 'success');
+
+  //       },
+  //       error: (errorResponse) => {
+  //         console.log('Erro ao gravar' + JSON.stringify(errorResponse));
+  //         this.tratarErros(errorResponse)
+  //       }
+  //     })
+  //   }
+  // }
+
   salvar() {
     this.formGroup.markAllAsTouched();
 
     if (this.formGroup.valid) {
       const cliente = this.formGroup.value;
 
-      const operacao = this.clienteService.updateBasico(cliente)
+      const operacao = this.clienteService.updateBasico(cliente);
 
       operacao.subscribe({
         next: () => {
-          this.uploadImage(cliente.id);
-          this.router.navigateByUrl('/minha-conta').then(() => {
-            window.location.reload();
-          });
-          this.showNotification('Perfil atualizado com sucesso!', 'success');
-
+          if (this.selectedFile) {
+            this.clienteService.uploadImage(cliente.id, this.selectedFile.name, this.selectedFile)
+              .subscribe({
+                next: () => {
+                  this.showNotification('Perfil atualizado com sucesso!', 'success');
+                  this.router.navigateByUrl('/minha-conta').then(() => {
+                    window.location.reload();
+                  });
+                },
+                error: err => {
+                  console.log('Erro ao fazer o upload da imagem', err);
+                  this.showNotification('Erro ao salvar a imagem.', 'error');
+                }
+              });
+          } else {
+            this.showNotification('Perfil atualizado com sucesso!', 'success');
+            this.router.navigateByUrl('/minha-conta').then(() => {
+              window.location.reload();
+            });
+          }
         },
         error: (errorResponse) => {
           console.log('Erro ao gravar' + JSON.stringify(errorResponse));
-          this.tratarErros(errorResponse)
+          this.tratarErros(errorResponse);
         }
-      })
+      });
     }
   }
 

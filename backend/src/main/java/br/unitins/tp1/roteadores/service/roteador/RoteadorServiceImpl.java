@@ -152,12 +152,16 @@ public class RoteadorServiceImpl implements RoteadorService {
     public Roteador updateNomeImagem(Long id, String nomeImagem) {
         Roteador roteador = roteadorRepository.findById(id);
         if (roteador == null)
-            throw new ValidationException("idRoteador", "Roteador nao encontrado");
+            throw new ValidationException("idRoteador", "Roteador não encontrado");
 
         if (roteador.getListaImagem() == null)
             roteador.setListaImagem(new ArrayList<>());
 
-        roteador.getListaImagem().add(nomeImagem);
+        // Evita duplicatas
+        if (!roteador.getListaImagem().contains(nomeImagem)) {
+            roteador.getListaImagem().add(nomeImagem);
+        }
+
         return roteador;
     }
 
@@ -181,5 +185,19 @@ public class RoteadorServiceImpl implements RoteadorService {
     @Override
     public List<Roteador> buscarComFiltros(RoteadorFiltroRequestDTO filtros) {
         return roteadorRepository.buscarComFiltros(filtros).list();
+    }
+
+    @Override
+    @Transactional
+    public void removerNomeImagem(Long idRoteador, String nomeImagem) {
+        Roteador roteador = roteadorRepository.findById(idRoteador);
+        if (roteador == null)
+            throw new ValidationException("idRoteador", "Roteador não encontrado.");
+
+        if (roteador.getListaImagem() != null && roteador.getListaImagem().contains(nomeImagem)) {
+            roteador.getListaImagem().remove(nomeImagem);
+        } else {
+            throw new ValidationException("nomeImagem", "Imagem não encontrada no roteador.");
+        }
     }
 }

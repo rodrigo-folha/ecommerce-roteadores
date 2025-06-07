@@ -36,7 +36,30 @@ export class CartaoDialogComponent {
   cartaoForm: FormGroup;
   minDate: Date;
 
+  meses = [
+    { nome: 'Janeiro', valor: 1 },
+    { nome: 'Fevereiro', valor: 2 },
+    { nome: 'Março', valor: 3 },
+    { nome: 'Abril', valor: 4 },
+    { nome: 'Maio', valor: 5 },
+    { nome: 'Junho', valor: 6 },
+    { nome: 'Julho', valor: 7 },
+    { nome: 'Agosto', valor: 8 },
+    { nome: 'Setembro', valor: 9 },
+    { nome: 'Outubro', valor: 10 },
+    { nome: 'Novembro', valor: 11 },
+    { nome: 'Dezembro', valor: 12 },
+  ];
+
+  anos: number[] = [];
+
   ngOnInit(): void {
+    const anoAtual = new Date().getFullYear();
+    const primeiroAnoValido = anoAtual + 1;
+
+    for (let i = 0; i <= 15; i++) {
+      this.anos.push(primeiroAnoValido + i);
+    }
     this.initializeForm();
   }
 
@@ -51,22 +74,27 @@ export class CartaoDialogComponent {
         titular: [data?.titular || '', Validators.required],
         cpfCartao: [data?.cpfCartao || '', Validators.required],
         numero: [data?.numero || '', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]],
-        dataValidade: [data?.dataValidade || '', [Validators.required]],
         cvc: [data?.cvc || '', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+        mesValidade: [null, Validators.required],
+        anoValidade: [null, Validators.required],
         modalidade: [data?.modalidade || '', Validators.required]
       });
       this.minDate = new Date();
     }
 
   initializeForm(): void {
+    const data = this.data?.dataValidade ? new Date(this.data.dataValidade) : null;
+
     this.cartaoForm = this.fb.group({
-      id: [(this.data && this.data.id) ? this.data.id : null],
-      titular: [(this.data && this.data.titular) ? this.data.titular : null, [Validators.required]],
-      cpfCartao: [(this.data && this.data.cpfCartao) ? this.data.cpfCartao : null, [Validators.required]],
-      numero: [(this.data && this.data.numero) ? this.data.numero : null, [Validators.required, Validators.minLength(16), Validators.maxLength(16)]],
-      dataValidade: [(this.data && this.data.dataValidade) ? this.data.dataValidade : null],
-      cvc: [(this.data && this.data.cvc) ? this.data.cvc : null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-      modalidade: [(this.data && this.data.modalidade) ? this.data.modalidade : null, [Validators.required]],
+      id: [this.data?.id ?? null],
+      titular: [this.data?.titular ?? null, [Validators.required]],
+      cpfCartao: [this.data?.cpfCartao ?? null, [Validators.required]],
+      numero: [this.data?.numero ?? null, [Validators.required, Validators.minLength(16), Validators.maxLength(16)]],
+      cvc: [this.data?.cvc ?? null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      modalidade: [this.data?.modalidade ?? null, [Validators.required]],
+      
+      mesValidade: [data ? data.getMonth() +2 : null, [Validators.required]],
+      anoValidade: [data ? data.getFullYear() : null, [Validators.required]],
     });
   }
 
@@ -74,7 +102,24 @@ export class CartaoDialogComponent {
     this.cartaoForm.markAllAsTouched();
 
     if (this.cartaoForm.valid) {
-      this.dialogRef.close(this.cartaoForm.value);
+      const formValue = this.cartaoForm.value;
+
+      const mes = formValue.mesValidade;
+      const ano = formValue.anoValidade;
+
+      // Gera a data com dia fixo 1
+      const dataValidade = new Date(ano, mes - 1, 1);
+
+      const payload = {
+        ...formValue,
+        dataValidade
+      };
+
+      // Remove os campos temporários do payload
+      delete payload.mesValidade;
+      delete payload.anoValidade;
+
+      this.dialogRef.close(payload);
     }
   }
 
@@ -115,17 +160,32 @@ export class CartaoDialogComponent {
       apiError: ' '
     },
 
-    dataValidade: {
-      required: 'A data de validade deve ser informada.',
-      apiError: ' '
-    },
-
     cvc: {
       required: 'O cvc deve ser informado.',
       minlength: 'O cvc deve possuir 3 dígitos',
       maxlength: 'O cvc deve possuir 3 dígitos',
       apiError: ' '
     },
+
+    mesValidade: {
+      required: 'O mês deve ser informado.'
+    },
+    anoValidade: {
+      required: 'O ano deve ser informado.'
+    },
+  }
+
+  selecionarMesAno(data: Date, datepicker: any) {
+    const controle = this.cartaoForm.get('dataValidade');
+    if (controle) {
+      controle.setValue(new Date(data.getFullYear(), data.getMonth(), 1)); // seta dia 1 como fixo
+      datepicker.close();
+    }
+  }
+
+  formatarDataValidade(event: any) {
+    // Isso impede que o usuário digite algo no campo manualmente (se for necessário)
+    event.preventDefault();
   }
 
 

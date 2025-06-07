@@ -13,7 +13,11 @@
           <h2>Itens do Pedido</h2>
           <div class="items-list">
             <div *ngFor="let item of pedido?.listaItemPedido" class="item">
-              <div class="item-name">{{ item.nome }}</div>
+              <div class="item-name">
+                <a [routerLink]="['/pagina-roteador', item.idProduto]" class="item-name-link">
+                  {{ item.nome }}
+                </a>
+              </div>
               <div class="item-details">
                 <span>Quantidade: {{ item.quantidade }}</span>
                 <span>Valor: {{ item.valor * item.quantidade | currency:'BRL':'symbol' }}</span>
@@ -34,6 +38,14 @@
         </div>
         <div *ngIf="exibirBotaoPagamento()" class="section">
           <button class="btn-pagar" (click)="realizarPagamento()">Pagar agora</button>
+        </div>
+
+        <div *ngIf="exibirBotaoCancelar()" class="section">
+          <button class="btn-cancelar" (click)="cancelarPedido()">Cancelar pedido</button>
+        </div>
+
+        <div *ngIf="exibirBotaoDevolver()" class="section">
+          <button class="btn-cancelar" (click)="devolverPedido()">Devolver pedido</button>
         </div>
       </div>
 

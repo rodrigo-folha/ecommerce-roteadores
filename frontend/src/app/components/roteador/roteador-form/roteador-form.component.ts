@@ -127,58 +127,64 @@ export class RoteadorFormComponent {
       this.quantidadeAntenas = response.quantidadeAntenas.resultado;
       this.sinalWireless = response.sinaisWireless.resultado;
       this.fornecedores = response.fornecedores.resultado;
+
+      this.productImages = [];
+      this.selectedFiles = [];
+      this.imagePreviews = [];
+      this.imageIdCounter = 0;
+
       this.initializeForm();
     });
 
   }
 
   initializeForm(): void {
-    const roteador: Roteador = this.activatedRoute.snapshot.data['roteador'];
+  // Zera todos os arrays que manipulam imagens para evitar duplicações
+  this.productImages = [];
+  this.imagePreviews = [];
+  this.selectedFiles = [];
+  this.fileNames = [];
 
-    const sistemaOperacional = this.sistemasOperacionais.find((item) => item.id === (roteador?.sistemaOperacional?.id || null));
-    const bandaFrequencia = this.bandaFrequencias.find((item) => item.id === (roteador?.bandaFrequencia?.id || null));
-    const protocoloSeguranca = this.protocolosSeguranca.find((item) => item.id === (roteador?.protocoloSeguranca?.id || null));
-    const quantidadeAntena = this.quantidadeAntenas.find((item) => item.id === (roteador?.quantidadeAntena?.id || null));
-    const sinalWireless = this.sinalWireless.find((item) => item.id === (roteador?.sinalWireless?.id || null));
-    const fornecedor = this.fornecedores.find((item) => item.id === (roteador?.fornecedor?.id || null));
+  const roteador: Roteador = this.activatedRoute.snapshot.data['roteador'];
 
-    // carregando a imagem do preview
-    if (roteador && roteador.listaImagem.length > 0) {
-      this.imagePreviews = this.roteadorService.getUrlImages(roteador.listaImagem)
-      this.fileNames = roteador.listaImagem;
-      this.loadImagesFromRoteador(roteador);
-    }
+  const sistemaOperacional = this.sistemasOperacionais.find(item => item.id === (roteador?.sistemaOperacional?.id || null));
+  const bandaFrequencia = this.bandaFrequencias.find(item => item.id === (roteador?.bandaFrequencia?.id || null));
+  const protocoloSeguranca = this.protocolosSeguranca.find(item => item.id === (roteador?.protocoloSeguranca?.id || null));
+  const quantidadeAntena = this.quantidadeAntenas.find(item => item.id === (roteador?.quantidadeAntena?.id || null));
+  const sinalWireless = this.sinalWireless.find(item => item.id === (roteador?.sinalWireless?.id || null));
+  const fornecedor = this.fornecedores.find(item => item.id === (roteador?.fornecedor?.id || null));
 
-    let precoInicialFormatado = 'R$ 0,00';
-    if (roteador && roteador.preco !== null && roteador.preco !== undefined) {
-      precoInicialFormatado = `R$ ${roteador.preco.toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}`;
-    }
-
-    this.formGroup = this.formBuilder.group({
-      id: [ 
-        (roteador && roteador.id) ? roteador.id : null],
-      descricao: [
-        (roteador && roteador.descricao) ? roteador.descricao : null, 
-        Validators.required],
-      nome: [
-        (roteador && roteador.nome) ? roteador.nome : null, 
-        Validators.required],
-      preco: [
-        (roteador && roteador.preco) ? roteador.preco : null,
-        Validators.required],
-      sistemaOperacional: [sistemaOperacional, Validators.required],
-      bandaFrequencia: [bandaFrequencia, Validators.required],
-      protocoloSeguranca: [protocoloSeguranca, Validators.required],
-      quantidadeAntena: [quantidadeAntena, Validators.required],
-      sinalWireless: [sinalWireless, Validators.required],
-      fornecedor: [fornecedor, Validators.required],
-    })
-
-    this.precoFormatado = precoInicialFormatado;
+  // Se o roteador tem imagens, carrega corretamente as do backend sem duplicar
+  if (roteador && roteador.listaImagem.length > 0) {
+    this.loadImagesFromRoteador(roteador);
   }
+
+  // Formata o preço inicial
+  let precoInicialFormatado = 'R$ 0,00';
+  if (roteador && roteador.preco !== null && roteador.preco !== undefined) {
+    precoInicialFormatado = `R$ ${roteador.preco.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }
+
+  // Inicializa o formulário
+  this.formGroup = this.formBuilder.group({
+    id: [roteador?.id ?? null],
+    nome: [roteador?.nome ?? null, Validators.required],
+    descricao: [roteador?.descricao ?? null, Validators.required],
+    preco: [roteador?.preco ?? null, Validators.required],
+    sistemaOperacional: [sistemaOperacional, Validators.required],
+    bandaFrequencia: [bandaFrequencia, Validators.required],
+    protocoloSeguranca: [protocoloSeguranca, Validators.required],
+    quantidadeAntena: [quantidadeAntena, Validators.required],
+    sinalWireless: [sinalWireless, Validators.required],
+    fornecedor: [fornecedor, Validators.required],
+  });
+
+  this.precoFormatado = precoInicialFormatado;
+}
+
 
   salvar() {
     this.formGroup.markAllAsTouched();
@@ -476,26 +482,62 @@ export class RoteadorFormComponent {
     }
   }
   
-  private uploadImages(roteadorId: number) {
-    if (this.selectedFiles && this.selectedFiles.length > 0) {
-      // Array de observables para os uploads
-      const uploads = this.selectedFiles.map(file =>
-        this.roteadorService.uploadImage(roteadorId, file.name, file)
-      );
+  // private uploadImages(roteadorId: number) {
+  //   if (this.selectedFiles && this.selectedFiles.length > 0) {
+  //     // Array de observables para os uploads
+  //     const uploads = this.selectedFiles.map(file =>
+  //       this.roteadorService.uploadImage(roteadorId, file.name, file)
+  //     );
 
-      // Usamos forkJoin para aguardar todos os uploads
-      forkJoin(uploads).subscribe({
-        next: () => {
-          this.router.navigateByUrl('admin/roteadores');
-        },
-        error: err => {
-          console.log('Erro ao fazer upload das imagens', err);
-          // aqui você pode tratar erro para vários arquivos
-        }
+  //     // Usamos forkJoin para aguardar todos os uploads
+  //     forkJoin(uploads).subscribe({
+  //       next: () => {
+  //         this.router.navigateByUrl('admin/roteadores');
+  //       },
+  //       error: err => {
+  //         console.log('Erro ao fazer upload das imagens', err);
+  //         // aqui você pode tratar erro para vários arquivos
+  //       }
+  //     });
+  //   } else {
+  //     this.router.navigateByUrl('admin/roteadores');
+  //   }
+  // }
+
+  private uploadImages(roteadorId: number) {
+    const imagensParaUpload = this.productImages
+      .filter(img => img.file) // Apenas imagens novas
+      .filter((img, index, self) => {
+        // Remove duplicadas por nome + tamanho (extra segurança)
+        return index === self.findIndex(i =>
+          i.file?.name === img.file?.name &&
+          i.file?.size === img.file?.size
+        );
       });
-    } else {
+
+    if (imagensParaUpload.length === 0) {
+      console.log('Nenhuma nova imagem para upload.');
       this.router.navigateByUrl('admin/roteadores');
+      return;
     }
+
+    const uploadRequests = imagensParaUpload.map(img =>
+      this.roteadorService.uploadImage(roteadorId, img.file!.name, img.file!)
+    );
+
+    forkJoin(uploadRequests).subscribe({
+      next: () => {
+        console.log('Todas as imagens foram enviadas com sucesso.');
+        this.router.navigateByUrl('admin/roteadores');
+      },
+      error: err => {
+        console.error('Erro ao fazer upload das imagens:', err);
+        this.snackBar.open('Erro ao enviar imagens.', 'Fechar', {
+          duration: 3000,
+          panelClass: 'error-snackbar'
+        });
+      }
+    });
   }
 
 
@@ -506,47 +548,49 @@ export class RoteadorFormComponent {
 
   // Manipula o upload de imagens via input de arquivo
   onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement
-    
-    if (input.files && input.files.length > 0) {
-      this.handleFiles(input.files)
+    const input = event.target as HTMLInputElement;
 
-      for (let i = 0; i < input.files.length; i++) {
-        this.selectedFiles.push(input.files[i]);
-      }
+    if (input.files && input.files.length > 0) {
+      this.handleFiles(input.files);
 
       // Limpa o input para permitir selecionar os mesmos arquivos novamente
-      input.value = ''
+      input.value = '';
     }
   }
 
   // Processa os arquivos selecionados
   handleFiles(files: FileList): void {
     Array.from(files).forEach(file => {
-      // Verifica se o arquivo é uma imagem
+      // Verifica se a imagem já foi adicionada (evita mesmo nome/tamanho)
+      const jaExiste = this.productImages.some(img =>
+        img.file?.name === file.name && img.file?.size === file.size
+      );
+      if (jaExiste) return;
+
       if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/)) {
-        alert(`O arquivo "${file.name}" não é uma imagem válida.`)
-        return
+        alert(`O arquivo "${file.name}" não é uma imagem válida.`);
+        return;
       }
-      
-      // Verifica o tamanho do arquivo (máximo 5MB)
+
       if (file.size > 5 * 1024 * 1024) {
-        alert(`O arquivo "${file.name}" é muito grande. O tamanho máximo é 5MB.`)
-        return
+        alert(`O arquivo "${file.name}" é muito grande. Máx 5MB.`);
+        return;
       }
-      
-      // Cria uma URL para prévia da imagem
-      const imageUrl = URL.createObjectURL(file)
-      
-      // Adiciona a imagem ao array de imagens
+
+      const imageUrl = URL.createObjectURL(file);
+
       this.productImages.push({
         id: `img_${this.imageIdCounter++}`,
-        file: file,
+        file,
         url: imageUrl,
-        isPrimary: this.productImages.length === 0 // A primeira imagem é definida como principal
-      })
-    })
+        isPrimary: this.productImages.length === 0
+      });
+
+      this.imagePreviews.push(imageUrl);
+    });
   }
+
+
 
   setAsPrimary(imageId: string): void {
     this.productImages.forEach(image => {
@@ -600,11 +644,21 @@ export class RoteadorFormComponent {
   }
 
   loadImagesFromRoteador(roteador: Roteador) {
-    this.productImages = roteador.listaImagem.map((nomeImagem, index) => ({
-      id: index.toString(),
-      url: this.roteadorService.getUrlImage(nomeImagem), // gera a url completa
-      isPrimary: index === 0,  // a primeira imagem é a principal
-    }));
+    const imagensUnicas = new Set<string>();
+
+    roteador.listaImagem.forEach((nomeImagem, index) => {
+      if (!imagensUnicas.has(nomeImagem)) {
+        imagensUnicas.add(nomeImagem);
+        const url = this.roteadorService.getUrlImage(nomeImagem);
+
+        this.imagePreviews.push(url);
+        this.productImages.push({
+          id: `img_${index}`,
+          url,
+          isPrimary: index === 0
+        });
+      }
+    });
   }
 
   formatarValorMonetario(event: any): void {

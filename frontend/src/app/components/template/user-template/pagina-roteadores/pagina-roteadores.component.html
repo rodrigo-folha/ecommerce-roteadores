@@ -25,6 +25,7 @@
             type="text"
             placeholder="Digite o nome do roteador"
             [(ngModel)]="nomeFiltro"
+            (keydown.enter)="applyFilters()"
             class="name-filter-input"
           />
         </div>
@@ -190,7 +191,16 @@
       <div class="products-content">
         <div class="products-header">
           <h1 class="products-title">Roteadores</h1>
+          <div class="products-header-right">
           <div class="products-count">{{ roteadores.length }} produtos encontrados</div>
+          <div class="sort-by-container">
+            <label for="sortBy" class="sort-label">Ordenar por:</label>
+            <select id="sortBy" class="sort-select" [(ngModel)]="sortBy" (change)="applyFilters()">
+              <option value="preco-asc">Menor preço</option>
+              <option value="preco-desc">Maior preço</option>
+            </select>
+          </div>
+        </div>
         </div>
   
         <!-- Grid de produtos -->
@@ -258,8 +268,11 @@
                   </div>
                 </div>
                 
-                <button (click)="adicionarAoCarrinho(card)" class="add-to-cart-button">
+                <button (click)="adicionarAoCarrinho(card)" class="add-to-cart-button" *ngIf="card.estoque > 0">
                   Adicionar ao Carrinho
+                </button>
+                <button class="add-to-cart-button" *ngIf="card.estoque === 0" [disabled]="card.estoque === 0">
+                  ESGOTADO
                 </button>
               </div>
             </div>

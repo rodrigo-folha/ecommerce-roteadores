@@ -80,6 +80,24 @@ export class HeaderUserComponent implements OnInit, OnDestroy {
     });
   }
 
+  irParaListaCartoes() {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/minha-conta'], { queryParams: { aba: 3 } });
+    });
+  }
+
+  irParaListaEnderecos() {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/minha-conta'], { queryParams: { aba: 2 } });
+    });
+  }
+
+  irParaPedidos() {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/minha-conta'], { queryParams: { aba: 5 } });
+    });
+  }
+
   deslogar() {
     this.authService.removeToken();
     this.authService.removeUsuarioLogado();

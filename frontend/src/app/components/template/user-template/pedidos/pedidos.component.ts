@@ -1,7 +1,7 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { Component, LOCALE_ID } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PedidoService } from '../../../../services/pedido.service';
 import { Pedido } from '../../../../models/pedido.model';
 import { SituacaoPedidoPipe } from '../../../../pipe/situacaoPedido.pipe';
@@ -17,7 +17,7 @@ registerLocaleData(localePt);
               provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
               { provide: LOCALE_ID, useValue: 'pt-BR'}
             ],
-  imports: [CommonModule, SituacaoPedidoPipe],
+  imports: [CommonModule, SituacaoPedidoPipe, RouterLink],
   templateUrl: './pedidos.component.html',
   styleUrl: './pedidos.component.css'
 })
@@ -130,6 +130,36 @@ export class PedidosComponent {
     );
   }
 
+  exibirBotaoCancelar(): boolean {
+    const statusList = this.pedido?.statusPedidos;
+
+    if (!statusList || statusList.length === 0) return false;
+
+    const ultimoStatus = statusList.reduce((maisRecente, atual) => {
+      return new Date(atual.dataAtualizacao) > new Date(maisRecente.dataAtualizacao) ? atual : maisRecente;
+    });
+
+    const statusAtual = ultimoStatus?.situacaoPedido;
+
+    // Só permite cancelar se o pedido estiver aguardando pagamento
+    return statusAtual === 'PAGAMENTO_AUTORIZADO';
+  }
+
+  exibirBotaoDevolver(): boolean {
+    const statusList = this.pedido?.statusPedidos;
+
+    if (!statusList || statusList.length === 0) return false;
+
+    const ultimoStatus = statusList.reduce((maisRecente, atual) => {
+      return new Date(atual.dataAtualizacao) > new Date(maisRecente.dataAtualizacao) ? atual : maisRecente;
+    });
+
+    const statusAtual = ultimoStatus?.situacaoPedido;
+
+    // Só permite cancelar se o pedido estiver aguardando pagamento
+    return statusAtual === 'ENTREGUE';
+  }
+
   realizarPagamento() {
     if (!this.pedido) return;
 
@@ -171,6 +201,48 @@ export class PedidosComponent {
     } else {
       alert('Modalidade de pagamento inválida.');
     }
+  }
+
+  cancelarPedido() {
+    if (!this.pedido) return;
+
+    const confirmar = confirm('Tem certeza que deseja cancelar este pedido?');
+
+    if (!confirmar) return;
+
+    const idPedido = this.pedido.id;
+
+    this.pedidoService.cancelarPedido(idPedido).subscribe({
+      next: () => {
+        this.showSnackbarTopPosition('Pedido cancelado com sucesso!');
+        this.carregarPedido(String(idPedido));
+      },
+      error: (err) => {
+        console.error('Erro ao cancelar o pedido:', err);
+        alert(err.error?.detail || 'Erro ao cancelar o pedido.');
+      }
+    });
+  }
+
+  devolverPedido() {
+    if (!this.pedido) return;
+
+    const confirmar = confirm('Tem certeza que deseja devolver este pedido?');
+
+    if (!confirmar) return;
+
+    const idPedido = this.pedido.id;
+
+    this.pedidoService.devolverPedido(idPedido).subscribe({
+      next: () => {
+        this.showSnackbarTopPosition('Pedido devolvido com sucesso!');
+        this.carregarPedido(String(idPedido));
+      },
+      error: (err) => {
+        console.error('Erro ao devolver o pedido:', err);
+        alert(err.error?.detail || 'Erro ao devolver o pedido.');
+      }
+    });
   }
 
   showSnackbarTopPosition(content: any) {

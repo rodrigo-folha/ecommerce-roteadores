@@ -25,6 +25,31 @@ export class PedidoService {
     return this.httpClient.get<IPaginator<Pedido>>(this.baseUrl, {params});
   }
 
+  findAllAdm(page?: number, pageSize?: number): Observable<IPaginator<Pedido>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      }
+    }
+    return this.httpClient.get<IPaginator<Pedido>>(`${this.baseUrl}/search/all`, {params});
+  }
+
+  findAllResumido(page?: number, pageSize?: number): Observable<IPaginator<PedidoResumido>> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      };
+    }
+
+    return this.httpClient.get<IPaginator<PedidoResumido>>(`${this.baseUrl}/resumo/all`, { params });
+  }
+
   findByEmail(email?: string, page?: number, pageSize?: number): Observable<IPaginator<Pedido>> {
     let params = {};
 
@@ -108,5 +133,9 @@ export class PedidoService {
 
   pagarPix(idPedido: number, idPix: number): Observable<void> {
     return this.httpClient.patch<void>(`${this.baseUrl}/${idPedido}/pagamento/pagar/pix/${idPix}`, {});
+  }
+
+  atualizarStatus(idPedido: number, situacaoPedido: string): Observable<void> {
+    return this.httpClient.patch<void>(`${this.baseUrl}/statuspedido/${idPedido}`,{ situacaoPedido });
   }
 }

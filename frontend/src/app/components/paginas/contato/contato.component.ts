@@ -12,6 +12,10 @@ export class ContatoComponent {
   contactForm: FormGroup
   submitted = false
 
+  ngOnInit() {
+    window.scroll(0, 0);
+  }
+
   constructor(private fb: FormBuilder) {
     this.contactForm = this.fb.group({
       name: ["", [Validators.required, Validators.minLength(2)]],

@@ -80,11 +80,29 @@ public class PedidoResource {
             count, page, pageSize, pedidoService.findByEmail(username, page, pageSize).stream().map(PedidoBasicoResponseDTO::valueOf).toList());
 
         return Response.ok(paginacao).build();
+    }
 
-        // return Response.ok(pedidoService.findByEmail(username, page, pageSize).
-        //             stream().
-        //             map(o -> PedidoBasicoResponseDTO.valueOf(o)).
-        //             toList()).build();
+    @GET
+    @RolesAllowed("Adm")
+    @Path("/resumo/all")
+    public Response findAllResumido(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) {
+        LOG.info("Execucao do metodo findAllResumido");
+
+        Long count = pedidoService.count();
+        
+        var listaResumida = pedidoService.findAll(page, pageSize)
+            .stream()
+            .map(PedidoBasicoResponseDTO::valueOf)
+            .toList();
+
+        PaginacaoResponseDTO<PedidoBasicoResponseDTO> paginacao = PaginacaoResponseDTO.valueOf(
+            count, page, pageSize, listaResumida
+        );
+
+        return Response.ok(paginacao).build();
     }
 
     @GET

@@ -425,7 +425,6 @@ public class PedidoServiceImpl implements PedidoService {
         
         pedido.getStatusPedido().add(statusPedido);
         devolverEstoque(idPedido);
-        
     }
 
     @Override
@@ -438,8 +437,8 @@ public class PedidoServiceImpl implements PedidoService {
         if (!(pedido.getStatusPedido().stream().anyMatch(e -> e.getSituacaoPedido().equals(SituacaoPedido.ENTREGUE))))
             throw new ValidationException("Status Pedido", "Nao é possivel devolver, pois o pedido ainda não foi entregue");
 
-            if (!(pedido.getStatusPedido().stream().anyMatch(e -> e.getSituacaoPedido().equals(SituacaoPedido.DEVOLVIDO))))
-            throw new ValidationException("Status Pedido", "Nao é possivel devolver, pois o pedido ja foi devolvido");
+        if (pedido.getStatusPedido().stream().anyMatch(e -> e.getSituacaoPedido().equals(SituacaoPedido.DEVOLVIDO)))
+        throw new ValidationException("Status Pedido", "Nao é possivel devolver, pois o pedido ja foi devolvido");
 
         StatusPedido statusPedido = new StatusPedido();
         statusPedido.setDataAtualizacao(LocalDateTime.now());

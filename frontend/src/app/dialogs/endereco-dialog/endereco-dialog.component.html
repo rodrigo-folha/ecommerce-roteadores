@@ -1,4 +1,3 @@
-<!-- <h1 mat-dialog-title>Adicionar Endereço</h1> -->
 <mat-toolbar color="primary">
   <div class="toolbar-title" *ngIf="enderecoForm.get('id')?.value">
     Atualização de Endereço
@@ -7,98 +6,82 @@
     Cadastro de Endereço
   </div>
 </mat-toolbar>
-<div mat-dialog-content>
-  <form [formGroup]="enderecoForm">
-    <mat-form-field appearance="outline">
-      <mat-label>Logradouro</mat-label>
-      <input matInput formControlName="logradouro" required />
-      <mat-error
-        *ngIf="
-          enderecoForm.get('logradouro') &&
-          enderecoForm.get('logradouro')?.invalid &&
-          enderecoForm.get('logradouro')?.touched
-        ">
-        {{getErrorMessage('logradouro', enderecoForm.get('logradouro')?.errors)}}
 
-        @if (enderecoForm.get('logradouro')?.hasError('apiError')) {
-            <span> {{ enderecoForm.get('logradouro')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Bairro</mat-label>
-      <input matInput formControlName="bairro" required />
-      <mat-error
-        *ngIf="
-          enderecoForm.get('bairro') &&
-          enderecoForm.get('bairro')?.invalid &&
-          enderecoForm.get('bairro')?.touched
-        ">
-        {{getErrorMessage('bairro', enderecoForm.get('bairro')?.errors)}}
+<div mat-dialog-content class="form-container">
+  <form [formGroup]="enderecoForm" class="form-grid">
 
-        @if (enderecoForm.get('bairro')?.hasError('apiError')) {
-            <span> {{ enderecoForm.get('bairro')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Número</mat-label>
-      <input matInput formControlName="numero" required onkeypress="return /^[0-9]+$/.test(event.key)" />
-      <mat-error
-        *ngIf="
-          enderecoForm.get('numero') &&
-          enderecoForm.get('numero')?.invalid &&
-          enderecoForm.get('numero')?.touched
-        ">
-        {{getErrorMessage('numero', enderecoForm.get('numero')?.errors)}}
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field full">
+        <mat-label>Logradouro</mat-label>
+        <input matInput formControlName="logradouro" required />
+        <mat-error *ngIf="enderecoForm.get('logradouro')?.invalid && enderecoForm.get('logradouro')?.touched">
+          {{ getErrorMessage('logradouro', enderecoForm.get('logradouro')?.errors) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-        @if (enderecoForm.get('numero')?.hasError('apiError')) {
-            <span> {{ enderecoForm.get('numero')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Complemento</mat-label>
-      <input matInput formControlName="complemento" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>CEP</mat-label>
-      <input matInput formControlName="cep" required onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="10" mask="00.000-000"/>
-      <mat-error
-        *ngIf="
-          enderecoForm.get('cep') &&
-          enderecoForm.get('cep')?.invalid &&
-          enderecoForm.get('cep')?.touched
-        ">
-        {{getErrorMessage('cep', enderecoForm.get('cep')?.errors)}}
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Bairro</mat-label>
+        <input matInput formControlName="bairro" required />
+        <mat-error *ngIf="enderecoForm.get('bairro')?.invalid && enderecoForm.get('bairro')?.touched">
+          {{ getErrorMessage('bairro', enderecoForm.get('bairro')?.errors) }}
+        </mat-error>
+      </mat-form-field>
 
-        @if (enderecoForm.get('cep')?.hasError('apiError')) {
-            <span> {{ enderecoForm.get('cep')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Cidade</mat-label>
-      <mat-select formControlName="cidade" [compareWith]="compareCidades" required>
-        <mat-option *ngFor="let cidade of cidades" [value]="cidade">{{ cidade.nome }}</mat-option>
-      </mat-select>
-      <mat-error
-        *ngIf="
-          enderecoForm.get('cidade') &&
-          enderecoForm.get('cidade')?.invalid &&
-          enderecoForm.get('cidade')?.touched
-        ">
-        {{getErrorMessage('cidade', enderecoForm.get('cidade')?.errors)}}
+      <mat-form-field appearance="outline" class="form-field small">
+        <mat-label>Número</mat-label>
+        <input matInput formControlName="numero" required onkeypress="return /^[0-9]+$/.test(event.key)" />
+        <mat-error *ngIf="enderecoForm.get('numero')?.invalid && enderecoForm.get('numero')?.touched">
+          {{ getErrorMessage('numero', enderecoForm.get('numero')?.errors) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-        @if (enderecoForm.get('cidade')?.hasError('apiError')) {
-            <span> {{ enderecoForm.get('cidade')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Complemento</mat-label>
+        <input matInput formControlName="complemento" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field small">
+        <mat-label>CEP</mat-label>
+        <input matInput formControlName="cep" required maxlength="10"
+          onkeypress="return /^[0-9]+$/.test(event.key)" mask="00.000-000" />
+        <mat-error *ngIf="enderecoForm.get('cep')?.invalid && enderecoForm.get('cep')?.touched">
+          {{ getErrorMessage('cep', enderecoForm.get('cep')?.errors) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="estado" required (selectionChange)="filtrarCidadesPorEstado($event.value)">
+          <mat-option *ngFor="let uf of estados" [value]="uf">{{ uf }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="enderecoForm.get('estado')?.invalid && enderecoForm.get('estado')?.touched">
+          Estado deve ser informado.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field full">
+        <mat-label>Cidade</mat-label>
+        <mat-select formControlName="cidade" [compareWith]="compareCidades" required>
+          <mat-option *ngFor="let cidade of cidades" [value]="cidade">{{ cidade.nome }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="enderecoForm.get('cidade')?.invalid && enderecoForm.get('cidade')?.touched">
+          {{ getErrorMessage('cidade', enderecoForm.get('cidade')?.errors) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
   </form>
 </div>
+
 <mat-dialog-actions align="end">
-    <button mat-button (click)="cancelar()">Cancelar</button>
-    <button mat-flat-button color="primary" (click)="salvar()">Salvar</button>
-  </mat-dialog-actions>
-  
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="salvar()">Salvar</button>
+</mat-dialog-actions>

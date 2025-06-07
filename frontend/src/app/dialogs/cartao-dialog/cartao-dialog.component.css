@@ -43,3 +43,32 @@ mat-dialog-actions {
 mat-dialog-actions button {
   margin-left: 8px;
 }
+
+.form-container {
+  padding: 16px;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.form-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.action-buttons {
+  padding: 8px 16px;
+}

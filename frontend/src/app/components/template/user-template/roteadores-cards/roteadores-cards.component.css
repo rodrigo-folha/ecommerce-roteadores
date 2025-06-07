@@ -291,3 +291,8 @@
     border-width: 0;
   }
   
+  .add-to-cart-button:disabled {
+    background-color: #d1d5db; /* cinza claro */
+    color: #6b7280; /* cinza escuro para o texto */
+    cursor: not-allowed;
+  }

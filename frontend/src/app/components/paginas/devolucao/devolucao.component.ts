@@ -11,6 +11,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 export class DevolucaoComponent {
   returnForm: FormGroup;
 
+  ngOnInit() {
+    window.scroll(0, 0);
+  }
+
   constructor(private fb: FormBuilder) {
     this.returnForm = this.fb.group({
       orderNumber: ['', Validators.required],

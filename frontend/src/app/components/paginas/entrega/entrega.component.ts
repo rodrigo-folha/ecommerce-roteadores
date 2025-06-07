@@ -8,6 +8,11 @@ import { Component } from '@angular/core';
   styleUrl: './entrega.component.css'
 })
 export class EntregaComponent {
+
+  ngOnInit() {
+    window.scroll(0, 0);
+  }
+  
   shippingRates = [
     {
       region: "Sudeste",

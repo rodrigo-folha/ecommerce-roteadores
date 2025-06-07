@@ -71,6 +71,7 @@ import { GarantiaComponent } from './components/paginas/garantia/garantia.compon
 import { SegurancaComponent } from './components/paginas/seguranca/seguranca.component';
 import { EntregaComponent } from './components/paginas/entrega/entrega.component';
 import { FaqComponent } from './components/paginas/faq/faq.component';
+import { PedidosAdminComponent } from './components/pedidos-admin/pedidos-admin.component';
 
 export const routes: Routes = [
   {
@@ -122,7 +123,7 @@ export const routes: Routes = [
 
         // {path: 'login', component: LoginComponent, title: 'Login' },
       
-        {path: 'home-admin', component: HomeAdminComponent, title: 'Home Admin'},
+        // {path: 'home-admin', component: HomeAdminComponent, title: 'Home Admin'},
         {path: 'perfil', component: PerfilAdminComponent, title: 'Perfil Admin'},
         {path: 'produto-admin', component: ProdutoAdminComponent, title: 'Produto Admin'},
 
@@ -133,6 +134,8 @@ export const routes: Routes = [
         {path: 'cidades', component: CidadeListComponent},
         {path: 'cidades/new', component: CidadeFormComponent},
         {path: 'cidades/edit/:id', component: CidadeFormComponent, resolve: {cidade: cidadeResolver}},
+
+        {path: 'pedidos', component: PedidosAdminComponent},
 
         {path: 'lotes', component: LoteListComponent},
         {path: 'lotes/new', component: LoteFormComponent},

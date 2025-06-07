@@ -8,6 +8,11 @@ import { Component } from '@angular/core';
   styleUrl: './garantia.component.css'
 })
 export class GarantiaComponent {
+
+  ngOnInit() {
+    window.scroll(0, 0);
+  }
+
   warrantyTypes = [
     {
       title: 'Garantia de Fábrica',

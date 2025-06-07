@@ -208,6 +208,24 @@ public class RoteadorResource {
         return response.build();
     }
 
+    @DELETE
+    @Path("/{idRoteador}/imagem/{nomeImagem}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deletarImagem(@PathParam("idRoteador") Long id, @PathParam("nomeImagem") String nomeImagem) {
+        LOG.infof("Executando deleção da imagem %s para o roteador %d", nomeImagem, id);
+
+        try {
+            roteadorService.removerNomeImagem(id, nomeImagem); // remove da lista do banco
+            roteadorFileService.delete(nomeImagem);            // remove do disco
+            return Response.noContent().build();
+        } catch (IOException e) {
+            LOG.error("Erro ao deletar imagem: " + nomeImagem, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity("Erro ao deletar a imagem: " + nomeImagem)
+                        .build();
+        }
+    }
+
     @GET
     @Path("nome/{nome}/count")
     public Response countNome(@PathParam("nome") String nome) {

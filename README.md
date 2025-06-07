@@ -66,6 +66,11 @@ Clone o repositório:
 1. Configure o banco de dados conforme o arquivo de configuração `application.properties`.
 2. Execute o banco de dados localmente.
 
+### KeyCloak
+
+1. Estou utilizando o keycloak para criação de contas e autenticação.
+2. As suas configurações (REALM, Client-id, Cliente-secret, Porta, e dados de acesso etc) estão disponíveis no `application.properties`.
+
 ## Funcionalidades
 
 - Em construção
@@ -73,8 +78,3 @@ Clone o repositório:
 ## Como Usar
 
 - Em construção
-
-## Autores
-
-- Nome 1 - @rodrigo-folha
-- Nome 2 - @OtavioNardini

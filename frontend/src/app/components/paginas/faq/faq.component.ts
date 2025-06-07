@@ -8,6 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './faq.component.css'
 })
 export class FaqComponent {
+  ngOnInit() {
+    window.scroll(0, 0);
+  }
+
   faqCategories = [
     {
       title: "Compras e Pedidos",

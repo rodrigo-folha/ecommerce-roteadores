@@ -17,6 +17,7 @@ type Card = {
   rating: number;
   reviews: number;
   imageUrl: string;
+  estoque: number;
 };
 
 @Component({
@@ -34,6 +35,7 @@ export class RoteadoresCardsComponent {
   roteadores: Roteador[] = [];
   cards = signal<Card[]>([]);
   listaDesejo: number[] = [];
+  estoque = 0;
 
   constructor(
     private roteadorService: RoteadorService,
@@ -57,19 +59,41 @@ export class RoteadoresCardsComponent {
     })
   }
 
+  // carregarCards() {
+  //   const cards: Card[] = [];
+  //   this.roteadores.forEach((roteador) => {
+  //     cards.push({
+  //       id: roteador.id,
+  //       titulo: roteador.nome,
+  //       preco: roteador.preco,
+  //       rating: 4.8,
+  //       reviews: 100,
+  //       imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString()),
+  //       estoque: this.roteadorService.countQuantidadeTotalById(roteador.id)
+  //     })
+  //   })
+  //   this.cards.set(cards);
+  // }
+
   carregarCards() {
     const cards: Card[] = [];
     this.roteadores.forEach((roteador) => {
-      cards.push({
-        id: roteador.id,
-        titulo: roteador.nome,
-        preco: roteador.preco,
-        rating: 4.8,
-        reviews: 100,
-        imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString())
-      })
-    })
-    this.cards.set(cards);
+      this.roteadorService.countQuantidadeTotalById(roteador.id).subscribe((estoque) => {
+        cards.push({
+          id: roteador.id,
+          titulo: roteador.nome,
+          preco: roteador.preco,
+          rating: 4.8,
+          reviews: 100,
+          imageUrl: this.roteadorService.getUrlImage(roteador.listaImagem[0].toString()),
+          estoque: estoque
+        });
+
+        if (cards.length === this.roteadores.length) {
+          this.cards.set(cards);
+        }
+      });
+    });
   }
   
   carregarListaDesejos() {

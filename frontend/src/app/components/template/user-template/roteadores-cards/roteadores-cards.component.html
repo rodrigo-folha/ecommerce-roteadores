@@ -3,7 +3,7 @@
       <div class="section-header">
         <div class="section-title-container">
           <h2 class="section-title">Best Sellers</h2>
-          <p class="section-description">Nossos roteadores mais populares com base nas vendas</p>
+          <p class="section-description">Nossos roteadores mais populares com base nas avaliações dos usuários</p>
         </div>
         <a routerLink="/roteadores" class="view-all-link">
           Ver todos os roteadores
@@ -51,8 +51,11 @@
                 <span class="review-count">({{ card.reviews }} reviews)</span>
               </div>
               
-              <button (click)="adicionarAoCarrinho(card)" class="add-to-cart-button">
+              <button (click)="adicionarAoCarrinho(card)" class="add-to-cart-button" *ngIf="card.estoque > 0">
                 Adicionar ao Carrinho
+              </button>
+              <button class="add-to-cart-button" *ngIf="card.estoque === 0" [disabled]="card.estoque === 0">
+                ESGOTADO
               </button>
             </div>
           </div>

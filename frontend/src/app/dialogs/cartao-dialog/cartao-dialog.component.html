@@ -6,115 +6,107 @@
     Cadastro de Cartão
   </div>
 </mat-toolbar>
-<div mat-dialog-content>
-  <form [formGroup]="cartaoForm">
-    <mat-form-field appearance="outline">
-      <mat-label>Titular</mat-label>
-      <input matInput formControlName="titular" required />
-      <mat-error
-        *ngIf="
-          cartaoForm.get('titular') &&
-          cartaoForm.get('titular')?.invalid &&
-          cartaoForm.get('titular')?.touched
-        ">
-        {{getErrorMessage('titular', cartaoForm.get('titular')?.errors)}}
 
-        @if (cartaoForm.get('titular')?.hasError('apiError')) {
-            <span> {{ cartaoForm.get('titular')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Número</mat-label>
-      <input matInput formControlName="numero" required onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="19" mask="0000 0000 0000 0000"/>
-      <mat-error
-        *ngIf="
-          cartaoForm.get('numero') &&
-          cartaoForm.get('numero')?.invalid &&
-          cartaoForm.get('numero')?.touched
-        ">
-        {{getErrorMessage('numero', cartaoForm.get('numero')?.errors)}}
+<div mat-dialog-content class="form-container">
+  <form [formGroup]="cartaoForm" class="form-grid">
 
-        @if (cartaoForm.get('numero')?.hasError('apiError')) {
-            <span> {{ cartaoForm.get('numero')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>CPF</mat-label>
-      <input matInput formControlName="cpfCartao" required onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="14" mask="000.000.000-00"/>
-      <mat-error
-        *ngIf="
-          cartaoForm.get('cpfCartao') &&
-          cartaoForm.get('cpfCartao')?.invalid &&
-          cartaoForm.get('cpfCartao')?.touched
-        ">
-        {{getErrorMessage('cpfCartao', cartaoForm.get('cpfCartao')?.errors)}}
-
-        @if (cartaoForm.get('cpfCartao')?.hasError('apiError')) {
-            <span> {{ cartaoForm.get('cpfCartao')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>CVC</mat-label>
-      <input matInput formControlName="cvc" required onkeypress="return /^[0-9]+$/.test(event.key)" maxlength="3"/>
-      <mat-error
-        *ngIf="
-          cartaoForm.get('cvc') &&
-          cartaoForm.get('cvc')?.invalid &&
-          cartaoForm.get('cvc')?.touched
-        ">
-        {{getErrorMessage('cvc', cartaoForm.get('cvc')?.errors)}}
-
-        @if (cartaoForm.get('cvc')?.hasError('apiError')) {
-            <span> {{ cartaoForm.get('cvc')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Data de Validade</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="dataValidade" [min]="minDate" />
-        <mat-hint>Clique no calendário para escolher a data de validade</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-error
-            *ngIf="
-            cartaoForm.get('dataValidade') &&
-            cartaoForm.get('dataValidade')?.invalid &&
-            cartaoForm.get('dataValidade')?.touched
-            "
-        >
-        {{getErrorMessage('dataValidade', cartaoForm.get('dataValidade')?.errors)}}
-
-        @if (cartaoForm.get('dataValidade')?.hasError('apiError')) {
-            <span> {{ cartaoForm.get('dataValidade')?.getError('apiError') }}</span>
-        }
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Titular</mat-label>
+        <input matInput formControlName="titular" required />
+        <mat-error *ngIf="cartaoForm.get('titular')?.invalid && cartaoForm.get('titular')?.touched">
+          {{ getErrorMessage('titular', cartaoForm.get('titular')?.errors) }}
+          @if (cartaoForm.get('titular')?.hasError('apiError')) {
+            <span>{{ cartaoForm.get('titular')?.getError('apiError') }}</span>
+          }
         </mat-error>
-        </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Modalidade</mat-label>
-      <mat-select formControlName="modalidade" required>
-        <mat-option value="CREDITO">Crédito</mat-option>
-        <mat-option value="DEBITO">Débito</mat-option>
-      </mat-select>
-      <mat-error
-        *ngIf="
-          cartaoForm.get('modalidade') &&
-          cartaoForm.get('modalidade')?.invalid &&
-          cartaoForm.get('modalidade')?.touched
-        ">
-        {{getErrorMessage('modalidade', cartaoForm.get('modalidade')?.errors)}}
+      </mat-form-field>
 
-        @if (cartaoForm.get('modalidade')?.hasError('apiError')) {
-            <span> {{ cartaoForm.get('modalidade')?.getError('apiError') }}</span>
-        }
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Número</mat-label>
+        <input matInput formControlName="numero" required maxlength="19"
+               onkeypress="return /^[0-9]+$/.test(event.key)" mask="0000 0000 0000 0000" />
+        <mat-error *ngIf="cartaoForm.get('numero')?.invalid && cartaoForm.get('numero')?.touched">
+          {{ getErrorMessage('numero', cartaoForm.get('numero')?.errors) }}
+          @if (cartaoForm.get('numero')?.hasError('apiError')) {
+            <span>{{ cartaoForm.get('numero')?.getError('apiError') }}</span>
+          }
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpfCartao" required maxlength="14"
+               onkeypress="return /^[0-9]+$/.test(event.key)" mask="000.000.000-00" />
+        <mat-error *ngIf="cartaoForm.get('cpfCartao')?.invalid && cartaoForm.get('cpfCartao')?.touched">
+          {{ getErrorMessage('cpfCartao', cartaoForm.get('cpfCartao')?.errors) }}
+          @if (cartaoForm.get('cpfCartao')?.hasError('apiError')) {
+            <span>{{ cartaoForm.get('cpfCartao')?.getError('apiError') }}</span>
+          }
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>CVC</mat-label>
+        <input matInput formControlName="cvc" required maxlength="3"
+               onkeypress="return /^[0-9]+$/.test(event.key)" />
+        <mat-error *ngIf="cartaoForm.get('cvc')?.invalid && cartaoForm.get('cvc')?.touched">
+          {{ getErrorMessage('cvc', cartaoForm.get('cvc')?.errors) }}
+          @if (cartaoForm.get('cvc')?.hasError('apiError')) {
+            <span>{{ cartaoForm.get('cvc')?.getError('apiError') }}</span>
+          }
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+  <mat-form-field appearance="outline" class="form-field">
+    <mat-label>Mês de Validade</mat-label>
+    <mat-select formControlName="mesValidade" required>
+      <mat-option *ngFor="let mes of meses" [value]="mes.valor">
+        {{ mes.nome }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="cartaoForm.get('mesValidade')?.invalid && cartaoForm.get('mesValidade')?.touched">
+      Mês deve ser informado.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="form-field">
+    <mat-label>Ano de Validade</mat-label>
+    <mat-select formControlName="anoValidade" required>
+      <mat-option *ngFor="let ano of anos" [value]="ano">
+        {{ ano }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="cartaoForm.get('anoValidade')?.invalid && cartaoForm.get('anoValidade')?.touched">
+      Ano deve ser informado.
+    </mat-error>
+  </mat-form-field>
+</div>
+
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Modalidade</mat-label>
+        <mat-select formControlName="modalidade" required>
+          <mat-option value="CREDITO">Crédito</mat-option>
+          <mat-option value="DEBITO">Débito</mat-option>
+        </mat-select>
+        <mat-error *ngIf="cartaoForm.get('modalidade')?.invalid && cartaoForm.get('modalidade')?.touched">
+          {{ getErrorMessage('modalidade', cartaoForm.get('modalidade')?.errors) }}
+          @if (cartaoForm.get('modalidade')?.hasError('apiError')) {
+            <span>{{ cartaoForm.get('modalidade')?.getError('apiError') }}</span>
+          }
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
 </div>
-<mat-dialog-actions align="end">
-    <button mat-button (click)="cancelar()">Cancelar</button>
-    <button mat-flat-button color="primary" (click)="salvar()">Salvar</button>
-  </mat-dialog-actions>
-  
+
+<mat-dialog-actions align="end" class="action-buttons">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="salvar()">Salvar</button>
+</mat-dialog-actions>
