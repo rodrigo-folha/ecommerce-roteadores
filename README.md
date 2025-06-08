@@ -1,7 +1,7 @@
 
 # E-commerce de Roteadores
 
-Um e-commerce para venda de roteadores, desenvolvido com **Quarkus** no backend e **Angular V19** no frontend.
+Um e-commerce para venda de roteadores, desenvolvido com **Quarkus** no backend, **Angular V19** no frontend, **PostgreSQL** como banco de dados e **Keycloak** como ferramenta de autenticação e autorização.
 
 ## Descrição
 
@@ -12,6 +12,10 @@ Este projeto é um sistema de e-commerce especializado em roteadores, permitindo
 - **Backend**: Quarkus, JPA, Hibernate
 - **Frontend**: Angular V19, TypeScript
 - **Banco de Dados**: PostgreSQL
+- **Autenticação e Autorização**: Keycloak
+
+## Prévia
+<img src="./frontend/public/prints/Tela-roteadores.png"/>
 
 ## Instalação
 
@@ -70,11 +74,3 @@ Clone o repositório:
 
 1. Estou utilizando o keycloak para criação de contas e autenticação.
 2. As suas configurações (REALM, Client-id, Cliente-secret, Porta, e dados de acesso etc) estão disponíveis no `application.properties`.
-
-## Funcionalidades
-
-- Em construção
-
-## Como Usar
-
-- Em construção

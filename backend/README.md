@@ -27,33 +27,6 @@ Para instalar o projeto, siga os passos abaixo:
 - Java JDK (versão 21 ou superior)
 - Maven (versão 3.9.7 ou superior)
 
-### Passos
-
-[Guia Quarkus](https://github.com/rodrigo-folha/roteadores-tp1-quarkus/blob/main/README.md)
-
-1. Clone o repositório:
-
-   ```sh
-   git clone https://github.com/rodrigo-folha/roteadores-tp1-quarkus.git
-   ```
-
-2. Entre no diretório do repositório:
-
-   ```sh
-   cd roteadores-tp1-quarkus
-   ```
-
-3. Baixe as dependências:
-
-   ```sh
-   mvn clean install
-   ```
-
-4. Rode a aplicação localmente:
-
-   ```sh
-   ./mvnw compile quarkus:dev   
-   ```
 ## Aprendizados
 
 Durante o desenvolvimento da API, tive um aprendizado constante e explorei os principais recursos para sua criação:
@@ -63,6 +36,7 @@ Durante o desenvolvimento da API, tive um aprendizado constante e explorei os pr
 - JPA e Hibernate
 - Validação de dados
 - Modelagem UML
+- Utilizacao do Keycloak para autenticação e autorização
 
 ## Estrutura de Pastas
 
